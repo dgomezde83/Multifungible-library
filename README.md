@@ -1,89 +1,116 @@
-# mx-sdk-cpp
+# Multifungible-sdk-cpp
 
-MultiversX C++ Command Line Tools and SDK for interacting with the MultiversX blockchain (in general) and Smart Contracts (in
-particular).
+MultiversX C++ SDK for interacting with the MultiversX blockchain's Non-fungible tokens and Semi-fungible tokens. 
 
-## 1. Installation. How to use it
-```bash
-./install.sh
-```
+## 1. Installation instructions and documentation
+Visit http:// ... for a complete installation guide and documentation of every function of this library.
 
-This script will install all necessary dependencies, build solution and:
-- copy **headers** in `/usr/include/erdcpp` 
-- copy **shared library** in `/usr/lib/libsrc.so`
-
-### 1.1 SDK
-To integrate this sdk in your project, link `libsrc.so` and include this header in your project:
-```c++
-#include "erdcpp/erdsdk.h"
-```
-
-### CMake integration
-
-To integrate this sdk in your `CMake` project:
-1. include `/usr/include/erdcpp`
-2. link `/usr/lib/libsrc.so`
-
-Example:
-```cmake
-cmake_minimum_required(VERSION 3.11)
-project(main)
-
-include_directories(/usr/include/erdcpp) #-> include header files
-
-add_executable(main main.cpp)
-target_link_libraries(main PUBLIC /usr/lib/libsrc.so) #-> link library
-```
-
-
-### 1.2 CLI
-
-To see all available command lines:
-```bash
-cd cli
-./erdcpp -h
-```
-
-## 2. Examples
-A quick look into an ESDT transfer: 
+## 2. Quick example
+A quick look into some functions from this library: 
 
 ```c++
-    // Read data from wallet
-    PemFileReader myWallet("wallet.pem");
-    Address myAddress = myWallet.getAddress();
-    bytes mySeed = myWallet.getSeed();
+    //1 Create two wallets
+returnCodeAndChar t_wallet1 = NFTSFTAPI::createWallet("./myPEMFile1.json","1234");
+returnCodeAndChar t_wallet2 = NFTSFTAPI::createWallet("./myPEMFile2.json","5678");
+if (t_wallet1.retCode)
+{
+  throw std::runtime_error(t_wallet1.message);
+}
+if (t_wallet2.retCode)
+{
+  throw std::runtime_error(t_wallet2.message);
+}
+std::cout << "Wallet1: " << t_wallet1.message << std::endl;
+std::cout << "Wallet2: " << t_wallet2.message << std::endl;
 
-    // Get updated account from proxy
-    ProxyProvider proxy("https://gateway.multiversx.com");
-    Account myAccount = proxy.getAccount(myAddress);
+//2 Issue an SFT collection with first wallet
+std::string t_collectionID;
+returnCodeAndChar t_IssueCollection = NFTSFTAPI::issueSFTCollection("./myPEMFile1.json", //PEM file path
+                                                                       "1234", //Password
+                                                                       "Test", //Collection name
+                                                                       "TST", //Collection ticker
+                                                                       false, //canFreeze
+                                                                       false, //canWipe
+                                                                       true, //canPause
+                                                                       false, //canTransferNFTCreateRole
+                                                                       false, //canChangeOwner
+                                                                       false, //canUpgrade
+                                                                       true); //canAddSpecialRoles
+if (t_IssueCollection.retCode)
+{
+    throw std::runtime_error(t_IssueCollection.message);
+}
+else
+{
+    t_collectionID = t_IssueCollection.message;
+}
+std::cout << "Issued collection: " << t_collectionID << std::endl;
 
-    // Create a transaction factory, which helps you easily build signed/unsigned transactions
-    NetworkConfig networkConfig = proxy.getNetworkConfig();
-    TransactionFactory transactionFactory(networkConfig);
+//3 Issue 10 certificates of affiliation with first wallet
+std::string t_tokenID;
+returnCodeAndChar t_IssueSFTToken = NFTSFTAPI::issueSemiFungibleToken("./myPEMFile1.json",   //PEM file path
+                                                                     "1234",                 //Password
+                                                                     t_collectionID.c_str(), //collection name
+                                                                     "tokenTest",            //Name of the token
+                                                                     10,                     //quantity
+                                                                     8500,                   //Royalties (85.00%)
+                                   "metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3",     //metadata 
+                                                                     "https://...");         //URL
+if (t_IssueSFTToken.retCode)
+{
+    throw std::runtime_error(t_IssueSFTToken.message);
+}
+else
+{
+    t_tokenID = t_IssueSFTToken.message;
+}
+std::cout << "Issued token: " << t_tokenID << std::endl;
 
-    // Build ESDT transactions
-    TokenPayment mexTokens =
-            TokenPayment::fungibleFromAmount("MEX-455c57", // Token ID
-                                             "100",        // Amount = 100 MEX
-                                             18);          // Num of token decimals
-    Transaction transaction = transactionFactory.createESDTTransfer(
-                    mexTokens,            // Token to transfer
-                    myAccount.getNonce(), // Nonce
-                    myAddress,            // Sender's address
-                    Address("erd1..."),   // Receiver's address
-                    1000000000)           // Gas Price
-            ->buildSigned(mySeed);
+//4 Stop the creation of certificates from this collection with first wallet
+returnCodeAndChar t_StopCreation = NFTSFTAPI::stopTokenCreation("./myPEMFile.json", //PEM file path
+                                                                "1234", //Password
+                                                                t_collectionID.c_str());
+if (t_StopCreation.retCode)
+{
+    throw std::runtime_error(t_StopCreation.message);
+}
+std::cout << t_StopCreation.message << std::endl;
 
-    // Send transaction and check its status
-    std::string txHash = proxy.send(transaction);
-    TransactionStatus txStatus = proxy.getTransactionStatus(txHash);
-    if (txStatus.isPending())
-    {
-        // ...
-    }
+//5 Send one certificate to second wallet with first wallet
+returnCodeAndChar t_Transaction = NFTSFTAPI::SFTTransaction("./myPEMFile.json", //PEM file path
+                                                          "1234", //Password
+                                                          t_wallet2.message, //Destination address
+                                                          t_tokenID.c_str(), //SFT token ID
+                                                          10); //quantity to send
+
+if (t_Transaction.retCode)
+{
+    throw std::runtime_error(t_Transaction.message);
+}
+std::cout << t_Transaction.message << std::endl;
+
+//6 Proove the ownership of the collection with my first wallet
+returnCodeAndChar t_ProofOfOwnership = NFTSFTAPI::getProofOfCollectionOwnership ("./myPEMFile1.json", //PEM file path
+                                                                                 "1234",                //Password
+                                                                                  "abcd",               //ciphertext
+                                                                                   t_collectionID.c_str());      //collection ID
+if (t_ProofOfOwnership.retCode)
+{
+    throw std::runtime_error(t_ProofOfOwnership.message);
+}
+std::cout << t_ProofOfOwnership.message << std::endl;
+
+//7 Proove the ownership of the certificate with my second wallet
+returnCodeAndChar t_ProofOfIssuance = NFTSFTAPI::getProofOfTokenOwnership ("./myPEMFile2.json", //PEM file path
+                                                                       "1234",                //Password
+                                                                        "abcd",               //ciphertext
+                                                                         t_tokenID.c_str());      //token ID
+if (t_ProofOfIssuance.retCode)
+{
+    throw std::runtime_error(t_ProofOfIssuance.message);
+}
+std::cout << t_ProofOfIssuance.message << std::endl;
 ```
-
-Click [here](examples/examples.md) to see a list with provided features and usage
 
 ## 3. External libraries
 This repository uses `google test` as submodule, as well as the following `external` sources:
@@ -97,3 +124,4 @@ This repository uses `google test` as submodule, as well as the following `exter
 - **keccak**: License: **MIT**. From: https://github.com/mjosaarinen/tiny_sha3
 - **toml**: License: **MIT**. From: https://github.com/skystrife/cpptoml
 - **libsodium**: License: **MIT**. From: https://github.com/jedisct1/libsodium
+- **boost**: License: **Boost Software License** From: https://www.boost.org

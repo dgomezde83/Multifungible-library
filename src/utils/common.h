@@ -26,6 +26,7 @@ inline void checkParam<std::string>(std::string const &param, std::string const 
     }
 }
 
+#ifdef __UNIX__
 inline std::string getCanonicalRootPath(std::string const &path)
 {
     // Get absolute path to executable
@@ -37,7 +38,7 @@ inline std::string getCanonicalRootPath(std::string const &path)
     canonicalPath = canonicalPath.substr(0, pos);
     return canonicalPath + path;
 }
-
+#endif
 }
 
 #endif
