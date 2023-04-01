@@ -31,9 +31,7 @@ class Client
 {
 public:
     explicit Client(std::string const &url) : m_client(url.c_str())
-    {
-       //m_client.enable_server_certificate_verification(false);
-    }
+    {}
 
     Result get(std::string const &path)
     {

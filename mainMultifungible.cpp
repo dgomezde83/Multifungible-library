@@ -39,10 +39,8 @@ int main(int argc, char** argv)
            t_rccMULTIFUNGIBLE_CREATION_WALLET.message,
            t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS.message);
 
-    //::testing::InitGoogleTest(&argc,argv);
-    //return RUN_ALL_TESTS();
-    returnCodeAndChar t_rccInfo = Multifungible::getCollectionProperties("ABC-51755a");
-    std::cout << t_rccInfo.message << std::endl;
+    ::testing::InitGoogleTest(&argc,argv);
+    return RUN_ALL_TESTS();
 
     //return 0;
 }

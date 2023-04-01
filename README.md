@@ -9,9 +9,9 @@ Visit http:// ... for a complete installation guide and documentation of every f
 A quick look into some functions from this library: 
 
 ```c++
-    //1 Create two wallets
-returnCodeAndChar t_wallet1 = NFTSFTAPI::createWallet("./myPEMFile1.json","1234");
-returnCodeAndChar t_wallet2 = NFTSFTAPI::createWallet("./myPEMFile2.json","5678");
+//1 Create two wallets
+returnCodeAndChar t_wallet1 = Multifungible::createWallet("./myPEMFile1.json","1234");
+returnCodeAndChar t_wallet2 = Multifungible::createWallet("./myPEMFile2.json","5678");
 if (t_wallet1.retCode)
 {
   throw std::runtime_error(t_wallet1.message);
@@ -25,7 +25,7 @@ std::cout << "Wallet2: " << t_wallet2.message << std::endl;
 
 //2 Issue an SFT collection with first wallet
 std::string t_collectionID;
-returnCodeAndChar t_IssueCollection = NFTSFTAPI::issueSFTCollection("./myPEMFile1.json", //PEM file path
+returnCodeAndChar t_IssueCollection = Multifungible::issueSFTCollection("./myPEMFile1.json", //PEM file path
                                                                        "1234", //Password
                                                                        "Test", //Collection name
                                                                        "TST", //Collection ticker
@@ -48,7 +48,7 @@ std::cout << "Issued collection: " << t_collectionID << std::endl;
 
 //3 Issue 10 certificates of affiliation with first wallet
 std::string t_tokenID;
-returnCodeAndChar t_IssueSFTToken = NFTSFTAPI::issueSemiFungibleToken("./myPEMFile1.json",   //PEM file path
+returnCodeAndChar t_IssueSFTToken = Multifungible::issueSemiFungibleToken("./myPEMFile1.json",   //PEM file path
                                                                      "1234",                 //Password
                                                                      t_collectionID.c_str(), //collection name
                                                                      "tokenTest",            //Name of the token
@@ -67,7 +67,7 @@ else
 std::cout << "Issued token: " << t_tokenID << std::endl;
 
 //4 Stop the creation of certificates from this collection with first wallet
-returnCodeAndChar t_StopCreation = NFTSFTAPI::stopTokenCreation("./myPEMFile.json", //PEM file path
+returnCodeAndChar t_StopCreation = Multifungible::stopTokenCreation("./myPEMFile.json", //PEM file path
                                                                 "1234", //Password
                                                                 t_collectionID.c_str());
 if (t_StopCreation.retCode)
@@ -77,7 +77,7 @@ if (t_StopCreation.retCode)
 std::cout << t_StopCreation.message << std::endl;
 
 //5 Send one certificate to second wallet with first wallet
-returnCodeAndChar t_Transaction = NFTSFTAPI::SFTTransaction("./myPEMFile.json", //PEM file path
+returnCodeAndChar t_Transaction = Multifungible::SFTTransaction("./myPEMFile.json", //PEM file path
                                                           "1234", //Password
                                                           t_wallet2.message, //Destination address
                                                           t_tokenID.c_str(), //SFT token ID
@@ -90,7 +90,7 @@ if (t_Transaction.retCode)
 std::cout << t_Transaction.message << std::endl;
 
 //6 Proove the ownership of the collection with my first wallet
-returnCodeAndChar t_ProofOfOwnership = NFTSFTAPI::getProofOfCollectionOwnership ("./myPEMFile1.json", //PEM file path
+returnCodeAndChar t_ProofOfOwnership = Multifungible::getProofOfCollectionOwnership ("./myPEMFile1.json", //PEM file path
                                                                                  "1234",                //Password
                                                                                   "abcd",               //ciphertext
                                                                                    t_collectionID.c_str());      //collection ID
@@ -101,7 +101,7 @@ if (t_ProofOfOwnership.retCode)
 std::cout << t_ProofOfOwnership.message << std::endl;
 
 //7 Proove the ownership of the certificate with my second wallet
-returnCodeAndChar t_ProofOfIssuance = NFTSFTAPI::getProofOfTokenOwnership ("./myPEMFile2.json", //PEM file path
+returnCodeAndChar t_ProofOfIssuance = Multifungible::getProofOfTokenOwnership ("./myPEMFile2.json", //PEM file path
                                                                        "1234",                //Password
                                                                         "abcd",               //ciphertext
                                                                          t_tokenID.c_str());      //token ID
