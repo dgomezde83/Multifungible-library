@@ -1,9 +1,12 @@
 # Multifungible-sdk-cpp
 
-MultiversX C++ SDK for interacting with the MultiversX blockchain's Non-fungible tokens and Semi-fungible tokens. 
+MultiversX C++ SDK for interacting with the MultiversX blockchain's Non-fungible tokens and Semi-fungible tokens.
+- Runs on Windows and Linux.
+- Targeted for developers that don't want to worry about blockchain programming.
+- Can compile into a windows DLL or linux .so and be used as an API from any program!
 
 ## 1. Installation instructions and documentation
-Visit http:// ... for a complete installation guide and documentation of every function of this library.
+Visit [![GitHub](https://img.shields.io/badge/GitHub-Profile-blue?style=flat-square&logo=github)](https://dgomezde83.github.io/Multifungible-sdk-cpp) for a complete installation guide and documentation of every function of this library.
 
 ## 2. Quick example
 A quick look into some functions from this library: 
@@ -125,3 +128,4 @@ This repository uses `google test` as submodule, as well as the following `exter
 - **toml**: License: **MIT**. From: https://github.com/skystrife/cpptoml
 - **libsodium**: License: **MIT**. From: https://github.com/jedisct1/libsodium
 - **boost**: License: **Boost Software License** From: https://www.boost.org
+- **vanitygen++**: License: **GNU Affero General Public License** From: https://github.com/10gic/vanitygen-plusplus
