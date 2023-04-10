@@ -3,7 +3,7 @@
 
 #include <functional>
 #include "Wallet.h"
-#include "wrapperProxyProvider.h"
+#include "WrapperProxyProvider.h"
 #include "WrapperTransactionFactory.h"
 
 //Wrapper Wallet generator messages

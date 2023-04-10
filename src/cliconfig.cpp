@@ -17,7 +17,7 @@ inline std::string formatMessageFileDoesNotContain(std::string const& filePath)
 }
 }
 
-#ifdef __UNIX__
+
 CLIConfig::CLIConfig(std::string const &tomlConfigPath) :
         m_tomlPath(util::getCanonicalRootPath(tomlConfigPath)),
         m_networkMap({{Mainnet, NETWORK_MAINNET},
@@ -25,18 +25,7 @@ CLIConfig::CLIConfig(std::string const &tomlConfigPath) :
                       {Testnet, NETWORK_TESTNET},
                       {Local,   NETWORK_LOCAL}})
 {}
-#endif // __UNIX__
 
-#ifdef __WINDOWS__
-CLIConfig::CLIConfig(std::string const &tomlConfigPath) :
-        m_tomlPath(tomlConfigPath),
-        m_networkMap({{Mainnet, NETWORK_MAINNET},
-                      {Devnet,  NETWORK_DEVNET},
-                      {Testnet, NETWORK_TESTNET},
-                      {Local,   NETWORK_LOCAL}})
-{}
-
-#endif // __WINDOWS__
 Config CLIConfig::config() const
 {
     Config ret;

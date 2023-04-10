@@ -38,13 +38,8 @@ get_private_key(EVP_PKEY *pkey, unsigned char *pub_buf, size_t buf_len, size_t *
 void *
 thread_loop_simplevanitygen(void *arg) {
     unsigned char priv_buf[32];
-    unsigned char pub_buf[128];  // 65 bytes enough
     size_t pub_buf_len = 128;
 
-    char address[1024] = {'\0'};
-
-    int find_it = 0;
-    size_t pattern_len;
 
     int thread_index;
 
@@ -62,8 +57,6 @@ thread_loop_simplevanitygen(void *arg) {
 
     ALC * t_alc = (ALC *) arg;
 
-    pattern_len = strlen(t_alc->pattern);
-
     check_thread_index:
     thread_index = get_thread_index1(t_alc->vc_thread_num);
     if (thread_index == -1) {
@@ -72,7 +65,6 @@ thread_loop_simplevanitygen(void *arg) {
     }
 
     int output_timeout = 0;
-    char *coin = "EGLD";
 
     while (!t_alc->vc_halt) {
         // Generate a key-pair

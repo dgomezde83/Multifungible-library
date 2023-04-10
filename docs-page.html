@@ -1,0 +1,2596 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <title>MultiFungible - Documentation</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="MultiFungible - Documentation">
+    <meta name="author" content="N83">    
+    <link rel="shortcut icon" href="nft-icon.ico"> 
+    
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome JS-->
+    <script defer src="assets/fontawesome/js/all.min.js"></script>
+    
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.2/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="assets/plugins/simplelightbox/simple-lightbox.min.css">
+
+    <!-- Theme CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/theme.css">
+
+</head>
+
+<body class="docs-page">    
+    <header class="header fixed-top">	    
+        <div class="branding docs-branding">
+            <div class="container-fluid position-relative py-2">
+                <div class="docs-logo-wrapper">
+					<button id="docs-sidebar-toggler" class="docs-sidebar-toggler docs-sidebar-visible me-2 d-xl-none" type="button">
+	                    <span></span>
+	                    <span></span>
+	                    <span></span>
+	                </button>
+	                <div class="site-logo"><a class="navbar-brand" href="index.html"><img class="logo-icon me-2" src="assets/images/nft-image-mini.png" alt="logo"><span class="logo-text">MultiFungible<span class="text-alt">Library</span></span></a></div>    
+                </div><!--//docs-logo-wrapper-->
+	            <div class="docs-top-utilities d-flex justify-content-end align-items-center">	
+					<ul class="social-list list-inline mx-md-3 mx-lg-5 mb-0 d-none d-lg-flex">
+						<li class="list-inline-item"><a href="https://github.com/dgomezde83/Multifungible-sdk-cpp"><i class="fab fa-github fa-fw"></i></a></li>
+		            </ul><!--//social-list-->
+		            <a href="https://themes.3rdwavemedia.com/bootstrap-templates/startup/coderdocs-free-bootstrap-5-documentation-template-for-software-projects/" class="btn btn-primary d-none d-lg-flex">Download</a>
+	            </div><!--//docs-top-utilities-->
+            </div><!--//container-->
+        </div><!--//branding-->
+    </header><!--//header-->
+    
+    
+    <div class="docs-wrapper">
+	    <div id="docs-sidebar" class="docs-sidebar">
+		    <div class="top-search-box d-lg-none p-3">
+                <form class="search-form">
+		            <input type="text" placeholder="Search the docs..." name="search" class="form-control search-input">
+		            <button type="submit" class="btn search-btn" value="Search"><i class="fas fa-search"></i></button>
+		        </form>
+            </div>
+		    <nav id="docs-nav" class="docs-nav navbar">
+			    <ul class="section-items list-unstyled nav flex-column pb-3">
+				    <li class="nav-item section-title"><a class="nav-link scrollto active" href="#section-1"><span class="theme-icon-holder me-2"><i class="fas fa-map-signs"></i></span>Introduction</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-2"><span class="theme-icon-holder me-2"><i class="fas fa-arrow-down"></i></span>Installation</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-2-1">Windows</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-2-2">Linux</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-3"><span class="theme-icon-holder me-2"><i class="fas fa-box"></i></span>Functions</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-1">Create Wallet</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-2">Load Wallet</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-3">Issue SFT Collection</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-4">Issue NFT Collection</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-5">Issue SFT Token</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-6">Issue NFT Token</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-7">Add role to collection</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-8">Add URI</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-9">Add SFT quantity</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-10">Burn NFT or SFT quantity</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-11">Wipe NFT</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-12">Freeze NFT</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-13">Unfreeze NFT</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-14">Transfer NFT Creation role</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-15">Stop NFT or SFT creation</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-16">Upgrade Properties</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-17">Transfer Ownership</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-18">Send NFT token</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-19">Send SFT token</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-20">Send EGLD</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-21">Retrieve Owned Tokens</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-22">Retrieve Token Balance</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-23">Retrieve Token Properties</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-24">Get Owned Token Properties</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-25">Get Collection Properties</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-26">Build proof</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-27">Collection Issuance Proof</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-28">Token Ownership Proof</a></li>
+					<li class="nav-item"><a class="nav-link scrollto" href="#item-3-29">Get Issuer</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-30">Get Emitted collections</a></li>
+				    <li class="nav-item"><a class="nav-link scrollto" href="#item-3-31">Get Roles and Addresses</a></li>
+				    <li class="nav-item section-title mt-3"><a class="nav-link scrollto" href="#section-9"><span class="theme-icon-holder me-2"><i class="fas fa-lightbulb"></i></span>FAQs</a></li>
+			    </ul>
+
+		    </nav><!--//docs-nav-->
+	    </div><!--//docs-sidebar-->
+	    <div class="docs-content">
+		    <div class="container">
+			    <article class="docs-article" id="section-1">
+				    <header class="docs-header">
+					    <h1 class="docs-heading">What is the MultiFungible SDK and API ? </h1>
+					    <section class="docs-intro">
+						    <p>The MultiFungible software development kit (SDK) and application-specific interface (API) is a cross-platform library written in C++ that allows to create and manage non-fungible tokens (NFTs) and semi-fungible tokens (SFTs) in the Multivers X blockchain.</p>
+						</section><!--//docs-intro-->
+						
+						<h5>Example:</h5>
+						<div class="docs-code-block">
+							<!-- ** Embed github code starts ** -->
+							<script src="https://gist.github.com/dgomezde83/e1baad7f1cc590a2753d88a944d5f685.js"></script>
+							<!-- ** Embed github code ends ** -->
+						</div><!--//docs-code-block-->
+						
+						<div class="docs-code-block">
+							<pre class="shadow-lg rounded"><code class="json hljs">Wallet1: erd1catxddevywldkrwujn4aj6e4d9ruhrrwtw8yfe3pdk9p9awmlnzqpsc5lp
+Wallet2: erd1ahxq4s4dtsp92tdxy2g5mutzlzrnz59seavmrt27kqpujl6v37psnwuat2
+Issued collection: ABCD-012345
+Issued token: ABCD-012345-01
+Creation stopped successfully
+Sent 10 units of ABCD-012345-01 to erd1ahxq4s4dtsp92tdxy2g5mutzlzrnz59seavmrt27kqpujl6v37psnwuat2 successfully
+true
+true
+</code></pre>
+						</div><!--//docs-code-block-->
+						
+						
+				    </header>
+					
+			    </article>
+			    
+			    <article class="docs-article" id="section-2">
+				    <header class="docs-header">
+					    <h1 class="docs-heading">Installation</h1>
+					    <section class="docs-intro">
+						    <p>This library can be installed as an SDK on Windows and Linux. It can also be compiled as a dynamic-linked library (DLL) or a linux dynamic library (.so). </p>
+						</section><!--//docs-intro-->
+				    </header>
+				     <section class="docs-section" id="item-2-1">
+						<h2 class="section-heading">Windows</h2>
+						<p>
+						<h5>OpenSSL</h5>
+						<ul>
+						<li>You need to install and compile OpenSSL 3.0.8 or higher to run Multifungible.</li>
+						<li>Follow the <a href="https://developers.refinitiv.com/en/article-catalog/article/how-to-build-openssl--zlib--and-curl-libraries-on-windows">tutorial</a> to install Openssl on windows. Here is a small summary of the steps:</li>
+						<li>Open the x64 Native tools command prompt</li>
+						<li>Run: <code class="language-bash">perl Configure VC-WIN64A --prefix=c:\local\openssl3.0.8</code></li>
+						<li>REMOVE ALL OCCURENCES OF -DOPENSSL_USE_APPLINK from the make file (so we don't need to use applink.c in our applications).</li>
+						<li>Run: <code class="language-bash">nmake</code></li>
+						<li>Run: <code class="language-bash">nmake install</code></li>
+						</ul>
+						</p>
+						<h5>Sodium</h5>
+						<ul>
+						<li>You need the libsodium library binaries to run Multifungible.</li>
+						<li>Download <a href="https://download.libsodium.org/libsodium/releases/">here</a> the latest pre-builts for mingw compiler.</li>
+						<li>Uncompress the .tar.gz</li>
+						<li>Paste the "include" folder to the root of the Multifungible library. Merge it with the existing include folder.</li>
+						<li>Paste the "lib" folder to the root of the Multifungible library. Merge it with the existing include folder.</li>
+						</ul>
+						</p>
+						</p>
+						<h5>Google tests</h5>
+						<ul>
+						<li>If you want to run the test suit of the Multifungible SDK, you need to install googletests.</li>
+						<li>You will need cmake, Mingw64 and the latest version of googletests from <a href="https://github.com/google/googletest/releases/">here</a>.</li>
+						<li>Uncompress the googletests' source code zip. Open a command prompt on its root directory.</li>
+						<li>Run: <code class="language-bash">cd build</code></li>
+						<li>Copy the four libraries (libgmock.a, libgmock_main.a, libgtest.a, libgtest_main.a) to the "lib" directory of the Multifungible folder."</li>
+						</ul>
+						</p>
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-2-2">
+						<h2 class="section-heading">Linux</h2>
+						<p>
+						<ul>
+						<li>To compile the library on Linux along with your project, you need to install OpenSSL 3.0.8 or higher.  You can follow the excellent tutorial at <a href="https://linuxhint.com/install-openssl-3-from-source/">https://linuxhint.com/install-openssl-3-from-source/</a></li>
+						<li>Run the makefile</li>
+						</p>
+						</ul>
+					</section><!--//section-->
+					
+			    </article><!--//docs-article-->
+			    
+			    
+			    <article class="docs-article" id="section-3">
+				    <header class="docs-header">
+					    <h1 class="docs-heading">Functions</h1>
+					    <section class="docs-intro">
+						    <p>These are the functions that can be called either as an SDK library from another program, or as DLL exportable functions.</p>
+						</section><!--//docs-intro-->
+				    </header>
+				     <section class="docs-section" id="item-3-1">
+						<h2 class="section-heading">Create Wallet</h2>
+						<p><code>returnCodeAndChar createWallet</code></p>
+						<p>Creates a PEM wallet file of the specified name on the hard drive, and encrypts it with the specified password.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to encrypt the PEM file.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Public address of the created wallet if the operation successful. Error information if it wasn't</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/63ee987494c2d2e253d050caed0df4c4.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+erd1ahxq4s4dtsp92tdxy2g5mutzlzrnz59seavmrt27kqpujl6v37psnwuat2
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-2">
+						<h2 class="section-heading">Load Wallet</h2>
+						<p><code>returnCodeAndChar loadWallet</code></p>
+						<p>Loads a PEM wallet file of the specified name on the hard drive, and decrypts it with the specified password.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Public address of the created wallet if the operation successful. Error information if it wasn't</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/8c87e48750925e843c9e11bcfa3784f1.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+erd1ahxq4s4dtsp92tdxy2g5mutzlzrnz59seavmrt27kqpujl6v37psnwuat2
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-3">
+						<h2 class="section-heading">Issue SFT Collection</h2>
+						<p><code>returnCodeAndChar issueSFTCollection</code></p>
+						<p>Issues an SFT collection on the blockchain with the attributes provided in the arguments.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Default Value</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Required</td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Required</td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_sftName</code></td>
+									<td><code>char *</code></td>
+									<td>Required</td>
+									<td>Name to give to the collection. Must be alphanumeric, between 3 and 20 characters.</td>
+								</tr>
+								<tr>
+									<td><code>p_sftTicker</code></td>
+									<td><code>char *</code></td>
+									<td>Required</td>
+									<td>Ticker to give to the collection. Must be alphanumeric, between 3 and 10 characters.</td>
+								</tr>
+								<tr>
+									<td><code>p_canFreeze</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow the collection to be freezed by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canWipe</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow a token from the collection to be wiped by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canPause</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow to pause the issuance of tokens of the collection by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canTransferNFTCreateRole</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow the account that has the ability to issue tokens on this collection to transfer this ability to another account. Only one account can have this ability at a given time, for the collection.</td>
+								</tr>
+								<tr>
+									<td><code>p_canChangeOwner</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow to change the owner of the collection by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canUpgrade</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow to upgrade the roles that an account possesses on the collection by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canAddSpecialRoles</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow to add roles to the collection by an account that possesses the right to do so.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Collection ID if the operation was successful. Error information if it wasn't.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/eb5b88aa59974b454ef282c76ead8049.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+ABCD-012345
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-4">
+						<h2 class="section-heading">Issue NFT Collection</h2>
+						<p><code>returnCodeAndChar issueNFTCollection</code></p>
+						<p>Issues an NFT collection on the blockchain with the attributes provided in the arguments.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Default Value</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Required</td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Required</td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_nftName</code></td>
+									<td><code>char *</code></td>
+									<td>Required</td>
+									<td>Name to give to the collection. Must be alphanumeric, between 3 and 20 characters.</td>
+								</tr>
+								<tr>
+									<td><code>p_nftTicker</code></td>
+									<td><code>char *</code></td>
+									<td>Required</td>
+									<td>Ticker to give to the collection. Must be alphanumeric, between 3 and 10 characters.</td>
+								</tr>
+								<tr>
+									<td><code>p_canFreeze</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow the collection to be freezed by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canWipe</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow a token from the collection to be wiped by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canPause</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow to pause the issuance of tokens of the collection by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canTransferNFTCreateRole</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow the account that has the ability to issue tokens on this collection to transfer this ability to another account. Only one account can have this ability at a given time, for the collection.</td>
+								</tr>
+								<tr>
+									<td><code>p_canChangeOwner</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow to change the owner of the collection by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canUpgrade</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow to upgrade the roles that an account possesses on the collection by an account that possesses the right to do so.</td>
+								</tr>
+								<tr>
+									<td><code>p_canAddSpecialRoles</code></td>
+									<td><code>bool</code></td>
+									<td><code>false</code></td>
+									<td>Allow to add roles to the collection by an account that possesses the right to do so.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Collection ID if the operation was successful. Error information if it wasn't.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/7553eb145db3f97522017d1cf2a26f12.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+ABCD-012345
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-5">
+						<h2 class="section-heading">Issue SFT Token</h2>
+						<p><code>returnCodeAndChar issueSemiFungibleToken</code></p>
+						<p>Issues an SFT collection on the blockchain with the attributes provided in the arguments.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the collection (Ex: ABCD-012345).</td>
+								</tr>
+								<tr>
+									<td><code>p_name</code></td>
+									<td><code>char *</code></td>
+									<td>Name to give to the token.</td>
+								</tr>
+								<tr>
+									<td><code>p_emitAmount</code></td>
+									<td><code>int</code></td>
+									<td>Number of tokens to emit.</td>
+								</tr>
+								<tr>
+									<td><code>p_royalties</code></td>
+									<td><code>int</code></td>
+									<td>Royalties that the creator will receive each time the token is transfered. Should be a numeric value between 0 an 10000 (0 meaning 0% and 10000 meaning 100%)</td>
+								</tr>
+								<tr>
+									<td><code>p_attributes</code></td>
+									<td><code>char *</code></td>
+									<td>Additional information about the token. Should have the format <em>metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3</em>, where <em>metadata:ipfsCID/fileName.json</em> is an IPFS address to a JSON containing a representation of the attributes of the token.</td>
+								</tr>
+								<tr>
+									<td><code>p_uri</code></td>
+									<td><code>char *</code></td>
+									<td>URL to a media file representing the token in some way. The media should be of a type supported by Multivers X.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Token ID if the operation was successful. Error information if it wasn't.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/3ebd485215d4cb4910118cf1427ed9a4.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+ABCD-012345-0a
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-6">
+						<h2 class="section-heading">Issue NFT Token</h2>
+						<p><code>returnCodeAndChar issueNonFungibleToken</code></p>
+						<p>Issues an NFT collection on the blockchain with the attributes provided in the arguments.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the collection (Ex: ABCD-012345).</td>
+								</tr>
+								<tr>
+									<td><code>p_name</code></td>
+									<td><code>char *</code></td>
+									<td>Name to give to the token.</td>
+								</tr>
+								<tr>
+									<td><code>p_royalties</code></td>
+									<td><code>int</code></td>
+									<td>Royalties that the creator will receive each time the token is transfered. Should be a numeric value between 0 an 10000 (0 meaning 0% and 10000 meaning 100%)</td>
+								</tr>
+								<tr>
+									<td><code>p_attributes</code></td>
+									<td><code>char *</code></td>
+									<td>Additional information about the token. Should have the format <em>metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3</em>, where <em>metadata:ipfsCID/fileName.json</em> is an IPFS address to a JSON containing a representation of the attributes of the token.</td>
+								</tr>
+								<tr>
+									<td><code>p_uri</code></td>
+									<td><code>char *</code></td>
+									<td>URL to a media file representing the token in some way. The media should be of a type supported by Multivers X.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Token ID if the operation was successful. Error information if it wasn't.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/75cf245f005e9dcd79d5b5914986b521.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+ABCD-012345-0a
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-7">
+						<h2 class="section-heading">Add role to collection</h2>
+						<p><code>returnCodeAndChar addCollectionRole</code></p>
+						<p>Give a role on a collection to an address.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the collection (Ex: ABCD-012345).</td>
+								</tr>
+								<tr>
+									<td><code>p_address</code></td>
+									<td><code>char *</code></td>
+									<td>Public address of the account to take the role on the collection.</td>
+								</tr>
+								<tr>
+									<td><code>p_role</code></td>
+									<td><code>char *</code></td>
+									<td>Role to give to the account on the collection (Ex: ESDTRoleNFTAddQuantity).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/4d07e6669528104c94f4d8ce9a810e7e.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Added Role successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-8">
+						<h2 class="section-heading">Add URI</h2>
+						<p><code>returnCodeAndChar addURI</code></p>
+						<p>Add an URI to a token of an NFT collection.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+								<tr>
+									<td><code>p_uri</code></td>
+									<td><code>char *</code></td>
+									<td>URI to add to the token (Ex: https:// ...).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/fe6ecadf3d81dc404b0aa13a6d108aec.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">
+Added URI successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-9">
+						<h2 class="section-heading">Add SFT quantity</h2>
+						<p><code>returnCodeAndChar addSFTQuantity</code></p>
+						<p>Add a quantity of SFT tokens to an existing token.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the SFT (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+								<tr>
+									<td><code>p_quantity</code></td>
+									<td><code>int</code></td>
+									<td>Quantity of new tokens to add to the existing number of SFT tokens of an SFT collection.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/1f82225e671f42e51e40f1a756192d60.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Emitted 10 tokens successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-10">
+						<h2 class="section-heading">Burn NFT or SFT quantity</h2>
+						<p><code>returnCodeAndChar burnSFTQuantity</code></p>
+						<p>Burn a quantity of SFT tokens from an existing token, or a single NFT.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+								<tr>
+									<td><code>p_quantity</code></td>
+									<td><code>int</code></td>
+									<td>Quantity of tokens to burn from the existing number of SFT tokens of an SFT collection. If the token is an NFT, the quantity to burn is 1.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/3a899e605e55f0c0a3e0eb5cb66f9724.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Burned 10 tokens successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-11">
+						<h2 class="section-heading">Wipe NFT</h2>
+						<p><code>returnCodeAndChar wipeNFT</code></p>
+						<p>Wipe (delete from the blockchain) an NFT owned by a blacklisted account in the Multivers X blockchain.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+								<tr>
+									<td><code>p_ownerAddress</code></td>
+									<td><code>char *</code></td>
+									<td>Public blackclisted address of the owner of the token.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/076f48205d5d6805d58bb11cc9832aa8.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Wiped NFT successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-12">
+						<h2 class="section-heading">Freeze NFT</h2>
+						<p><code>returnCodeAndChar freezeNFT</code></p>
+						<p>Freeze (block the ability to send the token to another address) an NFT owned by a blacklisted account in the Multivers X blockchain.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+								<tr>
+									<td><code>p_ownerAddress</code></td>
+									<td><code>char *</code></td>
+									<td>Public blackclisted address of the owner of the token.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/604ed78671d47794c13f118620c0b689.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Froze NFT successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-13">
+						<h2 class="section-heading">Unfreeze NFT</h2>
+						<p><code>returnCodeAndChar unfreezeNFT</code></p>
+						<p>Unfreeze (restore the ability to send the token to another address) an NFT owned by a blacklisted account in the Multivers X blockchain.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+								<tr>
+									<td><code>p_ownerAddress</code></td>
+									<td><code>char *</code></td>
+									<td>Public blackclisted address of the owner of the token.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/3a71c75f4026a20ba7dea3a535258488.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Unfroze NFT successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-14">
+						<h2 class="section-heading">Transfer NFT Creation role</h2>
+						<p><code>returnCodeAndChar transferCreationRole</code></p>
+						<p>Transfer the creation role (the ability to issue new tokens) of an NFT or SFT collection from an account to another. Only one account can possess this role at a given time.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT collection (Ex: ABCD-012345).</td>
+								</tr>
+								<tr>
+									<td><code>p_address</code></td>
+									<td><code>char *</code></td>
+									<td>Public address to transfer the role to.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/503c464783b7c222cdfd9e6be0ff2d85.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Role transfered successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-15">
+						<h2 class="section-heading">Stop NFT or SFT creation</h2>
+						<p><code>returnCodeAndChar stopTokenCreation</code></p>
+						<p>Stop the ability to create new tokens on an NFT or SFT collection. This method can be called by the manager of a collection, and removes the creation role (ESDTRoleNFTCreate) from whoever possesses it.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT collection (Ex: ABCD-012345).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/f0850c0fde349513eaf0b6f45001bd50.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Creation stopped successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-16">
+						<h2 class="section-heading">Upgrade Properties</h2>
+						<p><code>returnCodeAndChar upgradeProperties</code></p>
+						<p>Upgrade the properties of an NFT or SFT collection.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT collection (Ex: ABCD-012345).</td>
+								</tr>
+								<tr>
+									<td><code>p_property</code></td>
+									<td><code>char *</code></td>
+									<td>Property of the collection to upgrade.</td>
+								</tr>
+								<tr>
+									<td><code>p_newValue</code></td>
+									<td><code>bool</code></td>
+									<td>Boolean indicating whether the collection now possesses the property or not.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/30307c6c137181d0b6583c937810ca05.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Upgraded Property successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-17">
+						<h2 class="section-heading">Transfer Ownership</h2>
+						<p><code>returnCodeAndChar transferOwnership</code></p>
+						<p>Transfer the ownership of a collection, giving the management rights to the new address.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT collection (Ex: ABCD-012345).</td>
+								</tr>
+								<tr>
+									<td><code>p_address</code></td>
+									<td><code>char *</code></td>
+									<td>Public address of the new owner of the collection.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/8d55ba22ab774749187e90c153d19268.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Transfered ownership successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-18">
+						<h2 class="section-heading">Send NFT token</h2>
+						<p><code>returnCodeAndChar NFTTransaction</code></p>
+						<p>Send an NFT token to an address.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_destinationAddress</code></td>
+									<td><code>char *</code></td>
+									<td>Public address to send the token to.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT collection (Ex: ABCD-012345).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/368ef2474044f419e961e904b93228f5.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Sent "ABCD-012345-0a" successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-19">
+						<h2 class="section-heading">Send SFT token</h2>
+						<p><code>returnCodeAndChar SFTTransaction</code></p>
+						<p>Send an SFT token to an address.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_destinationAddress</code></td>
+									<td><code>char *</code></td>
+									<td>Public address to send the token to.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the SFT collection (Ex: ABCD-012345).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/6f0388fc7dd728b49fae205ce88ab6a8.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+Sent 10 units of "ABCD-012345-0a" successfully
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-20">
+						<h2 class="section-heading">Send EGLD</h2>
+						<p><code>returnCodeAndChar EGLDTransaction</code></p>
+						<p>Send EGLD to an address.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_destinationAddress</code></td>
+									<td><code>char *</code></td>
+									<td>Public address to send the token to.</td>
+								</tr>
+								<tr>
+									<td><code>p_amount</code></td>
+									<td><code>int</code></td>
+									<td>Quantity of EGLD to send.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>Information about the success or failure of the operation.</td>
+								</tr>
+							</tbody>
+						</table>
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-21">
+						<h2 class="section-heading">Retrieve Owned Tokens</h2>
+						<p><code>returnCodeAndChar getOwnedTokens</code></p>
+						<p>Retrieve the list of all the NFT or SFT tokens a given address possesses.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_address</code></td>
+									<td><code>char *</code></td>
+									<td>Public address to retrieve the information from.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns a list of JSONs separated by carriage returns. Each JSON contains the corresponding fields returned by the MultiversX API.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/a47680bf907287c1a5c9b018cb187170.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">
+<pre class="shadow-lg rounded"><code class="json hljs">{
+    "collection": "CTST-1a26e8",
+    "creator": "erd1catxddevywldkrwujn4aj6e4d9ruhrrwtw8yfe3pdk9p9awmlnzqpsc5lp",
+    "identifier": "CTST-1a26e8-01",
+    "isWhitelistedStorage": false,
+    "media": [
+        {
+            "fileSize": 29512,
+            "fileType": "image/png",
+            "originalUrl": "https://media.elrond.com/nfts/thumbnail/default.png",
+            "thumbnailUrl": "https://media.elrond.com/nfts/thumbnail/default.png",
+            "url": "https://media.elrond.com/nfts/thumbnail/default.png"
+        }
+    ],
+    "metadata": {},
+    "name": "tokenTest",
+    "nonce": 1,
+    "royalties": 75,
+    "ticker": "CTST-1a26e8",
+    "type": "NonFungibleESDT"
+    }
+
+    {
+    "balance": "5",
+    "collection": "CTST-1e8e85",
+    "creator": "erd1catxddevywldkrwujn4aj6e4d9ruhrrwtw8yfe3pdk9p9awmlnzqpsc5lp",
+    "identifier": "CTST-1e8e85-01",
+    "isWhitelistedStorage": false,
+    "media": [
+        {
+            "fileSize": 29512,
+            "fileType": "image/png",
+            "originalUrl": "https://media.elrond.com/nfts/thumbnail/default.png",
+            "thumbnailUrl": "https://media.elrond.com/nfts/thumbnail/default.png",
+            "url": "https://media.elrond.com/nfts/thumbnail/default.png"
+        }
+    ],
+    "metadata": {},
+    "name": "tokenTest",
+    "nonce": 1,
+    "royalties": 75,
+    "ticker": "CTST-1e8e85",
+    "type": "SemiFungibleESDT"
+    }
+	</code></pre>
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-22">
+						<h2 class="section-heading">Retrieve Token Balance</h2>
+						<p><code>returnCodeAndChar getAddressTokenBalance</code></p>
+						<p>Retrieve the balance of an NFT or SFT token a given address possesses.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_address</code></td>
+									<td><code>char *</code></td>
+									<td>Public address to retrieve the information from.</td>
+								</tr>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns the balance as a decimal integer in string format.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/6b8c1d6355dc50aa599548694b2cb274.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						5
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-23">
+						<h2 class="section-heading">Retrieve Token Properties</h2>
+						<p><code>returnCodeAndChar getTokenProperties</code></p>
+						<p>Retrieve the properties of an NFT or SFT token.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT token (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns a JSON with the token properties returned by the MultiversX API.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/8989a814864c82b7e7681f096ec778e3.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">
+<pre class="shadow-lg rounded"><code class="json hljs">{
+      "collection": "ABCD-012345",
+      "creator": "erd1catxddevywldkrwujn4aj6e4d9ruhrrwtw8yfe3pdk9p9awmlnzqpsc5lp",
+      "identifier": "ABCD-012345-0a",
+      "isWhitelistedStorage": false,
+      "media": [
+          {
+              "fileSize": 29512,
+              "fileType": "image/png",
+              "originalUrl": "https://media.elrond.com/nfts/thumbnail/default.png",
+              "thumbnailUrl": "https://media.elrond.com/nfts/thumbnail/default.png",
+              "url": "https://media.elrond.com/nfts/thumbnail/default.png"
+          }
+      ],
+      "name": "tokenTest",
+      "nonce": 1,
+      "rarities": {},
+      "royalties": 75,
+      "supply": "5",
+      "ticker": "ABCD-012345",
+      "timestamp": 1679956476,
+      "type": "SemiFungibleESDT",
+      "uris": [
+          ""
+      ]
+  }
+  </code></pre>
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-24">
+						<h2 class="section-heading">Get Owned Token Properties</h2>
+						<p><code>returnCodeAndChar getOwnedTokenProperties</code></p>
+						<p>Retrieves the information of a token, provided that the given address owns the token (this allows to call a method of the proxy, and therefore, retrieve the information faster than from the API).</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+								<tr>
+									<td><code>p_address</code></td>
+									<td><code>char *</code></td>
+									<td>Public address that owns the token.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns a JSON with the token properties returned by the MultiversX API.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/df897e6915834ea309162acdcdc8e362.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">
+<pre class="shadow-lg rounded"><code class="json hljs">{
+    "blockInfo": {
+        "hash": "b0388f2cf04da8c68b2b11ab2799985eed9fed0c623b7b8fac3db740413f26c7",
+        "nonce": 1282199,
+        "rootHash": "f493071e79a1e1c40ae66780dc5c59dcd1dcd6a37d638c5c209b28900b1c3c33"
+    },
+    "tokenData": {
+        "balance": "5",
+        "creator": "erd1catxddevywldkrwujn4aj6e4d9ruhrrwtw8yfe3pdk9p9awmlnzqpsc5lp",
+        "hash": "MDA=",
+        "name": "tokenTest",
+        "nonce": 1,
+        "royalties": "7500",
+        "tokenIdentifier": "ABCD-012345",
+        "uris": [
+            ""
+        ]
+    }
+}
+</code></pre>
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-25">
+						<h2 class="section-heading">Get Collection Properties</h2>
+						<p><code>returnCodeAndChar getCollectionProperties</code></p>
+						<p>Retrieves the properties of the given collection. Useful to quickly retrieve the manager of the collection.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT collection (Ex: ABCD-012345).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns the collection name, the type of collection, the address of the manager of the collection, the number of decimals, ..., and a list of properties the collection possesses.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/def98e0cec30876bf2af0cb26745e510.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">
+<pre class="shadow-lg rounded"><code class="json hljs">collectionTest
+SemiFungibleESDT
+erd1ahxq4s4dtsp92tdxy2g5mutzlzrnz59seavmrt27kqpujl6v37psnwuat2
+0
+0
+NumDecimals-0
+IsPaused-false
+CanUpgrade-true
+CanMint-false
+CanBurn-false
+CanChangeOwner-true
+CanPause-true
+CanFreeze-true
+CanWipe-true
+CanAddSpecialRoles-true
+CanTransferNFTCreateRole-true
+NFTCreateStopped-false
+NumWiped-0
+</code></pre>
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-26">
+						<h2 class="section-heading">Build proof</h2>
+						<p><code>returnCodeAndChar buildProofOfOwnershipOfKeyPair</code></p>
+						<p>Signs the given plaintext with the private key of the provided wallet.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_plainText</code></td>
+									<td><code>char *</code></td>
+									<td>Plaintext to generate signature from.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns the cryptographic signature of the provided plaintext.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/9b376798bee60c488e10d564add4532a.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+cabfce3c7f4d52cf76d57b63f56dc19fcbe5093fae32ba5a1f9ed0928cbb5c665c6bc2c50ea682e763fb0f92cde5bd44104d29288d76dbadfbd12cab0028b907
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-27">
+						<h2 class="section-heading">Collection Ownership Proof</h2>
+						<p><code>returnCodeAndChar getProofOfCollectionOwnership</code></p>
+						<p>Returns a string boolean telling whether the given collection is owned by the given wallet or not.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_plainText</code></td>
+									<td><code>char *</code></td>
+									<td>Plaintext to generate signature from.</td>
+								</tr>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT collection (Ex: ABCD-012345).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns the strng "true". If not, returns the string "false".</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/29bc631229b8c853cfa4a8cfb3eb55f4.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+true
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-28">
+						<h2 class="section-heading">Token Ownership Proof</h2>
+						<p><code>returnCodeAndChar getProofOfTokenOwnership </code></p>
+						<p>Returns a string boolean telling whether the given token is owned by the given wallet or not.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_walletName</code></td>
+									<td><code>char *</code></td>
+									<td>Name of the PEM file on the hard-drive.</td>
+								</tr>
+								<tr>
+									<td><code>p_password</code></td>
+									<td><code>char *</code></td>
+									<td>Password to decrypt the PEM file.</td>
+								</tr>
+								<tr>
+									<td><code>p_plainText</code></td>
+									<td><code>char *</code></td>
+									<td>Plaintext to generate signature from.</td>
+								</tr>
+								<tr>
+									<td><code>p_tokenID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT (Ex: ABCD-012345-01, which is a collection ID and a nonce, separated by a '-', in hexadecimal).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns the strng "true". If not, returns the string "false".</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/34a61b7ddfa1130e27a46e65adc83d1d.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+true
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-29">
+						<h2 class="section-heading">Get Owner</h2>
+						<p><code>returnCodeAndChar getOwnerAddress</code></p>
+						<p>Gets the address of the current owner of an NFT or SFT collection.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT collection (Ex: ABCD-012345).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns the address of the owner of the collection.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/e3ddbef87e992a54c62a3153b6ca850d.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">							
+erd1catxddevywldkrwujn4aj6e4d9ruhrrwtw8yfe3pdk9p9awmlnzqpsc5lp
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-30">
+						<h2 class="section-heading">Get Emitted collections</h2>
+						<p><code>returnCodeAndChar getEmittedCollections</code></p>
+						<p>Gets the list of collections emitted by a given address. "Owner" field actually represents the issuer, not the address that has ownership of the collection.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_address</code></td>
+									<td><code>char *</code></td>
+									<td>Public address from which to retrieve the list of the emitted tokens.</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns a list of the collection IDs of the emitted collections, separated by carriage returns.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/1ba15a94614314766e48c4a2b670b7bb.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">
+<pre class="shadow-lg rounded"><code class="json hljs">{
+"canAddSpecialRoles":true,
+"canChangeOwner":true,
+"canFreeze":true,
+"canPause":true,
+"canTransfer":false,
+"canTransferNftCreateRole":true,
+"canUpgrade":true,
+"canWipe":true,
+"collection":"ABC-51755a",
+"name":"abc",
+"owner":"erd1catxddevywldkrwujn4aj6e4d9ruhrrwtw8yfe3pdk9p9awmlnzqpsc5lp",
+"roles":[
+			{"address":"erd1catxddevywldkrwujn4aj6e4d9ruhrrwtw8yfe3pdk9p9awmlnzqpsc5lp",
+			"canAddQuantity":true,
+			"canAddUri":false,
+			"canBurn":true,
+			"canCreate":true,
+			"canTransfer":true,
+			"canUpdateAttributes":false,
+			"roles":["ESDTRoleNFTCreate","ESDTTransferRole","ESDTRoleNFTAddQuantity","ESDTRoleNFTBurn"]
+			}
+		],
+"ticker":"ABC-51755a",
+"timestamp":1672268028,
+"type":"SemiFungibleESDT"
+}
+</code></pre>
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+					
+					<section class="docs-section" id="item-3-31">
+						<h2 class="section-heading">Get Roles and Addresses</h2>
+						<p><code>returnCodeAndChar getRolesAndAddresses</code></p>
+						<p>For each role that a given collection has, retrieves a list of addresses possessing the role.</p>
+						<h5>Arguments:</h5>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>p_collectionID</code></td>
+									<td><code>char *</code></td>
+									<td>ID of the NFT or SFT collection (Ex: ABCD-012345).</td>
+								</tr>
+							</tbody>
+						</table>
+						<p></p>
+						<h5>Return Value:</h5>
+						<p><code>returnCodeAndChar</code> structure containing the following fields:</p>
+						<table class="table-striped" style="margin-left: 25px;">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Type</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><code>retCode</code></td>
+									<td><code>int</code></td>
+									<td>0 if the operation was successful, 1 if it wasn't.</td>
+								</tr>
+								<tr>
+									<td><code>message</code></td>
+									<td><code>char *</code></td>
+									<td>If successful, returns a JSON in which the keys are a comma-separated string of MultiversX roles, and the values are arrays of public addresses which possess the roles of their keys.</td>
+								</tr>
+							</tbody>
+						</table>
+						<br>
+						<h5>Usage example:</h5>
+						<br>
+						<script src="https://gist.github.com/dgomezde83/c598c65183f42368ecc709f382d0fb27.js"></script>
+						<br>
+						<h5>Result:</h5>
+						<br>
+						<div class="docs-code-block">	
+<pre class="shadow-lg rounded"><code class="json hljs">{
+"ESDTRoleBurnForAll":[""],
+"ESDTRoleNFTCreate,ESDTRoleNFTAddQuantity":["erd1catxddevywldkrwujn4aj6e4d9ruhrrwtw8yfe3pdk9p9awmlnzqpsc5lp"]
+}
+</code></pre>
+						</div><!--//docs-code-block-->
+					</section><!--//section-->
+			    </article><!--//docs-article-->			    
+			    
+			    <article class="docs-article" id="section-9">
+				    <header class="docs-header">
+					    <h1 class="docs-heading">FAQs</h1>
+					    <section class="docs-intro">						    
+						<h5 class="pt-3"><i class="fas fa-question-circle me-1"></i>Under which license is this library?</h5>
+						<p>This work is under the <a rel="license" href="https://opensource.org/license/mit/">MIT license</a>.</p>
+						</section><!--//section-->
+					</header>
+			    </article><!--//docs-article-->
+
+			    <footer class="footer">
+				    <div class="container text-center py-5">
+				        <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
+			            <small class="copyright">Designed with <span class="sr-only">love</span><i class="fas fa-heart" style="color: #fb866a;"></i> by <a class="theme-link" href="http://themes.3rdwavemedia.com" target="_blank">Xiaoying Riley</a> for developers</small>
+				        <ul class="social-list list-unstyled pt-4 mb-0">
+						    <li class="list-inline-item"><a href="https://github.com/dgomezde83/Multifungible-sdk-cpp"><i class="fab fa-github fa-fw"></i></a></li>
+				        </ul><!--//social-list-->
+				    </div>
+			    </footer>
+		    </div> 
+	    </div>
+    </div><!--//docs-wrapper-->
+   
+       
+    <!-- Javascript -->          
+    <script src="assets/plugins/popper.min.js"></script>
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>  
+    
+    
+    <!-- Page Specific JS -->
+    <script src="assets/plugins/smoothscroll.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
+    <script src="assets/js/highlight-custom.js"></script> 
+    <script src="assets/plugins/simplelightbox/simple-lightbox.min.js"></script>      
+    <script src="assets/plugins/gumshoe/gumshoe.polyfills.min.js"></script> 
+    <script src="assets/js/docs.js"></script> 
+
+</body>
+</html> 
+

@@ -3,6 +3,11 @@
 
 #include "errors.h"
 #include "stdexcept"
+#include <filesystem>
+#include <iostream>
+#ifdef __WINDOWS__
+#include <windows.h>
+#endif
 
 namespace util
 {
@@ -26,19 +31,32 @@ inline void checkParam<std::string>(std::string const &param, std::string const 
     }
 }
 
-#ifdef __UNIX__
+
 inline std::string getCanonicalRootPath(std::string const &path)
 {
-    // Get absolute path to executable
-    std::string canonicalPath = std::string(canonicalize_file_name("/proc/self/exe"));
-
-    // Remove everything in path until mx-sdk-cpp directory and concatenate it with the path
-    // Use rfind because github action runs into mx-sdk-cpp/mx-sdk-cpp folder
-    auto const pos = canonicalPath.rfind("mx-sdk-cpp");
-    canonicalPath = canonicalPath.substr(0, pos);
-    return canonicalPath + path;
+    // get the path to the current executable
+    #ifdef __UNIX__
+    std::filesystem::path executable_path = std::filesystem::canonical(std::filesystem::path("/proc/self/exe"));
+    #elif __WINDOWS__
+    char buf[MAX_PATH];
+    GetModuleFileName(NULL, buf, MAX_PATH);
+    std::filesystem::path executable_path(buf);
+    #else
+    return path;
+    #endif
+    std::cout << executable_path.string() << std::endl;
+    // compute the path to the root
+    std::filesystem::path root_path;
+    for (auto& p : std::filesystem::recursive_directory_iterator(executable_path.parent_path())) {
+        if (p.path().root_path() == p.path())
+            root_path = p.path();
+    }
+    std::cout << root_path.string() << std::endl;
+    // append the path to another file
+    std::filesystem::path resulting_path = root_path / path;
+    return resulting_path.string();
 }
-#endif
+
 }
 
 #endif

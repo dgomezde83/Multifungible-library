@@ -41,6 +41,31 @@
 
 const char *vg_b58_alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
+#if !defined(_WIN32)
+int
+count_processors(void)
+{
+#if defined(__APPLE__)
+    int count = sysconf(_SC_NPROCESSORS_ONLN);
+#else
+    FILE *fp;
+	char buf[512];
+	int count = 0;
+
+	fp = fopen("/proc/cpuinfo", "r");
+	if (!fp)
+		return -1;
+
+	while (fgets(buf, sizeof(buf), fp)) {
+		if (!strncmp(buf, "processor\t", 10))
+			count += 1;
+	}
+	fclose(fp);
+#endif
+    return count;
+}
+#endif
+
 const signed char vg_b58_reverse_map[256] = {
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,

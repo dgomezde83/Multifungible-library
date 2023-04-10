@@ -1,5 +1,6 @@
 #include "Wallet.h"
 #include "utils/errors.h"
+#include "utils/common.h"
 #include "wrappers/cryptosignwrapper.h"
 #include "WrapperProxyProvider.h"
 #include "filehandler/pemreader.h"
@@ -14,7 +15,7 @@
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 Wallet::Wallet(const char * p_keyfilePath, Config p_config, const char * p_password, bool p_createNew)
-    : m_keyFilePath(std::move(verifyKeyFilePath(p_keyfilePath))),
+    : m_keyFilePath(std::move(verifyKeyFilePath(util::getCanonicalRootPath(p_keyfilePath).c_str()))),
     m_password(std::move(verifyPassword(p_password))),
     m_seed(p_createNew ? std::move(createNewPrivateKey()) : std::move(retrievePrivateKeyFromFile())),
     m_publicSeed(std::move(createPublicKey())),
@@ -26,7 +27,7 @@ Wallet::Wallet(const char * p_keyfilePath, Config p_config, const char * p_passw
     }
 }
 /*-------------------------------------------------------------------------*
-*--------------------------------------------------------------------------*
+* Verify if the key file path ends in .json                                *
 *-------------------------------------------------------------------------*/
 std::string Wallet::verifyKeyFilePath(const char * p_keyfilePath) const
 {
@@ -34,19 +35,14 @@ std::string Wallet::verifyKeyFilePath(const char * p_keyfilePath) const
     {
         throw std::runtime_error(WALLET_GENERATOR_ERROR_NOKEYFILEPATH);
     }
-    std::string t_keyFilePath (p_keyfilePath);
-    std::string t_suffix = ".json";
-    std::pair<std::string::const_reverse_iterator,std::string::const_reverse_iterator> t_matchingFilePathToSuffix =std::mismatch( t_suffix.rbegin(), t_suffix.rend(), t_keyFilePath.rbegin());
-    //if no match, reverse iterators will point at rbegin() of both strings
-    if (t_keyFilePath.size() <= t_suffix.size() ||
-        (t_matchingFilePathToSuffix.second == t_keyFilePath.rbegin() &&
-        t_matchingFilePathToSuffix.first == t_suffix.rbegin()) ||
-        (t_matchingFilePathToSuffix.second != t_keyFilePath.rbegin() &&
-        t_matchingFilePathToSuffix.first != t_suffix.rend()))
+    size_t str_len = strlen(p_keyfilePath);
+    size_t suffix_len = strlen(".json");
+    if (str_len <= suffix_len) throw std::runtime_error(WALLET_GENERATOR_ERROR_NOKEYFILEPATH);
+    if (strcmp(p_keyfilePath + str_len - suffix_len, ".json") )
     {
         throw std::runtime_error(WALLET_GENERATOR_ERROR_BADSUFFIX);
     }
-    return t_keyFilePath;
+    return std::string(p_keyfilePath);
 }
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*

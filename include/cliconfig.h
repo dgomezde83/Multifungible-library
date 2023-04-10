@@ -28,7 +28,7 @@ struct Config
 class CLIConfig
 {
 public:
-    explicit CLIConfig(std::string const &tomlConfigPath = "elrond-sdk-erdcpp/cli/config/config.toml");
+    explicit CLIConfig(std::string const &tomlConfigPath);
 
     Config config() const;
 

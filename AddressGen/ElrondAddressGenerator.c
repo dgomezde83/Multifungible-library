@@ -33,18 +33,12 @@ int GRSFlag = 0;
 int getElrondAddress(char * cpp_priv_address, const char * p_password, const char * p_keyFilePath)
 {
 	int addrtype = 0;
-	int scriptaddrtype = 5;
 	int privtype = 128;
-	int pubkeytype;
-	enum vg_format format;
 	int verbose = 1;
-	int simulate = 0;
-	int remove_on_match = 1;
 	int numpairs = 0;
 	const char *result_file = NULL;
 	int nthreads = 0;
 
-	format = ADDR_TYPE_EGLD;
 	addrtype = ADDR_TYPE_EGLD;
     privtype = PRIV_TYPE_EGLD;
 

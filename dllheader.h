@@ -1,15 +1,22 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+#ifdef __WINDOWS__
 #include <windows.h>
+#endif
 
 #define CALLING_CONVENTION
 
-#ifdef MAKEDLL
-# define EXPORT __declspec(dllexport)
- #else
-# define EXPORT __declspec(dllimport)
+#ifdef __WINDOWS__
+    #ifdef MAKEDLL
+        #define EXPORT __declspec(dllexport)
+    #else
+        #define EXPORT __declspec(dllimport)
+    #endif
+#elif __UNIX__
+    #define EXPORT
 #endif
+
 
 /*  To use this exported function of dll, include this header
  *  in your project.
