@@ -6,7 +6,7 @@ MultiversX C++ SDK for interacting with the MultiversX blockchain's Non-fungible
 - Compiled windows DLL or linux .so binaries provided, so you can load and call the functions from any program!
 
 ## 1. Installation instructions and documentation
-Visit [![GitHub](https://img.shields.io/badge/GitHub-Profile-blue?style=flat-square&logo=github)](https://dgomezde83.github.io/Multifungible-sdk-cpp) for a complete installation guide and documentation of every function of this library.
+Visit [![GitHub](https://img.shields.io/badge/GitHub-Profile-blue?style=flat-square&logo=github)](https://dgomezde83.github.io/multifungible.github.io) for a complete installation guide and documentation of every function of this library.
 
 ## 2. Quick example
 A quick look into some functions from this library: 
