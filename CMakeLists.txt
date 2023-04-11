@@ -153,7 +153,7 @@ if (UNIX)
 elseif(WIN32)
     # Libsodium headers
     if (NOT DEFINED LIBSODIUM_INCLUDE_PATH)
-        set(LIBSODIUM_INCLUDE_PATH "./include/sodium")
+        set(LIBSODIUM_INCLUDE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include/sodium")
     endif()
 
     # Libsodium Libraries
