@@ -1,4 +1,4 @@
-#include "unitTests.h"
+#include "UnitTests.h"
 #include "Multifungible.h"
 #include "UnitTestsInfo.h"
 

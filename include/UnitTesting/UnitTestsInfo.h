@@ -1,7 +1,7 @@
 #ifndef DLLUNITTESTS_H_INCLUDED
 #define DLLUNITTESTS_H_INCLUDED
 
-#include "unitTests.h"
+#include "UnitTests.h"
 #include "Multifungible.h"
 #include <gtest/gtest.h>
 

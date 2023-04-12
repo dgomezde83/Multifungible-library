@@ -42,7 +42,7 @@
 # Build files
 build
 Testing
-Debug
+#Debug
 Win32
 Win64
 
