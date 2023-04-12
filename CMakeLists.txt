@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+option(BUILD_TESTS "Build test program" OFF)
 
 # Compiler
 if (WIN32)
@@ -107,6 +108,38 @@ set(MyDLL_ADDRESSGEN_WINDOWS
     AddressGen/winglue.c
 )
 
+# Test files
+set(MyDLL_TEST_FILES
+    mainMultifungible.cpp
+    src/UnitTests.cpp
+    include/UnitTesting/UnitTestsInfo.h
+    src/UnitTesting/AddQuantityTests.cpp
+    src/UnitTesting/AddRolesTests.cpp
+    src/UnitTesting/AddURIVerification.cpp
+    src/UnitTesting/buildProofOfOwnershipOfKeyPair.cpp
+    src/UnitTesting/BurnQuantityTests.cpp
+    src/UnitTesting/getAddressTokenBalanceTest.cpp
+    src/UnitTesting/getCollectionPropertiesTests.cpp
+    src/UnitTesting/getEmittedCollectionsTest.cpp
+    src/UnitTesting/getIssuerAddressTest.cpp
+    src/UnitTesting/getOwnedTokenPropertiesTests.cpp
+    src/UnitTesting/getOwnedTokensTests.cpp
+    src/UnitTesting/getRolesAndAddressesTests.cpp
+    src/UnitTesting/getTokenPropertiesTests.cpp
+    src/UnitTesting/IssueNFTCollectionTests.cpp
+    src/UnitTesting/IssueNFTTokenTests.cpp
+    src/UnitTesting/IssueSFTCollectionTests.cpp
+    src/UnitTesting/IssueSFTTokenTests.cpp
+    src/UnitTesting/stopCreationTests.cpp
+    src/UnitTesting/TokenDecoderTests.cpp
+    src/UnitTesting/TransferCreationRoles.cpp
+    src/UnitTesting/transferOwnershipTests.cpp
+    src/UnitTesting/TransferTokenRoles.cpp
+    src/UnitTesting/upgradePropertiesTests.cpp
+    src/UnitTesting/WalletGeneratorTests.cpp
+    src/UnitTesting/WipeFreezeUnfreeze.cpp
+)
+
 # External files
 set(MyDLL_EXTERNAL
     external/json/json.hpp
@@ -119,13 +152,23 @@ set(MyDLL_EXTERNAL
     external/bigint/integer.h external/bigint/integer.cpp
 )
 
-# Build the shared library (DLL)
-if (WIN32)
-	add_library(Multifungible SHARED ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
-elseif(UNIX)
-	add_library(Multifungible SHARED ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
+# Build executable for google tests
+if (BUILD_TESTS)
+    include_directories(include/UnitTesting)
+    include_directories(include/boost_1_81_0)
+    if (WIN32)
+        add_executable(Multifungible ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
+    elseif(UNIX)
+        add_executable(Multifungible ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
+    endif()
+else()
+    # Build the shared library (DLL)
+    if (WIN32)
+        add_library(Multifungible SHARED ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
+    elseif(UNIX)
+        add_library(Multifungible SHARED ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
+    endif()
 endif()
-
 
 # Find pthread
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -150,6 +193,10 @@ if (UNIX)
     target_link_libraries(Multifungible crypto)
     target_link_libraries(Multifungible ssl)
     target_link_libraries(Multifungible sodium)
+    if (BUILD_TESTS)
+        find_package(GTest REQUIRED)
+        target_link_libraries(Multifungible GTest::gtest)
+    endif()
 elseif(WIN32)
     # Libsodium headers
     if (NOT DEFINED LIBSODIUM_INCLUDE_PATH)
@@ -173,6 +220,17 @@ elseif(WIN32)
         set(OPENSSL_LIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/openssl")
     endif()
 
+    #Google tests headers and lib
+    if (BUILD_TESTS)
+        if (NOT DEFINED GOOGLETESTS_INCLUDE_PATH)
+            set(GOOGLETESTS_INCLUDE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+        endif()
+        if (NOT DEFINED GOOGLETESTS_LIB_PATH)
+            set(GOOGLETESTS_LIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib/googletest")
+        endif()
+        include_directories(${GOOGLETESTS_INCLUDE_PATH})
+    endif ()
+
     # Include libcrypt32
     target_link_libraries(Multifungible crypt32)
 
@@ -193,5 +251,12 @@ elseif(WIN32)
 
     # Include ws2_32
     target_link_libraries(Multifungible ws2_32)
+
+    #if we are building the tests, add googletests
+    if (BUILD_TESTS)
+        add_library(libgtest STATIC IMPORTED)
+        set_target_properties(libgtest PROPERTIES IMPORTED_LOCATION "${GOOGLETESTS_LIB_PATH}/libgtest.a")
+        target_link_libraries(Multifungible libgtest)
+    endif ()
 endif()
 include_directories(${LIBSODIUM_INCLUDE_PATH})
