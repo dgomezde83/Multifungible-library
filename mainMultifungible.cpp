@@ -22,25 +22,50 @@ void createWalletSuite()
     file << list_files;
     file.close();
 }
-
-
-
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 int main(int argc, char** argv)
 {
-    printf("Running tests ...\n");
-    returnCodeAndChar t_rccMULTIFUNGIBLE_MAINWALLET = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
-    returnCodeAndChar t_rccMULTIFUNGIBLE_CREATION_WALLET = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
-    returnCodeAndChar t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS = Multifungible::loadWallet(MULTIFUNGIBLE_GETEMITTEDCOLLECTIONS,WALLETPASSWORD);
-    printf("MULTIFUNGIBLE_MAINWALLET: %s\nMULTIFUNGIBLE_CREATION_WALLET: %s\nMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS: %s\n",
-           t_rccMULTIFUNGIBLE_MAINWALLET.message,
-           t_rccMULTIFUNGIBLE_CREATION_WALLET.message,
-           t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS.message);
-
-    ::testing::InitGoogleTest(&argc,argv);
-    return RUN_ALL_TESTS();
-
-    //return 0;
+    if (argc < 2) {
+        printf("Running tests ...\n");
+        ::testing::InitGoogleTest(&argc,argv);
+        return RUN_ALL_TESTS();
+    } else if (strcmp(argv[1], "-c") == 0) {
+        printf("Creating wallet suite ...\n");
+        returnCodeAndChar t_rccMULTIFUNGIBLE_MAINWALLET = Multifungible::createWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+        returnCodeAndChar t_rccMULTIFUNGIBLE_CREATION_WALLET = Multifungible::createWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+        returnCodeAndChar t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS = Multifungible::createWallet(MULTIFUNGIBLE_GETEMITTEDCOLLECTIONS,WALLETPASSWORD);
+        if (t_rccMULTIFUNGIBLE_MAINWALLET.retCode || t_rccMULTIFUNGIBLE_CREATION_WALLET.retCode || t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS.retCode)
+        {
+            printf("Error creating the wallet suite.\n");
+        }
+        
+        printf("Saving public addresses to %s ...\n",FILEWALLETADDRESSES);
+        list_files = nlohmann::json::object({{MULTIFUNGIBLE_MAINWALLET,t_rccMULTIFUNGIBLE_MAINWALLET.message},
+                           {MULTIFUNGIBLE_CREATION_WALLET,t_rccMULTIFUNGIBLE_CREATION_WALLET.message},
+                           {MULTIFUNGIBLE_GETEMITTEDCOLLECTIONS,t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS.message}});
+        //Writing addresses to file
+        std::ofstream file(FILEWALLETADDRESSES);
+        file << list_files;
+        file.close();
+        printf("Successfully saved public addresses\n");
+        printf("Please, add faucet EGLD to %s\n",t_rccMULTIFUNGIBLE_MAINWALLET.message);
+    } else if (strcmp(argv[1], "-s") == 0) {
+        printf("Showing current test addresses:\n");
+        returnCodeAndChar t_rccMULTIFUNGIBLE_MAINWALLET = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+        returnCodeAndChar t_rccMULTIFUNGIBLE_CREATION_WALLET = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+        returnCodeAndChar t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS = Multifungible::loadWallet(MULTIFUNGIBLE_GETEMITTEDCOLLECTIONS,WALLETPASSWORD);
+        if (t_rccMULTIFUNGIBLE_MAINWALLET.retCode || t_rccMULTIFUNGIBLE_CREATION_WALLET.retCode || t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS.retCode)
+        {
+            printf("Error retrieving wallet pubic addresses.\n");
+        }
+        printf("MULTIFUNGIBLE_MAINWALLET: %s\nMULTIFUNGIBLE_CREATION_WALLET: %s\nMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS: %s\n",
+               t_rccMULTIFUNGIBLE_MAINWALLET.message,
+               t_rccMULTIFUNGIBLE_CREATION_WALLET.message,
+               t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS.message);
+    } else {
+        printf("Invalid argument: %s\n", argv[1]);
+        return 1;
+    }
 }
