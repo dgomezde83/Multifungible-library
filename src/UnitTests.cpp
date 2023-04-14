@@ -7,9 +7,6 @@
 #include <regex> //token split
 #include <boost/range/algorithm.hpp> //set_difference
 
-//One EGLD has 18 decimals
-unsigned long long int one_xegld = 1000000000000000000;
-
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
@@ -293,12 +290,10 @@ bool UnitTests::issueCollectionVerification(const char * p_dllwalletpath,
 
     if( t_tokenUntrimmed == std::string(t_rccLoad.message))
     {
-        //printf("Test result: %d\n",1);
         return true;
     }
     else
     {
-        //printf("Test result: %d\n",0);
         return false;
     }
 }
@@ -525,7 +520,6 @@ bool UnitTests::freezeUnfreezeVerification(const char * p_dllwalletpath,
     }
 
     returnCodeAndChar t_oldFreezeUnfreezeState = Multifungible::getCollectionProperties(t_collectionID.c_str());
-    std::cout << t_oldFreezeUnfreezeState.message << std::endl;
     bool t_isCanFreezeOld = isRoleGivenToToken(t_oldFreezeUnfreezeState.message,"CanFreeze");
     bool t_isNFTCreateStoppedOld = isRoleGivenToToken(t_oldFreezeUnfreezeState.message,"NFTCreateStopped");
 
@@ -1188,8 +1182,6 @@ bool UnitTests::upgradePropertyVerification(const char * p_dllwalletpath,
     std::transform(t_tokenSearched.begin(), t_tokenSearched.end(), t_tokenSearched.begin(),
         [](unsigned char c){ return std::tolower(c); });
 
-    std::cout << "t_tokenSearched: " << t_tokenSearched << std::endl;
-
     std::string t_oldResponse = t_rccOldInfo.message;
     std::transform(t_oldResponse.begin(), t_oldResponse.end(), t_oldResponse.begin(),
         [](unsigned char c){ return std::tolower(c); });
@@ -1197,7 +1189,6 @@ bool UnitTests::upgradePropertyVerification(const char * p_dllwalletpath,
     int oldPosStartToken = t_oldResponse.find(t_tokenSearched) + t_tokenSearched.length() + 1; //start of the NFTCreateStoppedWord
     int oldPosStartCarriageReturn = t_oldResponse.find('\n',t_oldResponse.find(t_tokenSearched)); //start of the first \n after the position where we found NFTCreateStoppedWord
     std::string t_oldResult = t_oldResponse.substr(oldPosStartToken, oldPosStartCarriageReturn - oldPosStartToken);
-    std::cout << "old result: " << t_oldResult << std::endl;
 
     returnCodeAndChar t_rccUpgradeProp = Multifungible::upgradeProperties (p_dllwalletpath, p_password,p_collectionID, p_esdtProperty, p_newValue);
     if (t_rccUpgradeProp.retCode)
@@ -1221,13 +1212,9 @@ bool UnitTests::upgradePropertyVerification(const char * p_dllwalletpath,
     int newPosStartToken = t_newResponse.find(t_tokenSearched) + t_tokenSearched.length() + 1; //start of the NFTCreateStoppedWord
     int newPosStartCarriageReturn = t_newResponse.find('\n',t_newResponse.find(t_tokenSearched)); //start of the first \n after the position where we found NFTCreateStoppedWord
     std::string t_newResult = t_newResponse.substr(newPosStartToken, newPosStartCarriageReturn - newPosStartToken);
-    std::cout << "New result: " << t_newResult << std::endl;
 
     std::string t_newValueStr = p_newValue ? "true" : "false";
     std::string t_newValueOppositeStr = p_newValue ? "false" : "true";
-
-    std::cout << "t_newValueStr: " << t_newValueStr << std::endl;
-    std::cout << "t_newValueOppositeStr: " << t_newValueOppositeStr << std::endl;
 
     if (t_newResult == t_newValueStr && t_oldResult == t_newValueOppositeStr )
     {

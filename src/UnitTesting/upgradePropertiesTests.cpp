@@ -37,7 +37,7 @@ TEST_F(FixtureOverUnitTests, upgradeRoleTestSuccess)
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-/*
+
 TEST_F(FixtureOverUnitTests, upgradeRoleTestFailed)
 {
     //Load wallet
@@ -76,12 +76,11 @@ TEST_F(FixtureOverUnitTests, upgradeRoleTestFailed)
     }
 
 }
-*/
 
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-/*
+
 //Fails because we provided property CanWipe instead of canWipe. However, CanWipe is not recognized by multiversX,
 //but it is what the query getCollectionProperties returns
 TEST_F(FixtureOverUnitTests, upgradeRoleTestFailed2)
@@ -106,11 +105,20 @@ TEST_F(FixtureOverUnitTests, upgradeRoleTestFailed2)
         FAIL();
     }
 
-    EXPECT_EQ(upgradePropertyVerification(MULTIFUNGIBLE_MAINWALLET,
+    try
+    {
+        upgradePropertyVerification(MULTIFUNGIBLE_MAINWALLET,
                                         WALLETPASSWORD,
                                         t_rccIssueCollection.message,
                                         "CanWipe",
-                                        "true"),true); //nb of wiped quantity
+                                        "true");
+        FAIL();
+    }
+    catch( const std::runtime_error& err )
+    {
+        //Impossible to add this role to an NFT collection
+        ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+    }
 
 }
-*/
+

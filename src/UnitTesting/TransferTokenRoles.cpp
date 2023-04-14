@@ -20,7 +20,7 @@ TEST_F(FixtureOverUnitTests, transferTokenVerificationNFT) {
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccAccountToSend = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccAccountToSend = Multifungible::loadWallet(MULTIFUNGIBLE_WALLET_TRANSACTION_RECEIVER,WALLETPASSWORD);
     if (t_rccAccountToSend.retCode)
     {
         std::cout << t_rccAccountToSend.message << std::endl;
@@ -53,7 +53,7 @@ TEST_F(FixtureOverUnitTests, transferTokenVerificationNFT) {
     }
 
     EXPECT_EQ(m_ut->transferTokenVerification(MULTIFUNGIBLE_MAINWALLET,
-                                              MULTIFUNGIBLE_CREATION_WALLET,
+                                              MULTIFUNGIBLE_WALLET_TRANSACTION_RECEIVER,
                                                    WALLETPASSWORD,
                                                    true,
                                                    t_rccIssueNFTToken.message,

@@ -13,7 +13,7 @@ TEST_F(FixtureOverUnitTests, transferOwnershipSuccess)
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccLoadDest = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccLoadDest = Multifungible::loadWallet(MULTIFUNGIBLE_WALLET_TRANSACTION_RECEIVER,WALLETPASSWORD);
     if (t_rccLoadDest.retCode)
     {
         std::cout << t_rccLoadDest.message << std::endl;
@@ -53,7 +53,7 @@ TEST_F(FixtureOverUnitTests, transferOwnershipFailure)
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccLoadDest = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccLoadDest = Multifungible::loadWallet(MULTIFUNGIBLE_WALLET_TRANSACTION_RECEIVER,WALLETPASSWORD);
     if (t_rccLoadDest.retCode)
     {
         std::cout << t_rccLoadDest.message << std::endl;

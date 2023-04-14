@@ -3,7 +3,7 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-/*
+
 TEST_F(FixtureOverUnitTests, stopCreationSuccessful)
 {
 
@@ -32,7 +32,7 @@ TEST_F(FixtureOverUnitTests, stopCreationSuccessful)
     EXPECT_EQ(stopTokenCreation(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD,t_rccIssueCollection.message),true); //nb of wiped quantity
 
 }
-*/
+
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
@@ -48,7 +48,7 @@ TEST_F(FixtureOverUnitTests, stopCreationSuccessfulOtherAddress)
         FAIL();
     }
 
-    returnCodeAndChar t_rccLoadSecond = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccLoadSecond = Multifungible::loadWallet(MULTIFUNGIBLE_WALLET_TRANSACTION_RECEIVER,WALLETPASSWORD);
     if (t_rccLoadSecond.retCode)
     {
         std::cout << t_rccLoadSecond.message << std::endl;

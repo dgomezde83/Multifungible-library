@@ -50,7 +50,7 @@ TEST_F(FixtureOverUnitTests, getIssuerAddressTestSuccess)
 TEST_F(FixtureOverUnitTests, getIssuerAddressTestFailure)
 {
     //Load wallet
-    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_AUXILLIARYWALLET,WALLETPASSWORD);
     if (t_rccLoad.retCode)
     {
         std::cout << t_rccLoad.message << std::endl;

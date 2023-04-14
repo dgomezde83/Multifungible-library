@@ -3,12 +3,12 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-//Simple cretaion roletransfer
+//Simple creation role transfer
 
 TEST_F(FixtureOverUnitTests, transferSFTCreationRoleVerification) {
 
     //1) Retrieve the destination address from the destination wallet
-    returnCodeAndChar t_rccLoadDestination = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccLoadDestination = Multifungible::loadWallet(MULTIFUNGIBLE_WALLET_TRANSACTION_RECEIVER,WALLETPASSWORD);
     if (t_rccLoadDestination.retCode)
     {
         std::cout << t_rccLoadDestination.message << std::endl;
@@ -28,7 +28,7 @@ TEST_F(FixtureOverUnitTests, transferSFTCreationRoleVerification) {
     }
 
     EXPECT_EQ(m_ut->transferCreationRoleVerification(MULTIFUNGIBLE_MAINWALLET,
-                                           MULTIFUNGIBLE_CREATION_WALLET,
+                                           MULTIFUNGIBLE_WALLET_TRANSACTION_RECEIVER,
                                                    WALLETPASSWORD,
                                                    t_rccSFT.message), true);
 }

@@ -694,7 +694,7 @@ void WalletProvider::addCollectionRole(const std::string& p_collectionID, const 
         }
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
-            t_necessaryTokens.erase(t_necessaryTokens.begin() + 1);
+            t_necessaryTokens.pop_back();
             continue;
         }
     }
@@ -730,7 +730,7 @@ void WalletProvider::transferCreationRole(const std::string& p_collectionID, con
         }
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
-            t_necessaryTokens.erase(t_necessaryTokens.begin() + 1);
+            t_necessaryTokens.pop_back();
             continue;
         }
     }
@@ -962,7 +962,7 @@ void WalletProvider::stopCreation(const std::string& p_collectionID) const
         }
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
-            t_necessaryTokens.erase(t_necessaryTokens.begin() + 1);
+            t_necessaryTokens.pop_back();
             return;
         }
     }
@@ -1000,7 +1000,7 @@ void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, con
         }
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
-            t_necessaryTokens.erase(t_necessaryTokens.begin() + 1);
+            t_necessaryTokens.pop_back();
             continue;
         }
     }

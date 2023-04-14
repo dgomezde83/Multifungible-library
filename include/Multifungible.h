@@ -99,11 +99,6 @@ class Multifungible
         static returnCodeAndChar getEmittedCollections (const char * p_address);
         static returnCodeAndChar getRolesAndAddresses(const char * p_collectionID);
 
-    protected:
-        //Logging
-        static void logTrace(std::string p_logText);
-        static void logError(std::string p_errorText);
-
     private:
 
         static returnCodeAndChar transformIntoRCC(const int p_retCode, const std::string & p_message);

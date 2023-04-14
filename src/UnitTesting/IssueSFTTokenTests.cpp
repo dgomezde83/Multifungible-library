@@ -3,7 +3,7 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-/*
+
 //Simple collection emission
 TEST_F(FixtureOverUnitTests, issueTokenVerificationSFT)
 {
@@ -26,11 +26,11 @@ TEST_F(FixtureOverUnitTests, issueTokenVerificationSFT)
                                                    "tokenTest",
                                                    7500,"","",1), true);
 }
-*/
+
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-/*
+
 //Collection emission without 'canAddSpecialRoles', and therefore, without 'canAddQuantity'
 TEST_F(FixtureOverUnitTests, issueTokenVerificationSFTNoAddRole)
 {
@@ -62,7 +62,7 @@ TEST_F(FixtureOverUnitTests, issueTokenVerificationSFTNoAddRole)
         ASSERT_STREQ( UNITTESTS_TOKEN_EMISSION_REJECTED, err.what());
     }
 }
-*/
+
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/

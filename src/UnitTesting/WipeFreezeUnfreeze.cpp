@@ -12,7 +12,7 @@ TEST_F(FixtureOverUnitTests, wipeVerificationSuccessful) {
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_FREEZEUNFREEZEWIPE,WALLETPASSWORD);
     if (t_rccAccountToFreeze.retCode)
     {
         std::cout << t_rccAccountToFreeze.message << std::endl;
@@ -74,7 +74,7 @@ TEST_F(FixtureOverUnitTests, freezeVerificationSuccessful) {
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_FREEZEUNFREEZEWIPE,WALLETPASSWORD);
     if (t_rccAccountToFreeze.retCode)
     {
         std::cout << t_rccAccountToFreeze.message << std::endl;
@@ -136,7 +136,7 @@ TEST_F(FixtureOverUnitTests, unfreezeVerificationSuccessful) {
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_FREEZEUNFREEZEWIPE,WALLETPASSWORD);
     if (t_rccAccountToFreeze.retCode)
     {
         std::cout << t_rccAccountToFreeze.message << std::endl;

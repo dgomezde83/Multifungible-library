@@ -44,14 +44,12 @@ inline std::string getCanonicalRootPath(std::string const &path)
     #else
     return path;
     #endif
-    std::cout << executable_path.string() << std::endl;
     // compute the path to the root
     std::filesystem::path root_path;
     for (auto& p : std::filesystem::recursive_directory_iterator(executable_path.parent_path())) {
         if (p.path().root_path() == p.path())
             root_path = p.path();
     }
-    std::cout << root_path.string() << std::endl;
     // append the path to another file
     std::filesystem::path resulting_path = root_path / path;
     return resulting_path.string();

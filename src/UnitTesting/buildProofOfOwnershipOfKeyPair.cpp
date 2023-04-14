@@ -94,7 +94,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipTransferSomeUnitsSuccess)
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccLoadDest = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccLoadDest = Multifungible::loadWallet(MULTIFUNGIBLE_PROOFOFOWNERSHIP,WALLETPASSWORD);
     if (t_rccLoadDest.retCode)
     {
         std::cout << t_rccLoadDest.message << std::endl;
@@ -194,7 +194,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipFailure)
         FAIL();
     }
 
-    returnCodeAndChar t_rccProofOfOwnership = Multifungible::getProofOfTokenOwnership (MULTIFUNGIBLE_CREATION_WALLET,
+    returnCodeAndChar t_rccProofOfOwnership = Multifungible::getProofOfTokenOwnership (MULTIFUNGIBLE_PROOFOFOWNERSHIP,
                                                                             WALLETPASSWORD,
                                                                             t_plaintext.c_str(),
                                                                             t_rccIssueNFTToken.message);
@@ -267,7 +267,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfCollectionOwnershipSuccessTransferOwner
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccLoadDest = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccLoadDest = Multifungible::loadWallet(MULTIFUNGIBLE_PROOFOFOWNERSHIP,WALLETPASSWORD);
     if (t_rccLoadDest.retCode)
     {
         std::cout << t_rccLoadDest.message << std::endl;
@@ -306,7 +306,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfCollectionOwnershipSuccessTransferOwner
         FAIL();
     }
 
-    returnCodeAndChar t_rccProofOfIssuanceNewOwner = Multifungible::getProofOfCollectionOwnership (MULTIFUNGIBLE_CREATION_WALLET,
+    returnCodeAndChar t_rccProofOfIssuanceNewOwner = Multifungible::getProofOfCollectionOwnership (MULTIFUNGIBLE_PROOFOFOWNERSHIP,
                                                                             WALLETPASSWORD,
                                                                             t_plaintext.c_str(),
                                                                             t_rccIssueCollection.message);
@@ -349,7 +349,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfIssuanceFailureDirect)
         FAIL();
     }
 
-    returnCodeAndChar t_rccProofOfIssuance = Multifungible::getProofOfCollectionOwnership (MULTIFUNGIBLE_CREATION_WALLET,
+    returnCodeAndChar t_rccProofOfIssuance = Multifungible::getProofOfCollectionOwnership (MULTIFUNGIBLE_PROOFOFOWNERSHIP,
                                                                             WALLETPASSWORD,
                                                                             t_plaintext.c_str(),
                                                                             t_rccIssueCollection.message);

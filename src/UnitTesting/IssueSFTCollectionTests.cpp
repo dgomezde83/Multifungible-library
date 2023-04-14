@@ -21,11 +21,11 @@ TEST_F(FixtureOverUnitTests, issueCollectionVerificationSFT) {
 
 TEST_F(FixtureOverUnitTests, issueCollectionVerificationSFTNotInBlockchain)
 {
-    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_WALLET_NOTINBLOCKCHAIN,WALLETPASSWORD);
     try
     {
 
-    m_ut->issueCollectionVerification(MULTIFUNGIBLE_CREATION_WALLET,
+    m_ut->issueCollectionVerification(MULTIFUNGIBLE_WALLET_NOTINBLOCKCHAIN,
                                                    WALLETPASSWORD,
                                                    false,
                                                    "collectionTest",
@@ -52,7 +52,7 @@ TEST_F(FixtureOverUnitTests, issueCollectionVerificationSFTNoMoney)
     try
     {
 
-    m_ut->issueCollectionVerification(MULTIFUNGIBLE_CREATION_WALLET,
+    m_ut->issueCollectionVerification(MULTIFUNGIBLE_WALLET_NOMONEY,
                                                    WALLETPASSWORD,
                                                    false,
                                                    "collectionTest",

@@ -112,7 +112,6 @@ returnCodeAndChar Multifungible::issueNonFungibleToken(const char * p_walletName
 {
     try
     {
-        logTrace("issueNonFungibleToken");
 
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -144,8 +143,6 @@ returnCodeAndChar Multifungible::issueSemiFungibleToken(const char * p_walletNam
 {
     try
     {
-        logTrace("issueSemiFungibleToken");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -170,8 +167,6 @@ returnCodeAndChar Multifungible::getTokenProperties (const char * p_tokenID)
 {
     try
     {
-        logTrace("getTokenProperties");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -194,8 +189,6 @@ returnCodeAndChar Multifungible::buildProofOfOwnershipOfKeyPair (const char * p_
 {
     try
     {
-        logTrace("buildProofOfOwnershipOfKeyPair");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -214,8 +207,6 @@ returnCodeAndChar Multifungible::getProofOfCollectionOwnership (const char * p_w
 {
     try
     {
-        logTrace("getProofOfCollectionOwnership");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -251,8 +242,6 @@ returnCodeAndChar Multifungible::getProofOfTokenOwnership (const char * p_wallet
 {
     try
     {
-        logTrace("getProofOfTokenOwnership");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -287,8 +276,6 @@ returnCodeAndChar Multifungible::getOwnerAddress (const char * p_collectionID)
 {
     try
     {
-        logTrace("getOwnerAddress");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -312,8 +299,6 @@ returnCodeAndChar Multifungible::getEmittedCollections (const char * p_address)
 {
     try
     {
-        logTrace("getEmittedCollections");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -340,8 +325,6 @@ returnCodeAndChar Multifungible::getOwnedTokens (const char * p_address)
 {
     try
     {
-        logTrace("getOwnedTokens");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -371,8 +354,6 @@ returnCodeAndChar Multifungible::getAddressTokenBalance (const char * p_address,
 {
     try
     {
-        logTrace("getAddressTokenBalance");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -405,8 +386,6 @@ returnCodeAndChar Multifungible::issueNFTCollection(const char * p_walletName,
 {
     try
     {
-        logTrace("issueNFTCollection");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -445,8 +424,6 @@ returnCodeAndChar Multifungible::issueSFTCollection(const char * p_walletName,
 {
     try
     {
-        logTrace("issueSFTCollection");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -477,8 +454,6 @@ returnCodeAndChar Multifungible::upgradeProperties (const char * p_walletName, c
 {
     try
     {
-        logTrace("upgradeProperties");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -500,8 +475,6 @@ returnCodeAndChar Multifungible::transferOwnership (const char * p_walletName, c
 {
     try
     {
-        logTrace("transferOwnership");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -523,8 +496,6 @@ returnCodeAndChar Multifungible::addCollectionRole(const char * p_walletName, co
 {
     try
     {
-        logTrace("addCollectionRole");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -546,8 +517,6 @@ returnCodeAndChar Multifungible::addURI(const char * p_walletName, const char * 
 {
     try
     {
-        logTrace("addCollectionRole");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -572,8 +541,6 @@ returnCodeAndChar Multifungible::getCollectionProperties(const char * p_collecti
 {
     try
     {
-        logTrace("getCollectionProperties");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -602,8 +569,6 @@ returnCodeAndChar Multifungible::transferCreationRole(const char * p_walletName,
 {
    try
     {
-        logTrace("transferCreationRole");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -626,8 +591,6 @@ returnCodeAndChar Multifungible::stopTokenCreation(const char * p_walletName, co
 {
     try
     {
-        logTrace("stopTokenCreation");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -650,8 +613,6 @@ returnCodeAndChar Multifungible::getRolesAndAddresses(const char * p_collectionI
 {
     try
     {
-        logTrace("addCollectionRole");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -674,8 +635,6 @@ returnCodeAndChar Multifungible::addSFTQuantity(const char * p_walletName, const
 {
     try
     {
-        logTrace("addSFTQuantity");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -700,8 +659,6 @@ returnCodeAndChar Multifungible::burnSFTQuantity(const char * p_walletName, cons
 {
     try
     {
-        logTrace("burnSFTQuantity");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -726,8 +683,6 @@ returnCodeAndChar Multifungible::wipeNFT(const char * p_walletName, const char *
 {
     try
     {
-        logTrace("wipeNFT");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -752,8 +707,6 @@ returnCodeAndChar Multifungible::freezeNFT(const char * p_walletName, const char
 {
     try
     {
-        logTrace("freezeNFT");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -778,8 +731,6 @@ returnCodeAndChar Multifungible::unfreezeNFT(const char * p_walletName, const ch
 {
     try
     {
-        logTrace("unfreezeNFT");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -804,8 +755,6 @@ returnCodeAndChar Multifungible::NFTTransaction(const char * p_walletName, const
 {
     try
     {
-        logTrace("NFTTransaction");
-
         //Wallet, transactor and Proxy set up
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
@@ -830,8 +779,6 @@ returnCodeAndChar Multifungible::SFTTransaction(const char * p_walletName, const
 {
     try
     {
-        logTrace("SFTTransaction");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -855,8 +802,6 @@ returnCodeAndChar Multifungible::getOwnedTokenProperties(const char * p_tokenID,
 {
     try
     {
-        logTrace("getOwnedTokensForOwnedCollection");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);
@@ -876,26 +821,10 @@ returnCodeAndChar Multifungible::getOwnedTokenProperties(const char * p_tokenID,
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-void Multifungible::logTrace(std::string p_logText)
-{
-    printf("%s\t%s\n", "TRACE", p_logText.c_str());
-}
-/*-------------------------------------------------------------------------*
-*--------------------------------------------------------------------------*
-*-------------------------------------------------------------------------*/
-void Multifungible::logError(std::string p_errorText)
-{
-    printf("%d\t%s\n", 1, p_errorText.c_str());
-}
-/*-------------------------------------------------------------------------*
-*--------------------------------------------------------------------------*
-*-------------------------------------------------------------------------*/
 returnCodeAndChar Multifungible::EGLDTransaction(const char * p_walletName, const char * p_password,const char * p_strAddress, const int p_amount)
 {
     try
     {
-        logTrace("EGLDTransaction");
-
         CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
         Network nw = MULTIFUNGIBLE_NETWORK;
         clicf.setNetwork(nw);

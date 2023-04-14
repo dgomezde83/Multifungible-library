@@ -100,7 +100,7 @@ TEST_F(FixtureOverUnitTests, addSFTRoleCreateToAnotherAddress)
         FAIL();
     }
 
-    returnCodeAndChar t_rccLoadSecond = Multifungible::loadWallet(MULTIFUNGIBLE_CREATION_WALLET,WALLETPASSWORD);
+    returnCodeAndChar t_rccLoadSecond = Multifungible::loadWallet(MULTIFUNGIBLE_AUXILLIARYWALLET,WALLETPASSWORD);
     if (t_rccLoadSecond.retCode)
     {
         std::cout << t_rccLoadSecond.message << std::endl;
