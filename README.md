@@ -19,7 +19,7 @@ A quick look into some functions from this library:
 
 ### C++
 ```c++
-//Create a wallet
+// C++ example using the uncompiled source code
 Multifungible::createWallet("./myPEMFile.json","1234");
 
 //Issue an SFT collection with first wallet
@@ -34,7 +34,7 @@ if (!t_IssueCollection.retCode)
 }
 std::cout << "Issued collection: " << t_collectionID << std::endl;
 
-//3 Issue 10 certificates of affiliation with first wallet, with 85% of royalties on transfer
+// Issue 10 certificates of affiliation with first wallet, with 85% of royalties on transfer
 std::string t_tokenID;
 returnCodeAndChar t_IssueSFTToken = Multifungible::issueSemiFungibleToken("./myPEMFile.json", //PEM file path
                                                                      "1234",                  //Password
@@ -52,7 +52,7 @@ std::cout << "Issued token: " << t_tokenID << std::endl;
 ```
 ### Python
 ```python
-#Python linux example
+# Python example with a shared object
 import ctypes
 import os
 
@@ -64,19 +64,35 @@ class MyStruct(ctypes.Structure):
     _fields_ = [("my_int", ctypes.c_int),
                 ("my_string", ctypes.c_char_p)]
 
-# Define the function signature
+# Define the function signature for issuing a collection
 issue_SFT_Collection = mylibrary.issueSFTCollection
-my_function.restype = MyStruct
+issue_SFT_Collection.restype = MyStruct
 
 # Call the function
-result = issue_SFT_Collection(b"./myPEMFile.json", //PEM file path
-                               b"1234",  //Password
-                               b"Test",  //Collection name
-                               b"TST" ); //Collection ticker
+collectionID = issue_SFT_Collection(b"./myPEMFile.json", # PEM file path
+                               b"1234",  # Password
+                               b"Test",  # Collection name
+                               b"TST" ) # Collection ticker
+           
+# Define the function signature for issuing a token
+issue_SFT_Token = mylibrary.issueSemiFungibleToken
+issue_SFT_Token.restype = MyStruct
+
+# Call the function
+tokenID = issue_SFT_Collection(b"./myPEMFile.json", # PEM file path
+                               b"1234",                  # Password
+                               collectionID.encode("utf-8"),  # collection name
+                               b"tokenTest",             # Name of the token
+                               b"10",                    # quantity
+                               b"8500",                  # Royalties (85.00%)
+                               b"metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3", # metadata 
+                               b"https://...") # URL
 
 # Access the struct fields
-print(result.my_int)
-print(result.my_string.decode())
+print(collectionID.my_int)
+print(collectionID.my_string.decode())
+print(tokenID.my_int)
+print(tokenID.my_string.decode())
 ```
 
 ## 3. External libraries
