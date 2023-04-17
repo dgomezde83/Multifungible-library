@@ -3,6 +3,7 @@ import os
 import platform
 
 # Load the dynamic library
+mylibrary = None
 if platform.system() == "Windows":
     mylibrary = ctypes.cdll.LoadLibrary("../../libMultifungible.dll")
 elif platform.system() == "Linux":
