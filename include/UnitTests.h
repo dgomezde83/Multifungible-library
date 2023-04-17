@@ -47,7 +47,7 @@ class UnitTests
 
 
         //WalletGenerator tests.
-        bool DLLWalletTests(const char * p_testwallet, const char * p_password);
+        bool CreateLoadWalletTests(const char * p_testwallet, const char * p_password);
 
         //PAYABLE (interact with blockchain and change its state)
         bool issueTokenVerification(const char * p_dllwalletpath,
@@ -55,15 +55,15 @@ class UnitTests
                                     const bool isNFT,
                                      const char * p_collectionID,
                                      const char * p_tokenName,
-                                     const int p_tokenRoyalties,
+                                     const char * p_tokenRoyalties,
                                      const char * p_tokenAttributes,
                                      const char * p_tokenUri,
-                                     const int p_SFTQuantity);
+                                     const char * p_SFTQuantity);
 
         bool tokenQuantityVerification(const int p_functionToUse,
                                        const std::string & p_tokenID,
                                        const char * p_address,
-                                       const int p_quantity);
+                                       const std::string & p_quantity);
 
         bool issueCollectionVerification(const char * p_dllwalletpath,
                                          const char * p_password,
@@ -100,7 +100,7 @@ class UnitTests
                                             const bool p_isNFT,
                                             const bool p_isAdd,
                                             const char * p_tokenID,
-                                            const int p_SFTQuantity);
+                                            const char * p_SFTQuantity);
 
         bool wipeVerification(const char * p_dllwalletpath,
                                 const char * p_password,
@@ -128,9 +128,9 @@ class UnitTests
                                         const char * p_password,
                                         const bool p_isNFT,
                                         const char * p_tokenID,
-                                        const int p_quantityToSend);
+                                        const char * p_quantityToSend);
 
-        bool DLLisRoleOwnedByAddress (const char * p_collectionID, const char * p_role, const char * p_address);
+        bool isRoleOwnedByAddress (const char * p_collectionID, const char * p_role, const char * p_address);
 
         bool isTokenIssuedByAddress (const char * p_address, const char * p_tokenID);
 
@@ -158,6 +158,11 @@ class UnitTests
                                 const char * p_password,
                                 const char * p_collectionID);
 
+        bool transferEGLDVerification(const char * p_dllwalletpath,
+                                            const char * p_password,
+                                            const char * p_address,
+                                            const char * p_quantity);
+
     private:
         const std::string m_configName;
 
@@ -166,10 +171,10 @@ class UnitTests
                                 const bool isNFT,
                                  const char * p_collectionID,
                                  const char * p_tokenName,
-                                 const int p_tokenRoyalties,
+                                 const char * p_tokenRoyalties,
                                  const char * p_tokenAttributes,
                                  const char * p_tokenUri,
-                                 const int p_SFTQuantity);
+                                 const char * p_SFTQuantity);
 
         std::string  issueCollection(const char * p_dllwalletpath,
                             const char * p_password,

@@ -27,10 +27,10 @@ std::string UnitTests::issueToken (const char * p_dllwalletpath,
                                    const bool isNFT,
                                      const char * p_collectionID,
                                      const char * p_tokenName,
-                                     const int p_tokenRoyalties,
+                                     const char * p_tokenRoyalties,
                                      const char * p_tokenAttributes,
                                      const char * p_tokenUri,
-                                     const int p_SFTQuantity)
+                                     const char * p_SFTQuantity)
 {
     //Load wallet
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
@@ -56,7 +56,6 @@ std::string UnitTests::issueToken (const char * p_dllwalletpath,
     }
     return std::string(t_rccIssueToken.message);
 }
-//Issue a collection
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
@@ -124,7 +123,7 @@ std::string UnitTests::issueCollection(const char * p_dllwalletpath,
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-bool UnitTests::DLLWalletTests(const char * p_testwallet, const char * p_password)
+bool UnitTests::CreateLoadWalletTests(const char * p_testwallet, const char * p_password)
 {
     returnCodeAndChar t_rccCreate = Multifungible::createWallet(p_testwallet,p_password);
     if(t_rccCreate.retCode)
@@ -138,25 +137,27 @@ bool UnitTests::DLLWalletTests(const char * p_testwallet, const char * p_passwor
     }
     return false;
 }
+
 //Verify that a certain token has a certain quantity
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-bool UnitTests::tokenQuantityVerification(const int p_functionToUse, const std::string & p_tokenID, const char * p_address, const int p_quantity)
+bool UnitTests::tokenQuantityVerification(const int p_functionToUse, const std::string & p_tokenID, const char * p_address, const std::string & p_quantity)
 {
-    //Get the balances of the loaded address (our wallet
     returnCodeAndChar t_rccGetBalances;
+    //Option 1: Use proxy
     if (p_functionToUse == 1)
     {
         t_rccGetBalances = Multifungible::getOwnedTokenProperties(p_tokenID.c_str(),p_address);
     }
+    //Option 2: Use API->accounts->nfts query
     else if (p_functionToUse == 2)
     {
         t_rccGetBalances = Multifungible::getOwnedTokens(p_address);
     }
+    //Option 3: Use API->token ID information
     else if (p_functionToUse == 3)
     {
-        //t_rccGetBalances = Multifungible::getOwnedTokens(p_address);
         t_rccGetBalances = Multifungible::getTokenProperties(p_tokenID.c_str());
     }
 
@@ -165,7 +166,7 @@ bool UnitTests::tokenQuantityVerification(const int p_functionToUse, const std::
         throw std::runtime_error(t_rccGetBalances.message);
     }
 
-    std::string tmpstr(t_rccGetBalances.message,strlen(t_rccGetBalances.message)); // length optional, but needed if there may be zero's in your data
+    std::string tmpstr(t_rccGetBalances.message,strlen(t_rccGetBalances.message));
     std::istringstream is(tmpstr);
     std::string line;
     while (getline(is,line))
@@ -176,7 +177,7 @@ bool UnitTests::tokenQuantityVerification(const int p_functionToUse, const std::
         if (p_functionToUse == 1)
         {
             std::cout << "usedProxy" << std::endl;
-            if(t_response["tokenData"]["balance"] == std::to_string(p_quantity))
+            if(t_response["tokenData"]["balance"] == p_quantity)
             {
                 return true;
             }
@@ -189,7 +190,7 @@ bool UnitTests::tokenQuantityVerification(const int p_functionToUse, const std::
             }
             else if (t_response["type"] == "SemiFungibleESDT")
             {
-                if(t_response["supply"] == std::to_string(p_quantity)) //supply or balance?
+                if(t_response["supply"] == p_quantity) //supply or balance?
                 {
                     return true;
                 }
@@ -208,17 +209,11 @@ bool UnitTests::issueTokenVerification(const char * p_dllwalletpath,
                                          const bool isNFT,
                                          const char * p_collectionID,
                                          const char * p_tokenName,
-                                         const int p_tokenRoyalties,
+                                         const char * p_tokenRoyalties,
                                          const char * p_tokenAttributes,
                                          const char * p_tokenUri,
-                                         const int p_SFTQuantity)
+                                         const char * p_SFTQuantity)
 {
-
-    //Load config
-    CLIConfig clicf(CONFIGNAME);
-    Network nw = Testnet;
-    clicf.setNetwork(nw);
-    WrapperProxyProvider wpp (clicf.config());
 
     //Load wallet
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
@@ -307,13 +302,10 @@ bool UnitTests::addRoleVerification(const char * p_dllwalletpath,
                                     const char * p_esdtRole,
                                     const char * t_addressToGiveRole)
 {
-    //const char * t_esdtRole = "ESDTRoleNFTAddURI";
-    //const char * t_addressToGiveRole = "erd1l95wl2qyutv3gurl5lrcmeemx5n92hss63pappzr9gay9jlu8v4s9mv2w8";
-
     //Issue the collection
     std::string t_collectionID = std::string(p_collectionID);
 
-    //First issue the sft and get the properties. we should get 0 roles
+    //First issue the collection and get the properties. we should get 0 roles
     returnCodeAndChar propertiesBefore = Multifungible::getCollectionProperties(t_collectionID.c_str());
     if (propertiesBefore.retCode)
     {
@@ -332,15 +324,12 @@ bool UnitTests::addRoleVerification(const char * p_dllwalletpath,
         throw std::runtime_error(propertiesAfter.message);
     }
 
-    //std::cout << propertiesAfter.message << "\n\n";
     if(!std::string(propertiesBefore.message).find(p_esdtRole) && std::string(propertiesAfter.message).find(p_esdtRole))
     {
-        //printf("Test result: %d\n",1);
         return false;
     }
     else
     {
-        //printf("Test result: %d\n",0);
         return true;
     }
 }
@@ -353,25 +342,18 @@ bool UnitTests::addBurnQuantityVerification(const char * p_dllwalletpath,
                                         const bool p_isNFT,
                                         const bool p_isAdd,
                                         const char * p_tokenID,
-                                         const int p_SFTQuantity)
+                                         const char * p_SFTQuantity)
 {
-
-    CLIConfig clicf(CONFIGNAME);
-    Network nw = Testnet;
-    clicf.setNetwork(nw);
-    WrapperProxyProvider wpp (clicf.config());
+    BigUInt p_quantityToAdd(p_SFTQuantity);
 
     std::string t_tokenID = p_tokenID;
-    std::cout << t_tokenID << std::endl;
 
     std::pair<std::string,uint64_t> t_pairCollectionIDNonce = Multifungible::getCollectionIDAndNonceFromTokenID(p_tokenID);
 
     std::string t_collectionID = t_pairCollectionIDNonce.first;
     int t_nonce = t_pairCollectionIDNonce.second;
-    std::cout << t_collectionID << std::endl;
-    std::cout << t_nonce << std::endl;
 
-    int t_oldBalance = 0;
+    BigUInt t_oldBalance(0);
 
     //Load wallet
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
@@ -386,7 +368,7 @@ bool UnitTests::addBurnQuantityVerification(const char * p_dllwalletpath,
         throw std::runtime_error(t_rccGetOldBalances.message);
     }
 
-    t_oldBalance = std::stoi(t_rccGetOldBalances.message);
+    t_oldBalance = BigUInt(t_rccGetOldBalances.message);
 
     returnCodeAndChar t_rccAddBurnQtt;
     if (p_isAdd)
@@ -408,25 +390,25 @@ bool UnitTests::addBurnQuantityVerification(const char * p_dllwalletpath,
     {
         throw std::runtime_error(t_rccGetNewalances.message);
     }
-    int t_newBalance = std::stoi(t_rccGetNewalances.message);
+    BigUInt t_newBalance (t_rccGetNewalances.message);
 
     if (p_isAdd)
     {
-        if (t_newBalance == t_oldBalance + p_SFTQuantity)
+        if (t_newBalance == t_oldBalance + p_quantityToAdd)
         {
             return true;
         }
     }
     else
     {
-        if (t_newBalance == t_oldBalance - p_SFTQuantity)
+        if (t_newBalance == t_oldBalance - p_quantityToAdd)
         {
             return true;
         }
     }
 
     //If we are burning, we didn't find the NFT token now, but it was there before, it means the burn was successful
-    if (!p_isAdd && p_isNFT && t_oldBalance == 1)
+    if (!p_isAdd && p_isNFT && t_oldBalance.getValue() == "1")
     {
         return true;
     }
@@ -441,10 +423,6 @@ bool UnitTests::wipeVerification(const char * p_dllwalletpath,
                         const char * p_tokenID,
                         const char * p_destinationAddress)
 {
-    CLIConfig clicf(CONFIGNAME);
-    Network nw = Testnet;
-    clicf.setNetwork(nw);
-    WrapperProxyProvider wpp (clicf.config());
 
     //Load wallet
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
@@ -469,7 +447,7 @@ bool UnitTests::wipeVerification(const char * p_dllwalletpath,
 *-------------------------------------------------------------------------*/
 bool UnitTests::isRoleGivenToToken(const char *p_listOfRoles, const std::string &p_searchedRole)
 {
-    std::string tmpstr(p_listOfRoles,strlen(p_listOfRoles)); // length optional, but needed if there may be zero's in your data
+    std::string tmpstr(p_listOfRoles,strlen(p_listOfRoles));
     std::istringstream is(tmpstr);
     std::string line;
     int t_counter = 0;
@@ -502,10 +480,6 @@ bool UnitTests::freezeUnfreezeVerification(const char * p_dllwalletpath,
                                             const char * p_tokenID,
                                             const char * p_destinationAddress)
 {
-    CLIConfig clicf(CONFIGNAME);
-    Network nw = Testnet;
-    clicf.setNetwork(nw);
-    WrapperProxyProvider wpp (clicf.config());
 
     std::pair<std::string,uint64_t> t_pairCollectionIDNonce = Multifungible::getCollectionIDAndNonceFromTokenID(p_tokenID);
 
@@ -564,7 +538,6 @@ bool UnitTests::freezeUnfreezeVerification(const char * p_dllwalletpath,
 
 }
 
-//Tries to ass quantity to a token provided. Checks if successful
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
@@ -573,11 +546,6 @@ bool UnitTests::addURIVerification(const char * p_dllwalletpath,
                                         const char * p_tokenID,
                                          const char * p_uri)
 {
-
-    CLIConfig clicf(CONFIGNAME);
-    Network nw = Testnet;
-    clicf.setNetwork(nw);
-    WrapperProxyProvider wpp (clicf.config());
 
     std::pair<std::string,uint64_t> t_pairCollectionIDNonce = Multifungible::getCollectionIDAndNonceFromTokenID(p_tokenID);
 
@@ -762,13 +730,8 @@ bool UnitTests::transferTokenVerification(const char * p_dllwalletpath1,
                                     const char * p_password,
                                     const bool p_isNFT,
                                     const char * p_tokenID,
-                                    const int p_quantityToSend)
+                                    const char * p_quantityToSend)
 {
-    CLIConfig clicf(CONFIGNAME);
-    Network nw = Testnet;
-    clicf.setNetwork(nw);
-    WrapperProxyProvider wpp (clicf.config());
-
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath1,p_password);
     if (t_rccLoad.retCode)
     {
@@ -891,10 +854,7 @@ bool UnitTests::verifySignatureTest(const char * p_walletName,
     Wallet wg(p_walletName,clicf.config(),p_password,true);
     //build transaction examples
     std::string toSign("{\"nonce\":0,\"value\":\"0\",\"receiver\":\"erd1cux02zersde0l7hhklzhywcxk4u9n4py5tdxyx7vrvhnza2r4gmq4vw35r\",\"sender\":\"erd1l453hd0gt5gzdp7czpuall8ggt2dcv5zwmfdf3sd3lguxseux2fsmsgldz\",\"gasPrice\":1000000000,\"gasLimit\":50000,\"data\":\"Zm9v\",\"chainID\":\"1\",\"version\":1}");
-    //std::string toSign = "bonjour";
     std::string toSign2("nonce\":0,\"value\":\"0\",\"receiver\":\"erd1un74v8ldeuslanmx6c2nn3cuvwyu2k0swm8tqexcfm6mr8xnqavsfzqsd4\",\"sender\":\"erd1un74v8ldeuslanmx6c2nn3cuvwyu2k0swm8tqexcfm6mr8xnqavsfzqsd4\",\"gasPrice\":1000000000,\"gasLimit\":50000,\"data\":\"Zm9v\",\"chainID\":\"1\",\"version\":1}");
-    //std::string toSign2 = "fuira";
-    //hexadecimal value
 
     //createsignatures
     std::string signature = wg.signMessage(toSign);
@@ -949,7 +909,7 @@ bool UnitTests::retrieveSecretKeyTest(const char * p_walletName,
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-bool UnitTests::DLLisRoleOwnedByAddress (const char * p_collectionID, const char * p_role, const char * p_address)
+bool UnitTests::isRoleOwnedByAddress (const char * p_collectionID, const char * p_role, const char * p_address)
 {
     std::map<std::string,std::vector<std::string>> t_rolesAndOwnersMap = getRolesAndOwnersMap(p_collectionID);
     std::vector<std::string> t_addresses = t_rolesAndOwnersMap[p_role];
@@ -966,7 +926,7 @@ bool UnitTests::isTokenIssuedByAddress (const char * p_address, const char * p_t
 {
     returnCodeAndChar t_rccInfo = Multifungible::getOwnedTokenProperties(p_tokenID, p_address);
     std::pair<std::string,uint64_t> t_pairCollectionAndNonce = Multifungible::getCollectionIDAndNonceFromTokenID(p_tokenID);
-    std::string tmpstr(t_rccInfo.message,strlen(t_rccInfo.message)); // length optional, but needed if there may be zero's in your data
+    std::string tmpstr(t_rccInfo.message,strlen(t_rccInfo.message));
     std::istringstream is(tmpstr);
     std::string line;
     while (getline(is,line))
@@ -1025,7 +985,7 @@ bool UnitTests::checkTokenInfo (const char * p_collectionID,
         throw std::runtime_error(t_rccInfo.message);
     }
 
-    std::string tmpstr(t_rccInfo.message,strlen(t_rccInfo.message)); // length optional, but needed if there may be zero's in your data
+    std::string tmpstr(t_rccInfo.message,strlen(t_rccInfo.message));
     std::istringstream is(tmpstr);
 
     //Define our line that iterates through the server response
@@ -1272,4 +1232,58 @@ bool UnitTests::transferOwnershipVerification(const char * p_dllwalletpath,
         return false;
     }
 
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+bool UnitTests::transferEGLDVerification(const char * p_dllwalletpath,
+                                            const char * p_password,
+                                            const char * p_address,
+                                            const char * p_quantity)
+{
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
+    if (t_rccLoad.retCode)
+    {
+        std::cout << t_rccLoad.message << std::endl;
+        throw std::runtime_error("Error retrieving wallet");
+    }
+
+    CLIConfig clicf(CONFIGNAME);
+    Network nw = MULTIFUNGIBLE_NETWORK;
+    clicf.setNetwork(nw);
+
+    //Get old EGLD balance
+    BigUInt t_oldBalanceSource = WrapperProxyProvider(clicf.config()).getAccount(Address(t_rccLoad.message)).getBalance();
+    BigUInt t_oldBalanceDestination = WrapperProxyProvider(clicf.config()).getAccount(Address(p_address)).getBalance();
+    std::cout << t_oldBalanceSource.getValue() << std::endl;
+    std::cout << t_oldBalanceDestination.getValue() << std::endl;
+
+    BigUInt t_quantity(p_quantity);
+    //Verify how much EGLD we had before
+    returnCodeAndChar t_rccSendEGLD = Multifungible::EGLDTransaction(p_dllwalletpath,
+                                                                        p_password,
+                                                                        p_address,
+                                                                        p_quantity);
+    if (t_rccSendEGLD.retCode)
+    {
+        std::cout << t_rccSendEGLD.message << std::endl;
+        throw std::runtime_error("Error sending EGLD");
+    }
+
+    //Get new EGLD balance
+    BigUInt t_newBalanceSource = WrapperProxyProvider(clicf.config()).getAccount(Address(t_rccLoad.message)).getBalance();
+    BigUInt t_newBalanceDestination = WrapperProxyProvider(clicf.config()).getAccount(Address(p_address)).getBalance();
+    std::cout << t_newBalanceSource.getValue() << std::endl;
+    std::cout << t_newBalanceDestination.getValue() << std::endl;
+
+    std::cout << BigUInt(t_oldBalanceSource - t_newBalanceSource).getValue() << std::endl;
+    std::cout << BigUInt(t_newBalanceDestination - t_oldBalanceDestination).getValue() << std::endl;
+
+    //Take the transaction fee into account, usually 0.00005 EGLD
+
+    if (BigUInt(t_oldBalanceSource - t_newBalanceSource - BigUInt("50000000000000")).getValue() == p_quantity && BigUInt(t_newBalanceDestination - t_oldBalanceDestination).getValue() == p_quantity)
+    {
+        return true;
+    }
+    return false;
 }

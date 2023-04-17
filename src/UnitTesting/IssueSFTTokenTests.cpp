@@ -24,7 +24,7 @@ TEST_F(FixtureOverUnitTests, issueTokenVerificationSFT)
                                                    false,
                                                    t_rcc.message,
                                                    "tokenTest",
-                                                   7500,"","",1), true);
+                                                   "7500","","","1"), true);
 }
 
 /*-------------------------------------------------------------------------*
@@ -54,7 +54,7 @@ TEST_F(FixtureOverUnitTests, issueTokenVerificationSFTNoAddRole)
                                                    false,
                                                    t_rcc.message,
                                                    "tokenTest",
-                                                   7500,"","",1);
+                                                   "7500","","","1");
         FAIL();
     }
     catch( const std::runtime_error& err )
@@ -87,6 +87,6 @@ TEST_F(FixtureOverUnitTests, issueTokenVerificationSFTURL)
                                                    false,
                                                    t_rcc.message,
                                                    "tokenTest",
-                                                   7500,"","https://media.elrond.com/nfts/thumbnail/default.png",10), true);
+                                                   "7500","","https://media.elrond.com/nfts/thumbnail/default.png","10"), true);
 }
 

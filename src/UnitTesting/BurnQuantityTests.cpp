@@ -32,8 +32,8 @@ TEST_F(FixtureOverUnitTests, burnSFTQuantity) {
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                              5,
-                                                                                 7500,
+                                                                              "5",
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueSFTToken.retCode)
@@ -47,7 +47,7 @@ TEST_F(FixtureOverUnitTests, burnSFTQuantity) {
                                              false,
                                              false,
                                              t_rccIssueSFTToken.message,
-                                             4),true);
+                                             "4"),true);
 
 }
 
@@ -82,7 +82,7 @@ TEST_F(FixtureOverUnitTests, burnNFTQuantity) {
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                                 7500,
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)
@@ -96,7 +96,7 @@ TEST_F(FixtureOverUnitTests, burnNFTQuantity) {
                                          true,
                                          false,
                                          t_rccIssueNFTToken.message,
-                                         1),true);
+                                         "1"),true);
 }
 
 /*-------------------------------------------------------------------------*
@@ -122,7 +122,7 @@ TEST_F(FixtureOverUnitTests, burnSFTQuantityInvalidToken) {
                                              true,
                                              false,
                                              "invalidToken",
-                                             6);
+                                             "6");
         FAIL();
     }
     catch( const std::runtime_error& err )
@@ -156,7 +156,7 @@ TEST_F(FixtureOverUnitTests, burnSFTQuantityUnexistantToken) {
                                              false,
                                              false,
                                              "ABCD-1234-01",
-                                             6);
+                                             "6");
         FAIL();
     }
     catch( const std::runtime_error& err )

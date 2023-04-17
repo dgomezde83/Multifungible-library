@@ -122,5 +122,5 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTest) {
 
 //Create and load a wallet. Verify if addresses match
 TEST_F(FixtureOverUnitTests, DLLcreateWallet) {
-    EXPECT_EQ(m_ut->DLLWalletTests("./tests/createWallet.json",WALLETPASSWORD), true);
+    EXPECT_EQ(m_ut->CreateLoadWalletTests("./tests/createWallet.json",WALLETPASSWORD), true);
 }

@@ -1,5 +1,3 @@
-#define __SIMULATE__ false
-
 #include "WalletProvider.h"
 #include <chrono>
 #include <future>
@@ -147,7 +145,7 @@ Transaction WalletProvider::buildSFTEmissionTransaction(const std::string& p_sft
 /*-------------------------------------------------------------------------*
 * Create a transaction for adding a quantity of a token.                   *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildAddSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const uint64_t p_quantity) const
+Transaction WalletProvider::buildAddSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const
 {
     if(!p_collectionID.size())
     {
@@ -157,18 +155,18 @@ Transaction WalletProvider::buildAddSFTQuantityTransaction(const std::string& p_
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_NONCE_MISSING);
     }
-    if(!p_quantity)
+    if(!p_quantity.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_QUANTITY_MISSING);
     }
     TokenPayment t_tp = TokenPayment::semiFungible(p_collectionID,p_nonce,BigUInt(p_quantity));
-    Transaction t_ts = m_wpf.addQuantityOfSFTs(t_tp, BigUInt(p_quantity),m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.addQuantityOfSFTs(t_tp, p_quantity,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
 * Create a transaction for burning a quantity of a token.                  *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildBurnSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const uint64_t p_quantity) const
+Transaction WalletProvider::buildBurnSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const
 {
     if(!p_collectionID.size())
     {
@@ -178,12 +176,12 @@ Transaction WalletProvider::buildBurnSFTQuantityTransaction(const std::string& p
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_NONCE_MISSING);
     }
-    if(!p_quantity)
+    if(!p_quantity.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_QUANTITY_MISSING);
     }
     TokenPayment t_tp = TokenPayment::semiFungible(p_collectionID,p_nonce,BigUInt(p_quantity));
-    Transaction t_ts = m_wpf.burnQuantityOfSFTs(t_tp,BigUInt(p_quantity),m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.burnQuantityOfSFTs(t_tp,p_quantity,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -304,19 +302,19 @@ Transaction WalletProvider::buildNFTTransaction(const std::string& p_collectionI
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
     TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID,p_nonce);
-    Transaction t_ts = m_wpf.createSFTTransfer(t_tp,m_wg->getAccount().getNonce(),1,m_wg->getPublicAddress(),Address(p_destinataryAddress),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createSFTTransfer(t_tp,m_wg->getAccount().getNonce(),"1",m_wg->getPublicAddress(),Address(p_destinataryAddress),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
 * Create a transaction for sending an SFT token to another address.        *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildSFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce,const std::string & p_destinataryAddress, const uint64_t p_amount) const
+Transaction WalletProvider::buildSFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce,const std::string & p_destinataryAddress, const std::string & p_amount) const
 {
     if(!p_collectionID.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
     }
-    if(!p_amount)
+    if(!p_amount.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_AMOUNT_MISSING);
     }
@@ -411,7 +409,7 @@ Transaction WalletProvider::buildStopCreationRoleTransaction(const std::string& 
 /*-------------------------------------------------------------------------*
 * Create a transaction for creating a token unit of an NFT collection.     *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildCreateNFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const uint64_t p_royalties, const std::string& p_attributes, const std::string& p_uri) const
+Transaction WalletProvider::buildCreateNFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const
 {
     if(!p_collectionID.size())
     {
@@ -422,13 +420,13 @@ Transaction WalletProvider::buildCreateNFTUnitTransaction(const std::string& p_c
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TOKENNAME_MISSING);
     }
     char t_sftHash [3] = "00";
-    Transaction t_ts = m_wpf.createSFTUnit(m_wg->getAccount().getNonce(), m_wg->getPublicAddress(), p_collectionID, p_name, 1, p_royalties, t_sftHash, p_attributes, p_uri, MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createSFTUnit(m_wg->getAccount().getNonce(), m_wg->getPublicAddress(), p_collectionID, p_name, "1", p_royalties, t_sftHash, p_attributes, p_uri, MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
 * Create a transaction for creating token units of an SFT collection.      *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildCreateSFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const uint64_t p_emitAmount, const uint64_t p_royalties, const std::string& p_attributes, const std::string& p_uri) const
+Transaction WalletProvider::buildCreateSFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const std::string& p_emitAmount, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const
 {
     if(!p_collectionID.size())
     {
@@ -438,7 +436,7 @@ Transaction WalletProvider::buildCreateSFTUnitTransaction(const std::string& p_c
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TOKENNAME_MISSING);
     }
-    if(!p_emitAmount)
+    if(!p_emitAmount.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_AMOUNT_MISSING);
     }
@@ -744,14 +742,14 @@ void WalletProvider::transferCreationRole(const std::string& p_collectionID, con
 * Creates a new token from a collection, and issues the given quantity of  *
 * them.                                                                    *
 *-------------------------------------------------------------------------*/
-std::string WalletProvider::emitSFTUnits(const std::string& p_collectionID, const std::string& p_name, const int p_emitAmount, const int p_royalties, const std::string& p_attributes, const std::string& p_uri) const
+std::string WalletProvider::emitSFTUnits(const std::string& p_collectionID, const std::string& p_name, const std::string& p_emitAmount, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildCreateSFTUnitTransaction(p_collectionID,p_name,(const uint64_t)p_emitAmount, (const uint64_t)p_royalties, p_attributes, p_uri),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildCreateSFTUnitTransaction(p_collectionID,p_name, p_emitAmount, p_royalties, p_attributes, p_uri),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildCreateSFTUnitTransaction(p_collectionID,p_name,(const uint64_t)p_emitAmount, (const uint64_t)p_royalties, p_attributes, p_uri),false).value();
+    std::string t_transactionHash = pushTransaction(buildCreateSFTUnitTransaction(p_collectionID,p_name, p_emitAmount, p_royalties, p_attributes, p_uri),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -768,14 +766,14 @@ std::string WalletProvider::emitSFTUnits(const std::string& p_collectionID, cons
 /*-------------------------------------------------------------------------*
 * Creates a new token from a collection, and issues one single of them     *
 *-------------------------------------------------------------------------*/
-std::string WalletProvider::emitNFTUnit(const std::string& p_collectionID, const std::string& p_name, const int p_royalties, const std::string& p_attributes, const std::string& p_uri) const
+std::string WalletProvider::emitNFTUnit(const std::string& p_collectionID, const std::string& p_name, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildCreateNFTUnitTransaction(p_collectionID,p_name,(const uint64_t)p_royalties, p_attributes, p_uri),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildCreateNFTUnitTransaction(p_collectionID,p_name, p_royalties, p_attributes, p_uri),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildCreateNFTUnitTransaction(p_collectionID,p_name,(const uint64_t)p_royalties, p_attributes, p_uri),false).value();
+    std::string t_transactionHash = pushTransaction(buildCreateNFTUnitTransaction(p_collectionID,p_name, p_royalties, p_attributes, p_uri),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -793,14 +791,14 @@ std::string WalletProvider::emitNFTUnit(const std::string& p_collectionID, const
 * Adds the given quantity of tokens to the given token (in the form of     *
 * collection ID and nonce)                                                 *
 *-------------------------------------------------------------------------*/
-void WalletProvider::addSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const int p_quantity) const
+void WalletProvider::addSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildAddSFTQuantityTransaction(p_collectionID, p_nonce, (const uint64_t)p_quantity),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildAddSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildAddSFTQuantityTransaction(p_collectionID, p_nonce, (const uint64_t)p_quantity),false).value();
+    std::string t_transactionHash = pushTransaction(buildAddSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -817,14 +815,14 @@ void WalletProvider::addSFTQuantity(const std::string& p_collectionID, const uin
 /*-------------------------------------------------------------------------*
 * Burns the given quantity of the given token.                             *
 *-------------------------------------------------------------------------*/
-void WalletProvider::burnSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const int p_quantity) const
+void WalletProvider::burnSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildBurnSFTQuantityTransaction(p_collectionID, p_nonce, (const uint64_t)p_quantity),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildBurnSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildBurnSFTQuantityTransaction(p_collectionID, p_nonce, (const uint64_t)p_quantity),false).value();
+    std::string t_transactionHash = pushTransaction(buildBurnSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -980,10 +978,10 @@ void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, con
 
     if (__SIMULATE__)
     {
-        pushTransaction(buildNFTTransaction(p_collectionID, p_nonce, std::string(p_destinationAddress)),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildNFTTransaction(p_collectionID, p_nonce, p_destinationAddress),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildNFTTransaction(p_collectionID, p_nonce, std::string(p_destinationAddress)),false).value();
+    std::string t_transactionHash = pushTransaction(buildNFTTransaction(p_collectionID, p_nonce, p_destinationAddress),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -1013,26 +1011,29 @@ void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, con
 /*-------------------------------------------------------------------------*
 * Sends the given tokens to the given address.                              *
 *-------------------------------------------------------------------------*/
-void WalletProvider::SFTTransaction(const std::string& p_destinationAddress, const std::string& p_collectionID, const uint64_t p_nonce, const int p_amount) const
+void WalletProvider::SFTTransaction(const std::string& p_destinationAddress, const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_amount) const
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildSFTTransaction(p_collectionID, p_nonce, std::string(p_destinationAddress),(const uint64_t)p_amount),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildSFTTransaction(p_collectionID, p_nonce, p_destinationAddress,p_amount),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    waitTillTransactionIsCompleted(pushTransaction(buildSFTTransaction(p_collectionID, p_nonce, std::string(p_destinationAddress),(const uint64_t)p_amount),false).value()); //returns code + transaction status
+    waitTillTransactionIsCompleted(pushTransaction(buildSFTTransaction(p_collectionID, p_nonce, p_destinationAddress, p_amount),false).value()); //returns code + transaction status
 }
 /*-------------------------------------------------------------------------*
 * Sends the given EGLD to the given address.                               *
 *-------------------------------------------------------------------------*/
-void WalletProvider::EGLDTransaction(const std::string& p_strAddress2, const int p_amount) const
+void WalletProvider::EGLDTransaction(const std::string& p_destinationAddress, const std::string& p_amount) const
 {
+    //Transform the EGLD amount in quintillion format
+    uint64_t t_quantity = std::strtoull(p_amount.c_str(), nullptr, 10) * std::pow(10, 18);
+
     if (__SIMULATE__)
     {
-        pushTransaction(buildMoneyTransaction(std::string(p_strAddress2), (const uint64_t)p_amount),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildMoneyTransaction(p_destinationAddress, t_quantity),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    waitTillTransactionIsCompleted(pushTransaction(buildMoneyTransaction(std::string(p_strAddress2), (const uint64_t)p_amount),false).value()); //returns code + transaction status
+    waitTillTransactionIsCompleted(pushTransaction(buildMoneyTransaction(p_destinationAddress, t_quantity),false).value()); //returns code + transaction status
 }
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*

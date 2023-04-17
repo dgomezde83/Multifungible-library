@@ -201,7 +201,7 @@ std::string SFTIssuePayloadBuilder::build() const
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-SFTAddQuantityBuilder::SFTAddQuantityBuilder(const std::string &p_tokenID, const uint64_t p_nonce, const BigUInt p_supplyToEmit) :
+SFTAddQuantityBuilder::SFTAddQuantityBuilder(const std::string &p_tokenID, const uint64_t p_nonce, const std::string & p_supplyToEmit) :
         m_tokenID(std::move(p_tokenID)),
         m_nonce(std::move(p_nonce)),
         m_supplyToEmit(std::move(p_supplyToEmit))
@@ -214,7 +214,7 @@ std::string SFTAddQuantityBuilder::build() const
     SCArguments args;
     args.add(m_tokenID);
     args.add(BigUInt(m_nonce));
-    args.add(m_supplyToEmit);
+    args.add(BigUInt(m_supplyToEmit));
 
     std::string data = SFT_ADDQUANTITY_PREFIX + args.asOnData();
 
@@ -223,7 +223,7 @@ std::string SFTAddQuantityBuilder::build() const
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-SFTBurnQuantityBuilder::SFTBurnQuantityBuilder(const std::string &p_tokenID, const uint64_t p_nonce, const BigUInt p_supplyToBurn) :
+SFTBurnQuantityBuilder::SFTBurnQuantityBuilder(const std::string &p_tokenID, const uint64_t p_nonce, const std::string & p_supplyToBurn) :
         m_tokenID(std::move(p_tokenID)),
         m_nonce(std::move(p_nonce)),
         m_supplyToBurn(std::move(p_supplyToBurn))
@@ -236,7 +236,7 @@ std::string SFTBurnQuantityBuilder::build() const
     SCArguments args;
     args.add(m_tokenID);
     args.add(BigUInt(m_nonce));
-    args.add(m_supplyToBurn);
+    args.add(BigUInt(m_supplyToBurn));
 
     std::string data = SFT_BURNQUANTITY_PREFIX + args.asOnData();
 
@@ -444,8 +444,8 @@ std::string SFTITransferCreationRoleBuilder::build() const
 *-------------------------------------------------------------------------*/
 SFTICreateUnitsBuilder::SFTICreateUnitsBuilder(const std::string &p_tokenID,
                                                const std::string &p_name,
-                                            const uint64_t p_quantity,
-                                            const uint64_t p_royalties,
+                                            const std::string& p_quantity,
+                                            const std::string& p_royalties,
                                             const std::string &p_hash,
                                             const std::string &p_attributes,
                                             const std::string &p_uri) :
@@ -481,7 +481,7 @@ std::string SFTICreateUnitsBuilder::build() const
 *-------------------------------------------------------------------------*/
 SFTTokenTransactionBuilder::SFTTokenTransactionBuilder(const std::string &p_tokenID,
                                                         const uint64_t p_tokenNonce,
-                                                        const uint64_t p_transferQuantity,
+                                                        std::string const & p_transferQuantity,
                                                         const Address &p_receiverAddress) :
         m_tokenID(std::move(p_tokenID)),
         m_tokenNonce(std::move(p_tokenNonce)),
@@ -712,8 +712,8 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createSFTUnit(co
                                                                                 const Address &sender,
                                                                                 const std::string &p_tokenID,
                                                                                 const std::string &p_name,
-                                                                                const uint64_t p_quantity,
-                                                                                const uint64_t p_royalties,
+                                                                                const std::string& p_quantity,
+                                                                                const std::string& p_royalties,
                                                                                 const std::string &p_hash,
                                                                                 const std::string &p_attributes,
                                                                                 const std::string &p_uri,
@@ -743,7 +743,7 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createSFTUnit(co
 * from an SFT collection.                                                  *
 *-------------------------------------------------------------------------*/
 std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::addQuantityOfSFTs(const TokenPayment &p_tokenPayment,
-                                                                                   const BigUInt p_supplyToEmit,
+                                                                                   const std::string & p_supplyToEmit,
                                                                                    const uint64_t nonce,
                                                                                    const Address &sender,
                                                                                    const uint64_t gasPrice) const
@@ -770,7 +770,7 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::addQuantityOfSFT
 * Builds a transaction to burn a quantity of tokens from a collection.     *
 *-------------------------------------------------------------------------*/
 std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::burnQuantityOfSFTs(const TokenPayment &p_tokenPayment,
-                                                                                   const BigUInt p_supplyToBurn,
+                                                                                   const std::string & p_supplyToBurn,
                                                                                    const uint64_t nonce,
                                                                                    const Address &sender,
                                                                                    const uint64_t gasPrice) const
@@ -906,7 +906,7 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::addURI(const Tok
 *-------------------------------------------------------------------------*/
 std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createSFTTransfer(const TokenPayment &tokenPayment,
                                                                                    const uint64_t nonce,
-                                                                                   const uint64_t quantity,
+                                                                                   std::string const & quantity,
                                                                                    const Address &sender,
                                                                                    const Address &receiver,
                                                                                    const uint64_t gasPrice) const

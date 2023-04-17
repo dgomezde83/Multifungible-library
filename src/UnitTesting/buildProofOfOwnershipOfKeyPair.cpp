@@ -54,7 +54,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipSuccess)
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                                 7500,
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)
@@ -84,8 +84,8 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipSuccess)
 TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipTransferSomeUnitsSuccess)
 {
     std::string t_plaintext = "abcd";
-    int p_quantity = 2;
-    int p_quantityToSend = 1;
+    const char * p_quantity = "2";
+    const char * p_quantityToSend = "1";
 
     //Load wallet
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
@@ -119,7 +119,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipTransferSomeUnitsSuccess)
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
                                                                               p_quantity,
-                                                                                 7500,
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueSFTToken.retCode)
@@ -185,7 +185,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipFailure)
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                                 7500,
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)

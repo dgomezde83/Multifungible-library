@@ -33,7 +33,7 @@ TEST_F(FixtureOverUnitTests, addURIVerification) {
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                              7500,
+                                                                              "7500",
                                                                               "",
                                                                               "");
     if (t_rccIssueSFTToken.retCode)
@@ -82,8 +82,8 @@ TEST_F(FixtureOverUnitTests, addURIVerificationSFT) {
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                              5,
-                                                                              7500,
+                                                                              "5",
+                                                                              "7500",
                                                                               "",
                                                                               "");
     if (t_rccIssueSFTToken.retCode)

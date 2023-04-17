@@ -24,8 +24,8 @@ extern "C"
                                                          const char * p_password,
                                                          const char * p_collectionID,
                                                          const char * p_name,
-                                                         const int p_emitAmount,
-                                                         const int p_royalties,
+                                                         const char * p_emitAmount,
+                                                         const char * p_royalties,
                                                          const char * p_attributes,
                                                          const char * p_uri)
     {
@@ -38,7 +38,7 @@ extern "C"
                                                          const char * p_password,
                                                          const char * p_collectionID,
                                                          const char * p_name,
-                                                         const int p_royalties,
+                                                         const char * p_royalties,
                                                          const char * p_attributes,
                                                          const char * p_uri)
     {
@@ -134,7 +134,7 @@ extern "C"
     EXPORT RCM CALLING_CONVENTION addSFTQuantity(const char * p_walletName,
                                                  const char * p_password,
                                                  const char * p_tokenID,
-                                                 const int p_quantity)
+                                                 const char * p_quantity)
     {
         return Multifungible::addSFTQuantity(p_walletName, p_password,p_tokenID,p_quantity);
     }
@@ -144,7 +144,7 @@ extern "C"
     EXPORT RCM CALLING_CONVENTION burnSFTQuantity(const char * p_walletName,
                                                   const char * p_password,
                                                   const char * p_tokenID,
-                                                  const int p_quantity)
+                                                  const char * p_quantity)
     {
         return Multifungible::burnSFTQuantity(p_walletName, p_password,p_tokenID,p_quantity);
     }
@@ -256,7 +256,7 @@ extern "C"
                                                  const char * p_password,
                                                  const char * p_destinationAddress,
                                                  const char * p_tokenID,
-                                                 const int p_quantity)
+                                                 const char * p_quantity)
     {
         return Multifungible::SFTTransaction(p_walletName, p_password,p_destinationAddress,p_tokenID, p_quantity);
     }
@@ -284,7 +284,7 @@ extern "C"
         /*-------------------------------------------------------------------------*
     *--------------------------------------------------------------------------*
     *-------------------------------------------------------------------------*/
-    EXPORT RCM CALLING_CONVENTION EGLDTransaction(const char * p_walletName, const char * p_password,const char * p_strAddress, const int p_amount)
+    EXPORT RCM CALLING_CONVENTION EGLDTransaction(const char * p_walletName, const char * p_password,const char * p_strAddress, const char * p_amount)
     {
         return Multifungible::EGLDTransaction(p_walletName, p_password,p_strAddress,p_amount);
     }

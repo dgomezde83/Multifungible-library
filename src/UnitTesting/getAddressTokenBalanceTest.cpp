@@ -32,8 +32,8 @@ TEST_F(FixtureOverUnitTests, getAddressTokenBalanceTestSFT)
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                              5,
-                                                                                 7500,
+                                                                              "5",
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueSFTToken.retCode)
@@ -83,7 +83,7 @@ TEST_F(FixtureOverUnitTests, getAddressTokenBalanceTestNFT)
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                                 7500,
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)

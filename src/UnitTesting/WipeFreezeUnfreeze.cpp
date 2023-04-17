@@ -36,8 +36,8 @@ TEST_F(FixtureOverUnitTests, wipeVerificationSuccessful) {
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                              5,
-                                                                                 7500,
+                                                                              "5",
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)
@@ -98,8 +98,8 @@ TEST_F(FixtureOverUnitTests, freezeVerificationSuccessful) {
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                              5,
-                                                                                 7500,
+                                                                              "5",
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)
@@ -160,8 +160,8 @@ TEST_F(FixtureOverUnitTests, unfreezeVerificationSuccessful) {
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
-                                                                              5,
-                                                                                 7500,
+                                                                              "5",
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)

@@ -106,7 +106,7 @@ returnCodeAndChar Multifungible::issueNonFungibleToken(const char * p_walletName
                                                          const char * p_password,
                                                          const char * p_collectionID,
                                                          const char * p_name,
-                                                         const int p_royalties,
+                                                         const char * p_royalties,
                                                          const char * p_attributes,
                                                          const char * p_uri)
 {
@@ -136,8 +136,8 @@ returnCodeAndChar Multifungible::issueSemiFungibleToken(const char * p_walletNam
                                                          const char * p_password,
                                                          const char * p_collectionID,
                                                          const char * p_name,
-                                                         const int p_emitAmount,
-                                                         const int p_royalties,
+                                                         const char * p_emitAmount,
+                                                         const char * p_royalties,
                                                          const char * p_attributes,
                                                          const char * p_uri)
 {
@@ -631,7 +631,7 @@ returnCodeAndChar Multifungible::getRolesAndAddresses(const char * p_collectionI
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-returnCodeAndChar Multifungible::addSFTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const int p_quantity)
+returnCodeAndChar Multifungible::addSFTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_quantity)
 {
     try
     {
@@ -655,7 +655,7 @@ returnCodeAndChar Multifungible::addSFTQuantity(const char * p_walletName, const
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-returnCodeAndChar Multifungible::burnSFTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const int p_quantity)
+returnCodeAndChar Multifungible::burnSFTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_quantity)
 {
     try
     {
@@ -775,7 +775,7 @@ returnCodeAndChar Multifungible::NFTTransaction(const char * p_walletName, const
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-returnCodeAndChar Multifungible::SFTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress, const char * p_tokenID, const int p_amount)
+returnCodeAndChar Multifungible::SFTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress, const char * p_tokenID, const char * p_amount)
 {
     try
     {
@@ -821,7 +821,7 @@ returnCodeAndChar Multifungible::getOwnedTokenProperties(const char * p_tokenID,
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-returnCodeAndChar Multifungible::EGLDTransaction(const char * p_walletName, const char * p_password,const char * p_strAddress, const int p_amount)
+returnCodeAndChar Multifungible::EGLDTransaction(const char * p_walletName, const char * p_password,const char * p_strAddress, const char * p_amount)
 {
     try
     {

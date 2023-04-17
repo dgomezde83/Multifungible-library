@@ -38,15 +38,15 @@ extern "C"
                                                          const char * p_password,
                                                          const char * p_collectionID,
                                                          const char * p_name,
-                                                         const int p_emitAmount,
-                                                         const int p_royalties,
+                                                         const char * p_emitAmount,
+                                                         const char * p_royalties,
                                                          const char * p_attributes,
                                                          const char * p_uri);
     EXPORT RCM CALLING_CONVENTION issueNonFungibleToken(const char * p_walletName,
                                                          const char * p_password,
                                                          const char * p_collectionID,
                                                          const char * p_name,
-                                                         const int p_royalties,
+                                                         const char * p_royalties,
                                                          const char * p_attributes,
                                                          const char * p_uri);
     EXPORT RCM CALLING_CONVENTION upgradeProperties (const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_role, const bool p_newValue);
@@ -63,8 +63,8 @@ extern "C"
     EXPORT RCM CALLING_CONVENTION getEmittedCollections (const char * p_address);
     EXPORT RCM CALLING_CONVENTION addCollectionRole(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_address, const char * p_role);
     EXPORT RCM CALLING_CONVENTION addURI (const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_uri);
-    EXPORT RCM CALLING_CONVENTION addSFTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const int p_quantity);
-    EXPORT RCM CALLING_CONVENTION burnSFTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const int p_quantity);
+    EXPORT RCM CALLING_CONVENTION addSFTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_quantity);
+    EXPORT RCM CALLING_CONVENTION burnSFTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_quantity);
     EXPORT RCM CALLING_CONVENTION wipeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
     EXPORT RCM CALLING_CONVENTION freezeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
     EXPORT RCM CALLING_CONVENTION unfreezeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
@@ -79,8 +79,11 @@ extern "C"
                                                  const char * p_password,
                                                  const char * p_destinationAddress,
                                                  const char * p_tokenID,
-                                                 const int p_quantity);
-
+                                                 const char * p_quantity);
+    EXPORT RCM CALLING_CONVENTION EGLDTransaction(const char * p_walletName,
+                                                  const char * p_password,
+                                                  const char * p_strAddress,
+                                                  const char * p_amount);
     EXPORT RCM CALLING_CONVENTION issueSFTCollection(const char * p_walletName,
                                            const char * p_password,
                                            const char * p_sftName,

@@ -101,13 +101,13 @@ class WalletProvider
 
         void transferCreationRole(const std::string& p_collectionID, const std::string& p_address) const;
 
-        std::string emitSFTUnits(const std::string& p_collectionID, const std::string& p_name, const int p_emitAmount, const int p_royalties, const std::string& p_attributes, const std::string& p_uri) const;
+        std::string emitSFTUnits(const std::string& p_collectionID, const std::string& p_name, const std::string& p_emitAmount, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const;
 
-        std::string emitNFTUnit(const std::string& p_collectionID, const std::string& p_name, const int p_royalties, const std::string& p_attributes, const std::string& p_uri) const;
+        std::string emitNFTUnit(const std::string& p_collectionID, const std::string& p_name, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const;
 
-        void addSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const int p_quantity) const;
+        void addSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const;
 
-        void burnSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const int p_quantity) const;
+        void burnSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const;
 
         void wipeNFT(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const;
 
@@ -121,9 +121,9 @@ class WalletProvider
 
         void NFTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const uint64_t p_nonce) const;
 
-        void SFTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const uint64_t p_nonce, const int p_amount) const;
+        void SFTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_amount) const;
 
-        void EGLDTransaction(const std::string& p_strAddress2, const int p_amount) const;
+        void EGLDTransaction(const std::string& p_destinationAddress, const std::string& p_amount) const;
 
     protected:
     private:
@@ -154,13 +154,13 @@ class WalletProvider
                                                 const bool p_canUpgrade,
                                                 const bool p_canAddSpecialRoles) const;
 
-        Transaction buildSFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress, const uint64_t p_quantity) const;
+        Transaction buildSFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress, const std::string & p_quantity) const;
 
         Transaction buildNFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress) const;
 
-        Transaction buildAddSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const uint64_t p_quantity) const;
+        Transaction buildAddSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const;
 
-        Transaction buildBurnSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const uint64_t p_quantity) const;
+        Transaction buildBurnSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const;
 
         Transaction buildWipeNFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const;
 
@@ -180,9 +180,9 @@ class WalletProvider
 
         Transaction buildStopCreationRoleTransaction(const std::string& p_collectionID) const;
 
-        Transaction buildCreateNFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const uint64_t p_royalties, const std::string& p_attributes, const std::string& p_uri) const;
+        Transaction buildCreateNFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const;
 
-        Transaction buildCreateSFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const uint64_t p_emitAmount, const uint64_t p_royalties, const std::string& p_attributes, const std::string& p_uri) const;
+        Transaction buildCreateSFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const std::string& p_emitAmount, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const;
 
         void waitTillTransactionIsCompleted(const std::string &p_txHash) const;
 

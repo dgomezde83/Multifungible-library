@@ -7,8 +7,6 @@
 #include "filehandler/keyfilereader.h"
 #include "WrapperKeyFile.h"
 
-#include <algorithm>
-
 #define WALLETGENERATOR_SEED_CHAR_LENGTH 1024
 
 /*-------------------------------------------------------------------------*

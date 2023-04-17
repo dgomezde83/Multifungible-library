@@ -43,7 +43,7 @@ TEST_F(FixtureOverUnitTests, transferTokenVerificationNFT) {
                                                                               WALLETPASSWORD,
                                                                               t_rccCollection.message,
                                                                               "tokenTest",
-                                                                                 7500,
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)
@@ -57,7 +57,7 @@ TEST_F(FixtureOverUnitTests, transferTokenVerificationNFT) {
                                                    WALLETPASSWORD,
                                                    true,
                                                    t_rccIssueNFTToken.message,
-                                                   1), true);
+                                                   "1"), true);
 }
 
 /*-------------------------------------------------------------------------*
@@ -88,7 +88,7 @@ TEST_F(FixtureOverUnitTests, transferTokenVerificationNFTNoTransferRole) {
                                                    true,
                                                    t_rcc.message,
                                                    "tokenTest",
-                                                   7500,"","",1);
+                                                   "7500","","","1");
         FAIL();
     }
     catch( const std::runtime_error& err )

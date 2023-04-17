@@ -50,7 +50,7 @@ int main(int argc, char** argv)
         file << list_files;
         file.close();
         printf("Successfully saved public addresses\n");
-        printf("Please, add 5 faucet EGLD to %s\n",t_rccMULTIFUNGIBLE_MAINWALLET.message);
+        printf("Please, add 10 faucet EGLD to %s\n",t_rccMULTIFUNGIBLE_MAINWALLET.message);
         printf("Please, add less than 0.05 faucet EGLD to %s\n",t_rccMULTIFUNGIBLE_WALLET_NOMONEY.message);
         printf("Please, add 0.05 faucet EGLD to %s\n",t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS.message);
     } else if (strcmp(argv[1], "-s") == 0) {
@@ -75,7 +75,7 @@ int main(int argc, char** argv)
             printf("Error retrieving wallet pubic addresses.\n");
             return 1;
         }
-        printf("MULTIFUNGIBLE_MAINWALLET: %s\nMULTIFUNGIBLE_WALLET_NOMONEY: %s\nMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS: %s\n",
+        printf("Main wallet: %s\nSecondary wallet: %s\nOne-use wallet: %s\n",
                t_rccMULTIFUNGIBLE_MAINWALLET.message,
                t_rccMULTIFUNGIBLE_WALLET_NOMONEY.message,
                t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS.message);

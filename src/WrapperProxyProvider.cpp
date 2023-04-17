@@ -6,7 +6,7 @@
 #include <regex>
 
 #define MULTIVERSX_SMART_CONTRACT_VIRTUAL_FUNCTION_ADDRESS "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u"
-#define MULTIVERSX_SMARTCONTRACTGATEWAY std::string("https://gateway.elrond.com/vm-values/query")
+#define MULTIVERSX_SMARTCONTRACTGATEWAY std::string("https://gateway.multiversx.com/vm-values/query")
 #define MULTIVERSX_SIMULATION_ENDPOINT "https://gateway.multiversx.com/transaction/simulate"
 #define WALLETPROXYPROVIDER_TOKEN_DELIMITER "@"
 
@@ -323,8 +323,6 @@ std::vector<nlohmann::json> WrapperProxyProvider::getTransactionResponseVector(c
         nlohmann::json t_events = response["transaction"]["logs"]["events"].begin().value();
         //Take the last element of the array/table of topics
         std::string t_topics = t_events["topics"].rbegin().value();
-        //std::string t_data = t_events["data"];
-        //std::cout << "data: " << util::hexToString(t_data) << std::endl;
         //decode the element from base 64
         throw std::runtime_error(util::base64::decode(t_topics));
     }

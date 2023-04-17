@@ -24,7 +24,7 @@ TEST_F(FixtureOverUnitTests, issueTokenVerificationNFT)
                                                    true,
                                                    t_rcc.message,
                                                    "tokenTest",
-                                                   7500,"","",1), true);
+                                                   "7500","","","1"), true);
 }
 
 /*-------------------------------------------------------------------------*
@@ -54,7 +54,7 @@ TEST_F(FixtureOverUnitTests, issueTokenVerificationNFTNoAddRole)
                                                    true,
                                                    t_rcc.message,
                                                    "tokenTest",
-                                                   7500,"","",1);
+                                                   "7500","","","1");
         FAIL();
     }
     catch( const std::runtime_error& err )

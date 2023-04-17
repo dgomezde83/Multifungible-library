@@ -6,7 +6,7 @@
 //Issue an SFT Collection, then issue 5 tokens of a kind. After, issue an additional 6 tokens of that same token ID.
 TEST_F(FixtureOverUnitTests, getAllNFTsAndSFTsBalancesTest1)
 {
-    int p_quantity = 5;
+    const char * p_quantity = "5";
 
     //Load wallet
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
@@ -34,7 +34,7 @@ TEST_F(FixtureOverUnitTests, getAllNFTsAndSFTsBalancesTest1)
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
                                                                               p_quantity,
-                                                                                 7500,
+                                                                                 "7500",
                                                                                  "",
                                                                                  "");
     if (t_rccIssueSFTToken.retCode)

@@ -27,6 +27,6 @@ TEST_F(FixtureOverUnitTests, getRolesAndAddressesTest1)
     }
 
     //This test uses the API, so it might be a bit slower sometimes and fail
-    EXPECT_EQ(DLLisRoleOwnedByAddress(t_rccIssueCollection.message,"ESDTRoleNFTCreate",t_rccLoad.message),true);
+    EXPECT_EQ(isRoleOwnedByAddress(t_rccIssueCollection.message,"ESDTRoleNFTCreate",t_rccLoad.message),true);
 
 }
