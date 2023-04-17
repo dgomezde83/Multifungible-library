@@ -95,7 +95,7 @@ print(tokenID.my_int)
 print(tokenID.my_string.decode())
 ```
 
-## 3. External libraries
+## 4. External libraries
 This repository uses `google test` as submodule, as well as the following `external` sources:
 
 - **aes_128_ctr**: License: **The Unlicense**. From: https://github.com/kokke/tiny-AES-c
