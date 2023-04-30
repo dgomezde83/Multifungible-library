@@ -1,5 +1,3 @@
-#define CONFIGNAME "./tests/config.toml"
-
 #include "UnitTests.h"
 #include "Multifungible.h"
 #include "wrappers/cryptosignwrapper.h" //for seed length
@@ -252,7 +250,7 @@ bool UnitTests::issueCollectionVerification(const char * p_dllwalletpath,
                                          const bool p_canUpgrade,
                                          const bool p_canAddSpecialRoles)
 {
-    CLIConfig clicf(CONFIGNAME);
+    CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
     Network nw = Testnet;
     clicf.setNetwork(nw);
     WrapperProxyProvider wpp (clicf.config());
@@ -884,7 +882,7 @@ bool UnitTests::transferTokenVerification(const char * p_dllwalletpath1,
 bool UnitTests::createNewAccountTest(const char * p_walletName,
                                     const char * p_password)
 {
-    CLIConfig clicf(CONFIGNAME);
+    CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
     Network nw = Testnet;
     clicf.setNetwork(nw);
 
@@ -907,7 +905,7 @@ bool UnitTests::createNewAccountTest(const char * p_walletName,
 bool UnitTests::verifySignatureTest(const char * p_walletName,
                                     const char * p_password)
 {
-    CLIConfig clicf(CONFIGNAME);
+    CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
     Network nw = Testnet;
     clicf.setNetwork(nw);
 
@@ -947,7 +945,7 @@ bool UnitTests::verifySignatureTest(const char * p_walletName,
 bool UnitTests::retrieveSecretKeyTest(const char * p_walletName,
                                       const char * p_password)
 {
-    CLIConfig clicf(CONFIGNAME);
+    CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
     Network nw = Testnet;
     clicf.setNetwork(nw);
 
@@ -1387,7 +1385,7 @@ bool UnitTests::transferEGLDVerification(const char * p_dllwalletpath,
         throw std::runtime_error("Error retrieving wallet");
     }
 
-    CLIConfig clicf(CONFIGNAME);
+    CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
     Network nw = MULTIFUNGIBLE_NETWORK;
     clicf.setNetwork(nw);
 

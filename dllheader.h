@@ -31,7 +31,6 @@ struct returnCodeAndChar
 extern "C"
     {
     typedef struct returnCodeAndChar RCM;
-    EXPORT RCM CALLING_CONVENTION helloWorld();
     EXPORT RCM CALLING_CONVENTION createWallet(const char * p_walletName, const char * p_password);
     EXPORT RCM CALLING_CONVENTION loadWallet(const char * p_walletName, const char * p_password);
     EXPORT RCM CALLING_CONVENTION issueSemiFungibleToken(const char * p_walletName,

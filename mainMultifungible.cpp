@@ -4,19 +4,11 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-#define MAIN_INTERMEDIARY_WALLET_1 "./tests/intermediaryWallet1.json"
-#define MAIN_INTERMEDIARY_WALLET_2 "./tests/intermediaryWallet2.json"
-#define MAIN_INTERMEDIARY_WALLET_3 "./tests/intermediaryWallet3.json"
-#define MAIN_INTERMEDIARY_WALLET_4 "./tests/intermediaryWallet4.json"
-#define MAIN_INTERMEDIARY_WALLET_5 "./tests/intermediaryWallet5.json"
-/*-------------------------------------------------------------------------*
-*--------------------------------------------------------------------------*
-*-------------------------------------------------------------------------*/
-void loadMainWalletWithEnoughEGLD()
-{
-    //Create 5 wallets and display addresses. User can then load them with EGLD
-
-}
+#define MAIN_INTERMEDIARY_WALLET_1 "../tests/intermediaryWallet1.json"
+#define MAIN_INTERMEDIARY_WALLET_2 "../tests/intermediaryWallet2.json"
+#define MAIN_INTERMEDIARY_WALLET_3 "../tests/intermediaryWallet3.json"
+#define MAIN_INTERMEDIARY_WALLET_4 "../tests/intermediaryWallet4.json"
+#define MAIN_INTERMEDIARY_WALLET_5 "../tests/intermediaryWallet5.json"
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/

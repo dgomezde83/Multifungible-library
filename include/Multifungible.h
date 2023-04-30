@@ -1,6 +1,9 @@
 #ifndef MULTIFUNGIBLE_H
 #define MULTIFUNGIBLE_H
 
+#define VALUE(string) #string
+#define TO_LITERAL(string) VALUE(string)
+
 #include "../dllheader.h"
 
 //DLL MESSAGES
@@ -78,7 +81,7 @@ class Multifungible
         static returnCodeAndChar upgradeProperties (const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_property, const bool p_newValue);
         static returnCodeAndChar transferOwnership (const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address);
         static returnCodeAndChar addCollectionRole(const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address, const char * p_role);
-        static returnCodeAndChar removeCollectionRole(const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address, const char * p_role);    
+        static returnCodeAndChar removeCollectionRole(const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address, const char * p_role);
         static returnCodeAndChar addURI(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_uri);
         static returnCodeAndChar upgradeAttribute(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_attribute);
         static returnCodeAndChar addSFTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_quantity);
