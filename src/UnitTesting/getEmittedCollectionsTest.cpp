@@ -36,7 +36,7 @@ TEST_F(FixtureOverUnitTests, getEmittedCollectionsTestSuccess)
     }
 
     std::string t_collectionID = t_rccIssueCollection.message;
-    std::string tmpstr(t_rccRetrieveData.message,strlen(t_rccRetrieveData.message)); // length optional, but needed if there may be zero's in your data
+    std::string tmpstr(t_rccRetrieveData.message,strlen(t_rccRetrieveData.message));
     std::istringstream is(tmpstr);
     std::string line;
     int t_countlines = 0;

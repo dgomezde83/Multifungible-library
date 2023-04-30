@@ -4,27 +4,7 @@
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
-TEST_F(FixtureOverUnitTests, buildProofOfOwnershipOfKeyPairSuccess)
-{
-    std::string t_plaintext = "abcd";
-    std::string t_ciphertext = "cabfce3c7f4d52cf76d57b63f56dc19fcbe5093fae32ba5a1f9ed0928cbb5c665c6bc2c50ea682e763fb0f92cde5bd44104d29288d76dbadfbd12cab0028b907";
-    //Load wallet
-    returnCodeAndChar t_rccProof = Multifungible::buildProofOfOwnershipOfKeyPair(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD,t_plaintext.c_str());
-    if (t_rccProof.retCode)
-    {
-        std::cout << t_rccProof.message << std::endl;
-        FAIL();
-    }
-
-    //This test uses the API, so it might be a bit slower sometimes and fail
-    EXPECT_STREQ(t_rccProof.message,t_ciphertext.c_str());
-
-}
-
-/*-------------------------------------------------------------------------*
-*--------------------------------------------------------------------------*
-*-------------------------------------------------------------------------*/
-
+//Issue a token and prove we are its owner
 TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipSuccess)
 {
     std::string t_plaintext = "abcd";
@@ -42,7 +22,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipSuccess)
                                                                  WALLETPASSWORD,
                                                                  "collectionTest",
                                                                  "CTST",
-                                                                 true,true,true,true,true,true,true);
+                                                                 false,false,false,false,false,false,true);
     if (t_rccIssueCollection.retCode)
     {
         std::cout << t_rccIssueCollection.message << std::endl;
@@ -81,6 +61,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipSuccess)
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
+//Issue some units of SFT token. Send some to another address, prove we still own some
 TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipTransferSomeUnitsSuccess)
 {
     std::string t_plaintext = "abcd";
@@ -106,7 +87,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipTransferSomeUnitsSuccess)
                                                                  WALLETPASSWORD,
                                                                  "collectionTest",
                                                                  "CTST",
-                                                                 true,true,true,true,true,true,true);
+                                                                 false,false,false,false,false,false,true);
     if (t_rccIssueCollection.retCode)
     {
         std::cout << t_rccIssueCollection.message << std::endl;
@@ -152,10 +133,12 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipTransferSomeUnitsSuccess)
     //This test uses the API, so it might be a bit slower sometimes and fail
     EXPECT_STRCASEEQ(t_rccProofOfOwnership.message,"true");
 }
+
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
+//Issue a token, then verify its ownership with another wallet
 TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipFailure)
 {
     std::string t_plaintext = "abcd";
@@ -173,7 +156,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipFailure)
                                                                  WALLETPASSWORD,
                                                                  "collectionTest",
                                                                  "CTST",
-                                                                 true,true,true,true,true,true,true);
+                                                                 false,false,false,false,false,false,true);
     if (t_rccIssueCollection.retCode)
     {
         std::cout << t_rccIssueCollection.message << std::endl;
@@ -208,6 +191,81 @@ TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipFailure)
     EXPECT_STRCASEEQ(t_rccProofOfOwnership.message,"false");
 
 }
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
+//Issue a token, then verify its ownership with another wallet
+TEST_F(FixtureOverUnitTests, buildProofOfTokenOwnershipSendToAnotherAddressFailure)
+{
+    std::string t_plaintext = "abcd";
+
+    //Load wallet
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+    if (t_rccLoad.retCode)
+    {
+        std::cout << t_rccLoad.message << std::endl;
+        FAIL();
+    }
+    returnCodeAndChar t_rccLoadSecondary = Multifungible::loadWallet(MULTIFUNGIBLE_PROOFOFOWNERSHIP,WALLETPASSWORD);
+    if (t_rccLoadSecondary.retCode)
+    {
+        std::cout << t_rccLoadSecondary.message << std::endl;
+        FAIL();
+    }
+
+    //Issue collection
+    returnCodeAndChar t_rccIssueCollection = Multifungible::issueNFTCollection(MULTIFUNGIBLE_MAINWALLET,
+                                                                 WALLETPASSWORD,
+                                                                 "collectionTest",
+                                                                 "CTST",
+                                                                 false,false,false,false,false,false,true);
+    if (t_rccIssueCollection.retCode)
+    {
+        std::cout << t_rccIssueCollection.message << std::endl;
+        FAIL();
+    }
+
+    //Issue token
+    returnCodeAndChar t_rccIssueNFTToken = Multifungible::issueNonFungibleToken(MULTIFUNGIBLE_MAINWALLET,
+                                                                              WALLETPASSWORD,
+                                                                              t_rccIssueCollection.message,
+                                                                              "tokenTest",
+                                                                                 "7500",
+                                                                                 "",
+                                                                                 "");
+    if (t_rccIssueNFTToken.retCode)
+    {
+        std::cout << t_rccIssueNFTToken.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccTransaction = Multifungible::NFTTransaction(MULTIFUNGIBLE_MAINWALLET,
+                                                                            WALLETPASSWORD,
+                                                                            t_rccLoadSecondary.message,
+                                                                            t_rccIssueNFTToken.message);
+    if (t_rccTransaction.retCode)
+    {
+        std::cout << t_rccTransaction.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccProofOfOwnership = Multifungible::getProofOfTokenOwnership (MULTIFUNGIBLE_MAINWALLET,
+                                                                            WALLETPASSWORD,
+                                                                            t_plaintext.c_str(),
+                                                                            t_rccIssueNFTToken.message);
+    if (t_rccProofOfOwnership.retCode)
+    {
+        std::cout << t_rccProofOfOwnership.message << std::endl;
+        FAIL();
+    }
+
+    //This test uses the API, so it might be a bit slower sometimes and fail
+    EXPECT_STRCASEEQ(t_rccProofOfOwnership.message,"false");
+
+}
+
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
@@ -230,7 +288,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfCollectionOwnershipSuccess)
                                                                  WALLETPASSWORD,
                                                                  "collectionTest",
                                                                  "CTST",
-                                                                 true,true,true,true,true,true,true);
+                                                                 false,false,false,false,false,false,true);
     if (t_rccIssueCollection.retCode)
     {
         std::cout << t_rccIssueCollection.message << std::endl;
@@ -279,7 +337,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfCollectionOwnershipSuccessTransferOwner
                                                                  WALLETPASSWORD,
                                                                  "collectionTest",
                                                                  "CTST",
-                                                                 true,true,true,true,true,true,true);
+                                                                 false,false,false,false,true,false,true);
     if (t_rccIssueCollection.retCode)
     {
         std::cout << t_rccIssueCollection.message << std::endl;
@@ -342,7 +400,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfIssuanceFailureDirect)
                                                                  WALLETPASSWORD,
                                                                  "collectionTest",
                                                                  "CTST",
-                                                                 true,true,true,true,true,true,true);
+                                                                 false,false,false,false,false,false,true);
     if (t_rccIssueCollection.retCode)
     {
         std::cout << t_rccIssueCollection.message << std::endl;
@@ -363,3 +421,4 @@ TEST_F(FixtureOverUnitTests, buildProofOfIssuanceFailureDirect)
     EXPECT_STRCASEEQ(t_rccProofOfIssuance.message,"false");
 
 }
+

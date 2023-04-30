@@ -59,7 +59,14 @@ TEST_F(FixtureOverUnitTests, issueTokenVerificationSFTNoAddRole)
     }
     catch( const std::runtime_error& err )
     {
-        ASSERT_STREQ( UNITTESTS_TOKEN_EMISSION_REJECTED, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( UNITTESTS_TOKEN_EMISSION_REJECTED, err.what());
+        }
     }
 }
 

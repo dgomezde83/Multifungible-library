@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
-//Add a role to NFT collection that already exists (here all the possible roles are set)
+//Add a role that already exists to NFT collection (here the property canAddSpecialRoles is set at issuance)
 TEST_F(FixtureOverUnitTests, addNFTRoleAlreadyExists)
 {
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
@@ -18,7 +18,7 @@ TEST_F(FixtureOverUnitTests, addNFTRoleAlreadyExists)
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             true,true,true,true,true,true,true);
+                                                             false,false,false,false,false,false,true);
 
     if (t_rccIssueCollection.retCode)
     {
@@ -29,16 +29,24 @@ TEST_F(FixtureOverUnitTests, addNFTRoleAlreadyExists)
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTCreate",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
-        ASSERT_STRCASEEQ( MULTIVERSX_ROLE_ALREADY_EXISTS, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_ROLE_ALREADY_EXISTS, err.what());
+        }
     }
 }
 
@@ -46,7 +54,7 @@ TEST_F(FixtureOverUnitTests, addNFTRoleAlreadyExists)
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
-//Add a role to SFT collection that already exists (here all the possible roles are set)
+//Add a role that already exists to SFT collection (here the property canAddSpecialRoles is set at issuance)
 TEST_F(FixtureOverUnitTests, addSFTRoleAlreadyExists) {
 
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
@@ -60,7 +68,7 @@ TEST_F(FixtureOverUnitTests, addSFTRoleAlreadyExists) {
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             true,true,true,true,true,true,true);
+                                                             false,false,false,false,false,false,true);
 
     if (t_rccIssueCollection.retCode)
     {
@@ -71,20 +79,28 @@ TEST_F(FixtureOverUnitTests, addSFTRoleAlreadyExists) {
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTCreate",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
-        ASSERT_STRCASEEQ( MULTIVERSX_ROLE_ALREADY_EXISTS, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_ROLE_ALREADY_EXISTS, err.what());
+        }
     }
 }
 
-//Cannot add the creation role to another address simultaneously
+//Cannot add the ESDTRoleNFTCreate role to another address simultaneously
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
@@ -112,7 +128,7 @@ TEST_F(FixtureOverUnitTests, addSFTRoleCreateToAnotherAddress)
                                                                  WALLETPASSWORD,
                                                                  "collectionTest",
                                                                  "CTST",
-                                                                 false,false,false,true,true,false,true);
+                                                                 false,false,false,false,false,false,true);
     if (t_rccIssueCollection.retCode)
     {
         std::cout << t_rccIssueCollection.message << std::endl;
@@ -120,13 +136,26 @@ TEST_F(FixtureOverUnitTests, addSFTRoleCreateToAnotherAddress)
     }
 
     //Add the NFT creation role to another address
-    returnCodeAndChar t_rccAddRole = Multifungible::addCollectionRole(MULTIFUNGIBLE_MAINWALLET, WALLETPASSWORD,t_rccIssueCollection.message, t_rccLoadSecond.message, "ESDTRoleNFTCreate");
+    returnCodeAndChar t_rccAddRole = Multifungible::addCollectionRole(MULTIFUNGIBLE_MAINWALLET,
+                                                                      WALLETPASSWORD,
+                                                                      t_rccIssueCollection.message,
+                                                                      t_rccLoadSecond.message,
+                                                                      "ESDTRoleNFTCreate");
     if (t_rccAddRole.retCode)
     {
-        EXPECT_STRCASEEQ(t_rccAddRole.message,MULTIVERSX_ROLE_ALREADY_EXISTS);
-        return;
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            EXPECT_STRCASEEQ(t_rccAddRole.message,MULTIVERSX_ROLE_ALREADY_EXISTS);
+        }
     }
-    FAIL();
+    else
+    {
+        FAIL();
+    }
 }
 
 /*-------------------------------------------------------------------------*
@@ -147,7 +176,7 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationNoAddRoleRole)
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             true,true,true,true,true,true,false);
+                                                             false,false,false,false,false,false,false);
 
     if (t_rccIssueCollection.retCode)
     {
@@ -158,16 +187,24 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationNoAddRoleRole)
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTAddURI",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
-        ASSERT_STRCASEEQ( MULTIVERSX_CANNOT_ADDROLE, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_CANNOT_ADDROLE, err.what());
+        }
     }
 }
 
@@ -189,7 +226,7 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationNoAddRoleRole) {
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             true,true,true,true,true,true,false);
+                                                             false,false,false,false,false,false,false);
 
     if (t_rccIssueCollection.retCode)
     {
@@ -200,16 +237,24 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationNoAddRoleRole) {
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTAddURI",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
-        ASSERT_STRCASEEQ( MULTIVERSX_CANNOT_ADDROLE, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_CANNOT_ADDROLE, err.what());
+        }
     }
 }
 
@@ -231,7 +276,7 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationNonExistantRole) {
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             true,true,true,true,true,true,true);
+                                                             false,false,false,false,false,false,true);
 
     if (t_rccIssueCollection.retCode)
     {
@@ -242,16 +287,24 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationNonExistantRole) {
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "nonExistantRole",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
-        ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        }
     }
 }
 
@@ -273,7 +326,7 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationNonExistantRole) {
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             true,true,true,true,true,true,true);
+                                                             false,false,false,false,false,false,true);
 
     if (t_rccIssueCollection.retCode)
     {
@@ -284,16 +337,24 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationNonExistantRole) {
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "nonExistantRole",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
-        ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        }
     }
 }
 
@@ -323,11 +384,12 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationSuccessfulESDTRoleNFTAddUri) 
         FAIL();
     }
 
-    EXPECT_EQ(m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTAddURI",
-                                           t_rccLoad.message),true);
+                                           t_rccLoad.message,
+                                           true),true);
 
 }
 
@@ -360,16 +422,24 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationFailedESDTRoleSFTAddUri) {
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTAddURI",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
-        ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        }
     }
 }
 
@@ -399,11 +469,12 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationSuccessfulESDTRoleNFTUpdateAt
         FAIL();
     }
 
-    EXPECT_EQ(m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTUpdateAttributes",
-                                           t_rccLoad.message),true);
+                                           t_rccLoad.message,
+                                           true),true);
 
 }
 
@@ -436,16 +507,24 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationFailedESDTRoleSFTUpdateAttrib
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTUpdateAttributes",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
-        ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        }
     }
 }
 
@@ -475,11 +554,12 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationSuccessfulESDTTransferRole) {
         FAIL();
     }
 
-    EXPECT_EQ(m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTTransferRole",
-                                           t_rccLoad.message),true);
+                                           t_rccLoad.message,
+                                           true),true);
 
 }
 
@@ -509,11 +589,12 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationSuccessfulESDTTransferRole) {
         FAIL();
     }
 
-    EXPECT_EQ(m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTTransferRole",
-                                           t_rccLoad.message),true);
+                                           t_rccLoad.message,
+                                           true),true);
 
 }
 
@@ -543,11 +624,12 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationSuccessfulESDTRoleNFTBurn) {
         FAIL();
     }
 
-    EXPECT_EQ(m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTBurn",
-                                           t_rccLoad.message),true);
+                                           t_rccLoad.message,
+                                           true),true);
 
 }
 
@@ -577,11 +659,12 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationSuccessfulESDTRoleNFTBurn) {
         FAIL();
     }
 
-    EXPECT_EQ(m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTBurn",
-                                           t_rccLoad.message),true);
+                                           t_rccLoad.message,
+                                           true),true);
 
 }
 
@@ -589,7 +672,7 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationSuccessfulESDTRoleNFTBurn) {
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
-//Add 'ESDTRoleNFTAddQuantity' role to NFT collection
+//Cannot add 'ESDTRoleNFTAddQuantity' role to NFT collection
 TEST_F(FixtureOverUnitTests, addNFTRoleVerificationAddQuantity) {
 
    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
@@ -603,7 +686,7 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationAddQuantity) {
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             true,true,true,true,true,true,true);
+                                                             false,false,false,false,false,false,true);
 
     if (t_rccIssueCollection.retCode)
     {
@@ -614,17 +697,25 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationAddQuantity) {
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTAddQuantity",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
         //Impossible to add this role to an NFT collection
-        ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ROLE, err.what());
+        }
     }
 }
 
@@ -632,7 +723,7 @@ TEST_F(FixtureOverUnitTests, addNFTRoleVerificationAddQuantity) {
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
-//Add 'ESDTRoleNFTAddQuantity' role to SFT collection. But role already exists (it is given on creation by the API)
+//Add 'ESDTRoleNFTAddQuantity' role to SFT collection. But role already exists (it is given on creation by the issueSFTCollection method if canAddSpecialRoles property is set)
 TEST_F(FixtureOverUnitTests, addSFTRoleVerificationAddQuantity) {
 
    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
@@ -646,7 +737,7 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationAddQuantity) {
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             true,true,true,true,true,true,true);
+                                                             false,false,false,false,false,false,true);
 
     if (t_rccIssueCollection.retCode)
     {
@@ -657,17 +748,24 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationAddQuantity) {
     try
     {
 
-        m_ut->addRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            t_rccIssueCollection.message,
                                            "ESDTRoleNFTAddQuantity",
-                                           t_rccLoad.message);
+                                           t_rccLoad.message,
+                                           true);
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
-        //Impossible to add this role to an NFT collection
-        ASSERT_STRCASEEQ( MULTIVERSX_SPECIAL_ROLE, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_SPECIAL_ROLE, err.what());
+        }
     }
 }
 

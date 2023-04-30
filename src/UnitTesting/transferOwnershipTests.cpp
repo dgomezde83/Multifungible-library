@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
+//Basic transfer of ownership
 TEST_F(FixtureOverUnitTests, transferOwnershipSuccess)
 {
     //Load wallet
@@ -32,7 +33,7 @@ TEST_F(FixtureOverUnitTests, transferOwnershipSuccess)
         FAIL();
     }
 
-    EXPECT_EQ(transferOwnershipVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->transferOwnershipVerification(MULTIFUNGIBLE_MAINWALLET,
                                         WALLETPASSWORD,
                                         t_rccIssueCollection.message,
                                         t_rccLoadDest.message),true); //nb of wiped quantity
@@ -74,7 +75,7 @@ TEST_F(FixtureOverUnitTests, transferOwnershipFailure)
 
     try
     {
-        transferOwnershipVerification(MULTIFUNGIBLE_MAINWALLET,
+        m_ut->transferOwnershipVerification(MULTIFUNGIBLE_MAINWALLET,
                                         WALLETPASSWORD,
                                         t_rccIssueCollection.message,
                                         t_rccLoadDest.message);
@@ -83,7 +84,14 @@ TEST_F(FixtureOverUnitTests, transferOwnershipFailure)
     catch( const std::runtime_error& err )
     {
         //Impossible to add this role to an NFT collection
-        ASSERT_STRCASEEQ( MULTIVERSX_CHANGE_OWNER_NOT_ALLOWED, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_CHANGE_OWNER_NOT_ALLOWED, err.what());
+        }
     }
 
 }

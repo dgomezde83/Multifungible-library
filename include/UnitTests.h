@@ -15,19 +15,32 @@
 #define UNITTESTS_FREEZE_ISFROZEN_ERROR "Collection is frozen"
 #define UNITTESTS_ROLE_NOTFOUND_LISTOFROLES "Role not found in list of roles"
 #define UNITTESTS_INVALID_NFTCREATESTOP(x) std::string("Invalid value for NFTCreateStopped: ") + std::string(x)
+#define UNITTESTS_INVALID_PAUSEUNPAUSE(x) std::string("Invalid value for IsPaused: ") + std::string(x)
+#define UNITTESTS_COLLECTION_ALREADY_PAUSED "Collection already paused"
 
 //MULTIVERSE X MESSAGES
 #define MULTIVERSX_ADDRESS_NOT_IN_BLOCKCHAIN "Request failed with message: internal_issue. Error reason: transaction generation failed: account not found for address "
+#define MULTIVERSX_INSUFFICIENT_FUNDS "insufficient funds"
 #define MULTIVERSX_TRANSACTION_REJECTED "Transaction rejected"
 #define MULTIVERSX_ROLE_ALREADY_EXISTS "NFT create role already exists"
 #define MULTIVERSX_CANNOT_ADDROLE "Cannot add special roles"
 #define MULTIVERSX_INVALID_ROLE "Invalid argument"
+//not used
 #define MULTIVERSX_INVALID_ADDRESS_WIPE "Invalid address to wipe"
+//not used
 #define MULTIVERSX_INVALID_ADDRESS_FREEZE_UNFREEZE "Invalid address to freeze/unfreeze"
 #define MULTIVERSX_SPECIAL_ROLE "Special role already exists for given address"
+//not used
 #define MULTIVERSX_TRANSFER_ROLE_NOT_ALLOWED "NFT create role transfer is not allowed"
 #define MULTIVERSX_UPGRADE_PROPERTY_NOT_ALLOWED "Token is not upgradable"
 #define MULTIVERSX_CHANGE_OWNER_NOT_ALLOWED "Cannot change owner of the token"
+//not used
+#define MULTIVERSX_ALREADYPAUSED_CONTRACT "cannot pause an already paused contract"
+#define MULTIVERSX_PAUSEROLENOTGIVEN "cannot pause/un-pause"
+#define MULTIVERSX_SPECIAL_ROLE_NOTEXISTS "special role does not exist for address"
+#define MULTIVERSX_ESDT_IS_PAUSED "Esdt token is paused"
+#define MULTIVERSX_ACTION_NOT_ALLOWED "action is not allowed"
+#define MULTIVERSX_NEW_NFT_DATA_ON_SENDER "new NFT data on sender"
 
 class UnitTests
 {
@@ -78,11 +91,12 @@ class UnitTests
                                          const bool p_canUpgrade,
                                          const bool p_canAddSpecialRoles);
 
-        bool addRoleVerification(const char * p_dllwalletpath,
+        bool addRemoveRoleVerification(const char * p_dllwalletpath,
                                     const char * p_password,
                                     const char * p_collectionID,
                                     const char * p_esdtRole,
-                                    const char * t_addressToGiveRole);
+                                    const char * p_addressToGiveRole,
+                                    const bool p_isAdd);
 
         bool upgradePropertyVerification(const char * p_dllwalletpath,
                                         const char * p_password,
@@ -118,6 +132,11 @@ class UnitTests
                                  const char * p_tokenID,
                                  const char * p_uri);
 
+        bool upgradeAttributesVerification(const char * p_dllwalletpath,
+                                 const char * p_password,
+                                 const char * p_tokenID,
+                                 const char * p_attribute);
+
         bool transferCreationRoleVerification(const char * p_dllwalletpath1,
                                                 const char * p_dllwalletpath2,
                                                 const char * p_password,
@@ -134,7 +153,7 @@ class UnitTests
 
         bool isTokenIssuedByAddress (const char * p_address, const char * p_tokenID);
 
-        bool checkTokenInfo (const char * p_collectionID,
+        bool checkCollectionInfo (const char * p_collectionID,
                              const std::string & p_tokenName,
                                  const std::string & p_tokenType,
                                  const std::string & p_issuerAddress,
@@ -157,6 +176,11 @@ class UnitTests
         bool stopTokenCreation (const char * p_dllwalletpath,
                                 const char * p_password,
                                 const char * p_collectionID);
+
+        bool pauseUnpauseCollectionTransactions (const char * p_dllwalletpath,
+                                                const char * p_password,
+                                                const char * p_collectionID,
+                                                const bool p_isPause);
 
         bool transferEGLDVerification(const char * p_dllwalletpath,
                                             const char * p_password,
@@ -191,7 +215,7 @@ class UnitTests
 
         std::map<std::string,std::vector<std::string>> getRolesAndOwnersMap(const std::string &p_collectionID);
 
-        bool isRoleGivenToToken(const char * p_listOfRoles, const std::string &p_searchedRole);
+        bool isPropertyGivenToToken(const char * p_listOfRoles, const std::string &p_searchedRole);
 };
 
 #endif // UNITTESTS_H

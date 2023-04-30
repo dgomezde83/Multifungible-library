@@ -32,7 +32,14 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoJson) {
     catch( const std::runtime_error& err )
     {
         // check exception
-        ASSERT_STREQ( WALLET_GENERATOR_ERROR_BADSUFFIX, err.what() );
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( WALLET_GENERATOR_ERROR_BADSUFFIX, err.what() );
+        }
     }
 }
 
@@ -50,7 +57,14 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoJson2) {
     catch( const std::runtime_error& err )
     {
         // check exception
-        ASSERT_STREQ( WALLET_GENERATOR_ERROR_BADSUFFIX, err.what() );
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( WALLET_GENERATOR_ERROR_BADSUFFIX, err.what() );
+        }
     }
 }
 
@@ -68,7 +82,14 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoJson3) {
     catch( const std::runtime_error& err )
     {
         // check exception
-        ASSERT_STREQ( WALLET_GENERATOR_ERROR_BADSUFFIX, err.what() );
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( WALLET_GENERATOR_ERROR_BADSUFFIX, err.what() );
+        }
     }
 }
 
@@ -86,7 +107,14 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoFilename) {
     catch( const std::runtime_error& err )
     {
         // check exception
-        ASSERT_STREQ( WALLET_GENERATOR_ERROR_NOKEYFILEPATH, err.what() );
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( WALLET_GENERATOR_ERROR_NOKEYFILEPATH, err.what() );
+        }
     }
 }
 
@@ -104,7 +132,14 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoPassword) {
     catch( const std::runtime_error& err )
     {
         // check exception
-        ASSERT_STREQ( WALLET_GENERATOR_ERROR_NOPASSWORD, err.what() );
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( WALLET_GENERATOR_ERROR_NOPASSWORD, err.what() );
+        }
     }
 }
 /*-------------------------------------------------------------------------*

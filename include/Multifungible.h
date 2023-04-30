@@ -8,11 +8,15 @@
 #define MULTIFUNGIBLE_UPGRADEPROPERTY_SUCCESSFUL "Upgraded Property successfully"
 #define MULTIFUNGIBLE_TRANSFEROWNERSHIP_SUCCESSFUL "Transfered ownership successfully"
 #define MULTIFUNGIBLE_ADDROLE_SUCCESSFUL "Added Role successfully"
+#define MULTIFUNGIBLE_REMOVEROLE_SUCCESSFUL "Removed Role successfully"
 #define MULTIFUNGIBLE_ADDURI_SUCCESSFUL "Added URI successfully"
+#define MULTIFUNGIBLE_UPGRADEATTRIBUTE_SUCCESSFUL "Upgraded attribute successfully"
 #define MULTIFUNGIBLE_TRANSFERROLE_SUCCESSFUL "Role transfered successfully"
 #define MULTIFUNGIBLE_CREATION_STOPPED_SUCCESSFUL "Creation stopped successfully"
 #define MULTIFUNGIBLE_ADDQUANTITY_SUCCESSFUL(x) std::string("Emitted ") + x + std::string(" token") + std::string(( x != "0" ) ? "s" : "" ) + std::string(" successfully")
 #define MULTIFUNGIBLE_BURNQUANTITY_SUCCESSFUL(x) std::string("Burned ") + x + std::string(" token") + std::string(( x != "0" ) ? "s" : "" ) + std::string(" successfully")
+#define MULTIFUNGIBLE_PAUSE_SUCCESSFUL "Paused collection transactions successfully"
+#define MULTIFUNGIBLE_UNPAUSE_SUCCESSFUL "Unpaused collection transactions successfully"
 #define MULTIFUNGIBLE_WIPE_SUCCESSFUL "Wiped NFT successfully"
 #define MULTIFUNGIBLE_FREEZE_SUCCESSFUL "Froze NFT successfully"
 #define MULTIFUNGIBLE_UNFREEZE_SUCCESSFUL "Unfroze NFT successfully"
@@ -74,7 +78,9 @@ class Multifungible
         static returnCodeAndChar upgradeProperties (const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_property, const bool p_newValue);
         static returnCodeAndChar transferOwnership (const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address);
         static returnCodeAndChar addCollectionRole(const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address, const char * p_role);
+        static returnCodeAndChar removeCollectionRole(const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address, const char * p_role);    
         static returnCodeAndChar addURI(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_uri);
+        static returnCodeAndChar upgradeAttribute(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_attribute);
         static returnCodeAndChar addSFTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_quantity);
         static returnCodeAndChar burnSFTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_quantity);
         static returnCodeAndChar wipeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
@@ -82,6 +88,8 @@ class Multifungible
         static returnCodeAndChar unfreezeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
         static returnCodeAndChar transferCreationRole(const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address);
         static returnCodeAndChar stopTokenCreation(const char * p_walletName, const char * p_password,const char * p_collectionID);
+        static returnCodeAndChar pauseTransactions(const char * p_walletName, const char * p_password,const char * p_collectionID);
+        static returnCodeAndChar unPauseTransactions(const char * p_walletName, const char * p_password,const char * p_collectionID);
         static returnCodeAndChar NFTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress, const char * p_tokenID);
         static returnCodeAndChar SFTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress,const char * p_tokenID, const char * p_amount);
         static returnCodeAndChar EGLDTransaction(const char * p_walletName, const char * p_password,const char * p_strAddress, const char * p_amount);

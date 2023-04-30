@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
+//Basic creation stopping
 TEST_F(FixtureOverUnitTests, stopCreationSuccessful)
 {
 
@@ -29,13 +30,14 @@ TEST_F(FixtureOverUnitTests, stopCreationSuccessful)
 
 
 
-    EXPECT_EQ(stopTokenCreation(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD,t_rccIssueCollection.message),true); //nb of wiped quantity
+    EXPECT_EQ(m_ut->stopTokenCreation(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD,t_rccIssueCollection.message),true); //nb of wiped quantity
 
 }
 
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
+
 //Transfer the creation role to another address, then stop NFT creation. This will remove the creation role from the other address.
 TEST_F(FixtureOverUnitTests, stopCreationSuccessfulOtherAddress)
 {
@@ -67,7 +69,7 @@ TEST_F(FixtureOverUnitTests, stopCreationSuccessfulOtherAddress)
         FAIL();
     }
 
-    //Add the NFT creation role to another address
+    //transfer the NFT creation role to another address
     returnCodeAndChar t_rccAddRole = Multifungible::transferCreationRole(MULTIFUNGIBLE_MAINWALLET, WALLETPASSWORD,t_rccIssueCollection.message, t_rccLoadSecond.message);
     if (t_rccAddRole.retCode)
     {
@@ -75,7 +77,7 @@ TEST_F(FixtureOverUnitTests, stopCreationSuccessfulOtherAddress)
         FAIL();
     }
 
-    EXPECT_EQ(stopTokenCreation(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD,t_rccIssueCollection.message),true); //nb of wiped quantity
+    EXPECT_EQ(m_ut->stopTokenCreation(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD,t_rccIssueCollection.message),true);
 
 }
 

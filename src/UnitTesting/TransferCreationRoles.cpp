@@ -3,8 +3,8 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-//Simple creation role transfer
 
+//Simple creation role transfer
 TEST_F(FixtureOverUnitTests, transferSFTCreationRoleVerification) {
 
     //1) Retrieve the destination address from the destination wallet

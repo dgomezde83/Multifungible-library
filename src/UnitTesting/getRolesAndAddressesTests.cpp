@@ -3,7 +3,7 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-//Issue an SFT Collection, then issue 5 tokens of a kind. After, issue an additional 6 tokens of that same token ID.
+
 TEST_F(FixtureOverUnitTests, getRolesAndAddressesTest1)
 {
     //Load wallet
@@ -27,6 +27,6 @@ TEST_F(FixtureOverUnitTests, getRolesAndAddressesTest1)
     }
 
     //This test uses the API, so it might be a bit slower sometimes and fail
-    EXPECT_EQ(isRoleOwnedByAddress(t_rccIssueCollection.message,"ESDTRoleNFTCreate",t_rccLoad.message),true);
+    EXPECT_EQ(m_ut->isRoleOwnedByAddress(t_rccIssueCollection.message,"ESDTRoleNFTCreate",t_rccLoad.message),true);
 
 }

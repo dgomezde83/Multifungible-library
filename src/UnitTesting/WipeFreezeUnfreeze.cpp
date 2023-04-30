@@ -12,18 +12,12 @@ TEST_F(FixtureOverUnitTests, wipeVerificationSuccessful) {
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_FREEZEUNFREEZEWIPE,WALLETPASSWORD);
-    if (t_rccAccountToFreeze.retCode)
-    {
-        std::cout << t_rccAccountToFreeze.message << std::endl;
-        FAIL();
-    }
 
     returnCodeAndChar t_rccIssueCollection = Multifungible::issueSFTCollection(MULTIFUNGIBLE_MAINWALLET,
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             false,true,false,false,false,false,true);
+                                                             true,true,false,false,false,false,true);
 
     if (t_rccIssueCollection.retCode)
     {
@@ -46,19 +40,155 @@ TEST_F(FixtureOverUnitTests, wipeVerificationSuccessful) {
         std::cout << t_rccIssueNFTToken.message << std::endl;
     }
 
-    //Fail because the address is not blacklisted
-    try
+    returnCodeAndChar t_rccFreeze = Multifungible::freezeNFT(MULTIFUNGIBLE_MAINWALLET,
+                                                                              WALLETPASSWORD,
+                                                                              t_rccIssueNFTToken.message,
+                                                                              t_rccLoad.message);
+    if (t_rccFreeze.retCode)
     {
-        m_ut->wipeVerification(MULTIFUNGIBLE_MAINWALLET,
-                                           WALLETPASSWORD,
-                                           t_rccIssueNFTToken.message,
-                                           t_rccAccountToFreeze.message);
+        std::cout << t_rccFreeze.message << std::endl;
         FAIL();
     }
-    catch( const std::runtime_error& err )
+
+    EXPECT_EQ(m_ut->wipeVerification(MULTIFUNGIBLE_MAINWALLET,
+                                           WALLETPASSWORD,
+                                           t_rccIssueNFTToken.message,
+                                           t_rccLoad.message),true);
+
+}
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
+TEST_F(FixtureOverUnitTests, wipeVerificationTransferSuccessful) {
+
+   returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+    if (t_rccLoad.retCode)
     {
-        ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ADDRESS_WIPE, err.what() );
+        std::cout << t_rccLoad.message << std::endl;
+        FAIL();
     }
+    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_FREEZEUNFREEZEWIPE,WALLETPASSWORD);
+    if (t_rccAccountToFreeze.retCode)
+    {
+        std::cout << t_rccAccountToFreeze.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccIssueCollection = Multifungible::issueNFTCollection(MULTIFUNGIBLE_MAINWALLET,
+                                                             WALLETPASSWORD,
+                                                             "collectionTest" ,
+                                                             "CTST",
+                                                             true,true,false,false,false,false,true);
+
+    if (t_rccIssueCollection.retCode)
+    {
+        std::cout << t_rccIssueCollection.message << std::endl;
+        FAIL();
+    }
+
+    //Issue token
+    returnCodeAndChar t_rccIssueNFTToken = Multifungible::issueNonFungibleToken(MULTIFUNGIBLE_MAINWALLET,
+                                                                              WALLETPASSWORD,
+                                                                              t_rccIssueCollection.message,
+                                                                              "tokenTest",
+                                                                                 "7500",
+                                                                                 "",
+                                                                                 "");
+    if (t_rccIssueNFTToken.retCode)
+    {
+        std::cout << t_rccIssueNFTToken.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccTransfer = Multifungible::NFTTransaction(MULTIFUNGIBLE_MAINWALLET,
+                                                                              WALLETPASSWORD,
+                                                                              t_rccAccountToFreeze.message,
+                                                                              t_rccIssueNFTToken.message);
+    if (t_rccTransfer.retCode)
+    {
+        std::cout << t_rccTransfer.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccFreeze = Multifungible::freezeNFT(MULTIFUNGIBLE_MAINWALLET,
+                                                                              WALLETPASSWORD,
+                                                                              t_rccIssueNFTToken.message,
+                                                                              t_rccAccountToFreeze.message);
+    if (t_rccFreeze.retCode)
+    {
+        std::cout << t_rccFreeze.message << std::endl;
+        FAIL();
+    }
+
+    EXPECT_EQ(m_ut->wipeVerification(MULTIFUNGIBLE_MAINWALLET,
+                                           WALLETPASSWORD,
+                                           t_rccIssueNFTToken.message,
+                                           t_rccAccountToFreeze.message),true);
+
+}
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
+TEST_F(FixtureOverUnitTests, wipeVerificationTransferWithoutFreeze) {
+
+   returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+    if (t_rccLoad.retCode)
+    {
+        std::cout << t_rccLoad.message << std::endl;
+        FAIL();
+    }
+    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_FREEZEUNFREEZEWIPE,WALLETPASSWORD);
+    if (t_rccAccountToFreeze.retCode)
+    {
+        std::cout << t_rccAccountToFreeze.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccIssueCollection = Multifungible::issueNFTCollection(MULTIFUNGIBLE_MAINWALLET,
+                                                             WALLETPASSWORD,
+                                                             "collectionTest" ,
+                                                             "CTST",
+                                                             false,true,false,false,false,false,true);
+
+    if (t_rccIssueCollection.retCode)
+    {
+        std::cout << t_rccIssueCollection.message << std::endl;
+        FAIL();
+    }
+
+    //Issue token
+    returnCodeAndChar t_rccIssueNFTToken = Multifungible::issueNonFungibleToken(MULTIFUNGIBLE_MAINWALLET,
+                                                                              WALLETPASSWORD,
+                                                                              t_rccIssueCollection.message,
+                                                                              "tokenTest",
+                                                                                 "7500",
+                                                                                 "",
+                                                                                 "");
+    if (t_rccIssueNFTToken.retCode)
+    {
+        std::cout << t_rccIssueNFTToken.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccTransfer = Multifungible::NFTTransaction(MULTIFUNGIBLE_MAINWALLET,
+                                                                              WALLETPASSWORD,
+                                                                              t_rccAccountToFreeze.message,
+                                                                              t_rccIssueNFTToken.message);
+    if (t_rccTransfer.retCode)
+    {
+        std::cout << t_rccTransfer.message << std::endl;
+        FAIL();
+    }
+
+    //We don't freeze the account so we can't wipe
+    EXPECT_EQ(m_ut->wipeVerification(MULTIFUNGIBLE_MAINWALLET,
+                                           WALLETPASSWORD,
+                                           t_rccIssueNFTToken.message,
+                                           t_rccAccountToFreeze.message),true);
 
 }
 
@@ -74,12 +204,6 @@ TEST_F(FixtureOverUnitTests, freezeVerificationSuccessful) {
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_FREEZEUNFREEZEWIPE,WALLETPASSWORD);
-    if (t_rccAccountToFreeze.retCode)
-    {
-        std::cout << t_rccAccountToFreeze.message << std::endl;
-        FAIL();
-    }
 
     returnCodeAndChar t_rccIssueCollection = Multifungible::issueSFTCollection(MULTIFUNGIBLE_MAINWALLET,
                                                              WALLETPASSWORD,
@@ -94,7 +218,7 @@ TEST_F(FixtureOverUnitTests, freezeVerificationSuccessful) {
     }
 
     //Issue token
-    returnCodeAndChar t_rccIssueNFTToken = Multifungible::issueSemiFungibleToken(MULTIFUNGIBLE_MAINWALLET,
+    returnCodeAndChar t_rccIssueSFTToken = Multifungible::issueSemiFungibleToken(MULTIFUNGIBLE_MAINWALLET,
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
                                                                               "tokenTest",
@@ -102,26 +226,17 @@ TEST_F(FixtureOverUnitTests, freezeVerificationSuccessful) {
                                                                                  "7500",
                                                                                  "",
                                                                                  "");
-    if (t_rccIssueNFTToken.retCode)
+    if (t_rccIssueSFTToken.retCode)
     {
         FAIL();
-        std::cout << t_rccIssueNFTToken.message << std::endl;
+        std::cout << t_rccIssueSFTToken.message << std::endl;
     }
 
-    try
-    {
-        m_ut->freezeUnfreezeVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->freezeUnfreezeVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            true,
-                                           t_rccIssueNFTToken.message,
-                                           t_rccAccountToFreeze.message);
-        FAIL();
-    }
-    catch( const std::runtime_error& err )
-    {
-        ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ADDRESS_FREEZE_UNFREEZE, err.what() );
-    }
-
+                                           t_rccIssueSFTToken.message,
+                                           t_rccLoad.message),true);
 }
 
 /*-------------------------------------------------------------------------*
@@ -136,12 +251,6 @@ TEST_F(FixtureOverUnitTests, unfreezeVerificationSuccessful) {
         std::cout << t_rccLoad.message << std::endl;
         FAIL();
     }
-    returnCodeAndChar t_rccAccountToFreeze = Multifungible::loadWallet(MULTIFUNGIBLE_FREEZEUNFREEZEWIPE,WALLETPASSWORD);
-    if (t_rccAccountToFreeze.retCode)
-    {
-        std::cout << t_rccAccountToFreeze.message << std::endl;
-        FAIL();
-    }
 
     returnCodeAndChar t_rccIssueCollection = Multifungible::issueSFTCollection(MULTIFUNGIBLE_MAINWALLET,
                                                              WALLETPASSWORD,
@@ -170,20 +279,23 @@ TEST_F(FixtureOverUnitTests, unfreezeVerificationSuccessful) {
         std::cout << t_rccIssueNFTToken.message << std::endl;
     }
 
-    try
+    //First we freeze
+    returnCodeAndChar t_rccFreeze = Multifungible::freezeNFT(MULTIFUNGIBLE_MAINWALLET,
+                                                                              WALLETPASSWORD,
+                                                                              t_rccIssueNFTToken.message,
+                                                                              t_rccLoad.message);
+    if (t_rccFreeze.retCode)
     {
-        m_ut->freezeUnfreezeVerification(MULTIFUNGIBLE_MAINWALLET,
+        std::cout << t_rccFreeze.message << std::endl;
+        FAIL();
+    }
+
+    EXPECT_EQ(m_ut->freezeUnfreezeVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
                                            false,
                                            t_rccIssueNFTToken.message,
-                                           t_rccAccountToFreeze.message);
+                                           t_rccLoad.message),true);
 
-        FAIL();
-    }
-    catch( const std::runtime_error& err )
-    {
-        ASSERT_STRCASEEQ( MULTIVERSX_INVALID_ADDRESS_FREEZE_UNFREEZE, err.what() );
-    }
 
 }
 

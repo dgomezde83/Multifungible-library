@@ -1,12 +1,11 @@
 #include "WalletProvider.h"
 #include <chrono>
 #include <future>
+#include <cinttypes>
 
 #include "WrapperTransactionFactory.h"
 
 #define TRANSACTION_TIMEOUT_MS 180000
-
-#define MULTIVERSX_GAS_PRICE 1000000000
 
 #define TRANSACTION_SUCCESSFUL "successful"
 #define TRANSACTION_PENDING "pending"
@@ -35,8 +34,9 @@ WalletProvider::~WalletProvider(){}
 /*-------------------------------------------------------------------------*
 * Create a transaction for an NFT collection emission.                     *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildNFTEmissionTransaction(const std::string& p_nftName,
+Transaction WalletProvider::buildCollectionEmissionTransaction(const std::string& p_nftName,
                                                                 const std::string& p_nftTicker,
+                                                                const bool p_isNFT,
                                                                 const bool p_canFreeze,
                                                                 const bool p_canWipe,
                                                                 const bool p_canPause,
@@ -73,79 +73,24 @@ Transaction WalletProvider::buildNFTEmissionTransaction(const std::string& p_nft
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TICKER_NOT_UPPER);
     }
-    Transaction t_ts = m_wpf.createNFTIssue(m_wg->getAccount().getNonce(),
+    Transaction t_ts = m_wpf.createCollectionIssue(m_wg->getAccount().getNonce(),
+                                                   p_isNFT,
                                             m_wg->getPublicAddress(),
-                                            MULTIVERSX_GAS_PRICE,
                                             std::string(p_nftName),
                                             std::string(p_nftTicker),
-                                            p_canFreeze,
+                                            {p_canFreeze,
                                             p_canWipe,
                                             p_canPause,
-                                            p_canTransferNFTCreateRole,
                                             p_canChangeOwner,
                                             p_canUpgrade,
-                                            p_canAddSpecialRoles)->buildSigned(m_wg->getSeed());
-    return t_ts;
-}
-/*-------------------------------------------------------------------------*
-* Create a transaction for an SFT collection emission.                     *
-*-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildSFTEmissionTransaction(const std::string& p_sftName,
-                                                                const std::string& p_sftTicker,
-                                                                const bool p_canFreeze,
-                                                                const bool p_canWipe,
-                                                                const bool p_canPause,
-                                                                const bool p_canTransferNFTCreateRole,
-                                                                const bool p_canChangeOwner,
-                                                                const bool p_canUpgrade,
-                                                                const bool p_canAddSpecialRoles) const
-{
-    if(!p_sftName.size())
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PARAMETERMISSING("SFT Name"));
-    }
-    if(!p_sftTicker.size())
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PARAMETERMISSING("SFT Ticker"));
-    }
-    if(p_sftName.size() < 3 || p_sftName.size() > 20)
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_INVALID_TOKEN_LENGTH);
-    }
-    if(p_sftTicker.size() < 3 || p_sftTicker.size() > 10)
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_INVALID_TICKER_LENGTH);
-    }
-    if(!StringAlphaAndUpper::isAlphanumeric(p_sftName))
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TOKEN_NOT_ALPHA);
-    }
-    if(!StringAlphaAndUpper::isAlphanumeric(p_sftTicker))
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TICKER_NOT_ALPHA);
-    }
-    if(!StringAlphaAndUpper::isUpperCase(p_sftTicker))
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TICKER_NOT_UPPER);
-    }
-    Transaction t_ts = m_wpf.createSFTIssue(m_wg->getAccount().getNonce(),
-                                            m_wg->getPublicAddress(),
-                                            MULTIVERSX_GAS_PRICE,
-                                            p_sftName,
-                                            p_sftTicker,
-                                            p_canFreeze,
-                                            p_canWipe,
-                                            p_canPause,
-                                            p_canTransferNFTCreateRole,
-                                            p_canChangeOwner,
-                                            p_canUpgrade,
-                                            p_canAddSpecialRoles)->buildSigned(m_wg->getSeed());
+                                            p_canAddSpecialRoles,
+                                            p_canTransferNFTCreateRole})->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
 * Create a transaction for adding a quantity of a token.                   *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildAddSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const
+Transaction WalletProvider::buildAddBurnSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity, const bool p_isAdd) const
 {
     if(!p_collectionID.size())
     {
@@ -160,28 +105,7 @@ Transaction WalletProvider::buildAddSFTQuantityTransaction(const std::string& p_
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_QUANTITY_MISSING);
     }
     TokenPayment t_tp = TokenPayment::semiFungible(p_collectionID,p_nonce,BigUInt(p_quantity));
-    Transaction t_ts = m_wpf.addQuantityOfSFTs(t_tp, p_quantity,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
-    return t_ts;
-}
-/*-------------------------------------------------------------------------*
-* Create a transaction for burning a quantity of a token.                  *
-*-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildBurnSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const
-{
-    if(!p_collectionID.size())
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
-    }
-    if(!p_nonce)
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_NONCE_MISSING);
-    }
-    if(!p_quantity.size())
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_QUANTITY_MISSING);
-    }
-    TokenPayment t_tp = TokenPayment::semiFungible(p_collectionID,p_nonce,BigUInt(p_quantity));
-    Transaction t_ts = m_wpf.burnQuantityOfSFTs(t_tp,p_quantity,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.addBurnQuantityOfSFTs(t_tp, p_isAdd, p_quantity,m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -202,13 +126,13 @@ Transaction WalletProvider::buildWipeNFTTransaction(const std::string& p_collect
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_OWNERADDRESS_MISSING);
     }
     TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID,p_nonce);
-    Transaction t_ts = m_wpf.wipeNFT(t_tp, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.wipeNFT(t_tp, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
 * Create a transaction for freezing a token.                               *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildFreezeNFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const
+Transaction WalletProvider::buildFreezeUnfreezeTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress, const bool p_isFreeze) const
 {
     if(!p_collectionID.size())
     {
@@ -223,30 +147,27 @@ Transaction WalletProvider::buildFreezeNFTTransaction(const std::string& p_colle
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_OWNERADDRESS_MISSING);
     }
     TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID,p_nonce);
-    Transaction t_ts = m_wpf.freezeNFT(t_tp, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.freezeUnfreezeNFT(t_tp, p_isFreeze, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
-* Create a transaction for unfreezing a token.                             *
+* Create a transaction for freezing a n address on a collection.           *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildUnfreezeNFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const
+/*
+Transaction WalletProvider::buildFreezeUnfreezeAccountCollectionTransaction(const std::string& p_collectionID, const std::string& p_ownerAddress, const bool p_isFreeze) const
 {
     if(!p_collectionID.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
     }
-    if(!p_nonce)
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_NONCE_MISSING);
-    }
     if(!p_ownerAddress.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_OWNERADDRESS_MISSING);
     }
-    TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID,p_nonce);
-    Transaction t_ts = m_wpf.unfreezeNFT(t_tp, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.freezeUnfreezeAccountCollection(p_collectionID, p_isFreeze, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
+*/
 /*-------------------------------------------------------------------------*
 * Create a transaction for adding a URI to an NFT a token.                 *
 *-------------------------------------------------------------------------*/
@@ -265,7 +186,28 @@ Transaction WalletProvider::buildAddURITransaction(const std::string& p_collecti
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_URI_MISSING);
     }
     TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID, p_nonce);
-    Transaction t_ts = m_wpf.addURI(t_tp, p_uri, m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.addURI(t_tp, p_uri, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    return t_ts;
+}
+/*-------------------------------------------------------------------------*
+* Create a transaction for adding a URI to an NFT a token.                 *
+*-------------------------------------------------------------------------*/
+Transaction WalletProvider::buildUpgradeAttributesTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_newAttribute) const
+{
+    if(!p_collectionID.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
+    }
+    if(!p_nonce)
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_NONCE_MISSING);
+    }
+    if(!p_newAttribute.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_ATTRIBUTE_MISSING);
+    }
+    TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID, p_nonce);
+    Transaction t_ts = m_wpf.upgradeAttributes(t_tp, p_newAttribute, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -281,34 +223,13 @@ Transaction WalletProvider::buildMoneyTransaction(const std::string & p_destinat
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.createEGLDTransfer(m_wg->getAccount().getNonce(),BigUInt(p_amount),m_wg->getPublicAddress(),Address(p_destinataryAddress),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
-    return t_ts;
-}
-/*-------------------------------------------------------------------------*
-* Create a transaction for sending an NFT token to another address.        *
-*-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildNFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress) const
-{
-    if(!p_collectionID.size())
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
-    }
-    if(!p_nonce)
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_NONCE_MISSING);
-    }
-    if(!p_destinataryAddress.size())
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
-    }
-    TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID,p_nonce);
-    Transaction t_ts = m_wpf.createSFTTransfer(t_tp,m_wg->getAccount().getNonce(),"1",m_wg->getPublicAddress(),Address(p_destinataryAddress),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createEGLDTransfer(m_wg->getAccount().getNonce(),BigUInt(p_amount),m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
 * Create a transaction for sending an SFT token to another address.        *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildSFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce,const std::string & p_destinataryAddress, const std::string & p_amount) const
+Transaction WalletProvider::buildTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce,const std::string & p_destinataryAddress, const std::string & p_amount) const
 {
     if(!p_collectionID.size())
     {
@@ -323,7 +244,7 @@ Transaction WalletProvider::buildSFTTransaction(const std::string& p_collectionI
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
     TokenPayment t_tp = TokenPayment::semiFungible(p_collectionID,p_nonce,BigUInt(p_amount));
-    Transaction t_ts = m_wpf.createSFTTransfer(t_tp,m_wg->getAccount().getNonce(),p_amount,m_wg->getPublicAddress(),Address(p_destinataryAddress),MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createSFTTransfer(t_tp,m_wg->getAccount().getNonce(),p_amount,m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -339,7 +260,7 @@ Transaction WalletProvider::buildUpgradePropertyTransaction(const std::string& p
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PROPERTY_MISSING);
     }
-    Transaction t_ts = m_wpf.createUpgradeProperty(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID,p_property,p_newValue,MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createUpgradeProperty(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID,p_property,p_newValue)->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -355,13 +276,13 @@ Transaction WalletProvider::buildTransferOwnershipTransaction(const std::string&
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.createTransferCollectionOwnership(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID, p_address,MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createTransferCollectionOwnership(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID, p_address)->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
 * Create a transaction for adding roles to a collection.                   *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildAddRolesTransaction(const std::string& p_collectionID, const std::string& p_address, const std::string& p_role) const
+Transaction WalletProvider::buildSetUnsetRolesTransaction(const std::string& p_collectionID, const std::string& p_address, const std::string& p_role, const bool p_isSet) const
 {
     if(!p_collectionID.size())
     {
@@ -375,7 +296,7 @@ Transaction WalletProvider::buildAddRolesTransaction(const std::string& p_collec
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.setSpecialRoleSFT(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID, p_address,p_role,MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.setUnsetSpecialRoleSFT(m_wg->getAccount().getNonce(), p_isSet, m_wg->getPublicAddress(),p_collectionID, p_address,p_role)->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -391,7 +312,7 @@ Transaction WalletProvider::buildTransferCreationRoleTransaction(const std::stri
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.transferCreationRole(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID, p_address,MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.transferCreationRole(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID, p_address)->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -403,30 +324,25 @@ Transaction WalletProvider::buildStopCreationRoleTransaction(const std::string& 
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
     }
-    Transaction t_ts = m_wpf.stopCreation(p_collectionID, m_wg->getAccount().getNonce(), m_wg->getPublicAddress(), MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.stopCreation(p_collectionID, m_wg->getAccount().getNonce(), m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
-* Create a transaction for creating a token unit of an NFT collection.     *
+* Create a transaction for stopping the creation role of a collection.     *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildCreateNFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const
+Transaction WalletProvider::buildPauseUnpauseTransaction(const std::string& p_collectionID, const bool p_isPause) const
 {
     if(!p_collectionID.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
     }
-    if(!p_name.size())
-    {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TOKENNAME_MISSING);
-    }
-    char t_sftHash [3] = "00";
-    Transaction t_ts = m_wpf.createSFTUnit(m_wg->getAccount().getNonce(), m_wg->getPublicAddress(), p_collectionID, p_name, "1", p_royalties, t_sftHash, p_attributes, p_uri, MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.pauseUnPauseCreation(p_collectionID, p_isPause, m_wg->getAccount().getNonce(), m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
 * Create a transaction for creating token units of an SFT collection.      *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildCreateSFTUnitTransaction(const std::string& p_collectionID, const std::string& p_name, const std::string& p_emitAmount, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const
+Transaction WalletProvider::buildCreateTokensTransaction(const std::string& p_collectionID, const std::string& p_name, const std::string& p_emitAmount, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const
 {
     if(!p_collectionID.size())
     {
@@ -441,7 +357,7 @@ Transaction WalletProvider::buildCreateSFTUnitTransaction(const std::string& p_c
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_AMOUNT_MISSING);
     }
     char t_sftHash [3] = "00";
-    Transaction t_ts = m_wpf.createSFTUnit(m_wg->getAccount().getNonce(), m_wg->getPublicAddress(), p_collectionID, p_name, p_emitAmount, p_royalties, t_sftHash, p_attributes, p_uri, MULTIVERSX_GAS_PRICE)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createIssueToken(m_wg->getAccount().getNonce(), m_wg->getPublicAddress(), p_collectionID, p_name, p_emitAmount, p_royalties, t_sftHash, p_attributes, p_uri)->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -454,22 +370,30 @@ void WalletProvider::waitTillTransactionIsCompleted(const std::string &p_txHash)
     //Point in time where we want to end the loop
     std::chrono::time_point<std::chrono::system_clock> end_time = now_time + std::chrono::milliseconds(TRANSACTION_TIMEOUT_MS);
 
-    while ((!m_wpp.getTransactionStatus(p_txHash).isSuccessful() || !m_wpp.getTransactionStatus(p_txHash).isExecuted() ) && (std::chrono::system_clock::now() <= end_time))
+    //Execute the transaction and give a timeout
+    while (!m_wpp.getTransactionStatus(p_txHash).isExecuted() && (std::chrono::system_clock::now() <= end_time))
     {
-        if(m_wpp.getTransactionStatus(p_txHash).isFailed() || m_wpp.getTransactionStatus(p_txHash).isInvalid())
-        {
-            throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_REJECTED);
-        }
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
+
+    //If its successful, just return
+    if (m_wpp.getTransactionStatus(p_txHash).isSuccessful())
+    {
+        return;
+    }
+
+    //If its still pending after timeout, throw error
     if(m_wpp.getTransactionStatus(p_txHash).isPending())
     {
         throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_TIMEOUT_EXPIRED);
     }
-    //return true if transaction is successful or completed
+
+    //If it failed, return
     if(m_wpp.getTransactionStatus(p_txHash).isFailed() || m_wpp.getTransactionStatus(p_txHash).isInvalid())
     {
-        throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_REJECTED);
+        //Call the transaction vector decoder, which will throw an exception, as the transaction failed
+        m_wpp.getTransactionResponseVector(p_txHash);
+        //throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_REJECTED);
     }
 }
 /*-------------------------------------------------------------------------*
@@ -565,10 +489,10 @@ std::string WalletProvider::issueNFTCollection(const std::string& p_nftName,
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildNFTEmissionTransaction(p_nftName,p_nftTicker,p_canFreeze, p_canWipe, p_canPause, p_canTransferNFTCreateRole, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildCollectionEmissionTransaction(p_nftName,p_nftTicker, true, p_canFreeze, p_canWipe, p_canPause, p_canTransferNFTCreateRole, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildNFTEmissionTransaction(p_nftName,p_nftTicker,p_canFreeze, p_canWipe, p_canPause, p_canTransferNFTCreateRole, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),false).value();
+    std::string t_transactionHash = pushTransaction(buildCollectionEmissionTransaction(p_nftName,p_nftTicker, true, p_canFreeze, p_canWipe, p_canPause, p_canTransferNFTCreateRole, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -598,10 +522,10 @@ std::string WalletProvider::issueSFTCollection(const std::string& p_sftName,
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildSFTEmissionTransaction(p_sftName,p_sftTicker,p_canFreeze, p_canWipe, p_canPause, p_canTransferNFTCreateRole, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildCollectionEmissionTransaction(p_sftName,p_sftTicker, false, p_canFreeze, p_canWipe, p_canPause, p_canTransferNFTCreateRole, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildSFTEmissionTransaction(p_sftName,p_sftTicker,p_canFreeze, p_canWipe, p_canPause, p_canTransferNFTCreateRole, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),false).value();
+    std::string t_transactionHash = pushTransaction(buildCollectionEmissionTransaction(p_sftName,p_sftTicker, false, p_canFreeze, p_canWipe, p_canPause, p_canTransferNFTCreateRole, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -673,10 +597,10 @@ void WalletProvider::addCollectionRole(const std::string& p_collectionID, const 
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildAddRolesTransaction(p_collectionID, p_address, p_role),true);
+        pushTransaction(buildSetUnsetRolesTransaction(p_collectionID, p_address, p_role, true),true);
     }
 
-    std::string t_transactionHash = pushTransaction(buildAddRolesTransaction(p_collectionID, p_address, p_role),false).value();
+    std::string t_transactionHash = pushTransaction(buildSetUnsetRolesTransaction(p_collectionID, p_address, p_role, true),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -684,6 +608,9 @@ void WalletProvider::addCollectionRole(const std::string& p_collectionID, const 
 
     for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
         std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == "ESDTSetRole")
         {
@@ -703,6 +630,45 @@ void WalletProvider::addCollectionRole(const std::string& p_collectionID, const 
     throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("addCollectionRole"));
 }
 /*-------------------------------------------------------------------------*
+* Adds the given role to the given collection, for the given address.      *
+*-------------------------------------------------------------------------*/
+void WalletProvider::removeCollectionRole(const std::string& p_collectionID, const std::string& p_address, const std::string& p_role) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildSetUnsetRolesTransaction(p_collectionID, p_address, p_role, false),true);
+    }
+
+    std::string t_transactionHash = pushTransaction(buildSetUnsetRolesTransaction(p_collectionID, p_address, p_role, false),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    std::vector<std::string> t_necessaryTokens {"ESDTUnSetRole",INTERNAL_TRANSACTION_SUCCESSFUL};
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+        if(t_dataMap[0] == "ESDTUnSetRole")
+        {
+            t_necessaryTokens.erase(t_necessaryTokens.begin());
+            continue;
+        }
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            t_necessaryTokens.pop_back();
+            continue;
+        }
+    }
+    if (!t_necessaryTokens.size())
+    {
+        return;
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("removeCollectionRole"));
+}
+/*-------------------------------------------------------------------------*
 * Transfers the creation role of the given collection to the given address.*
 *-------------------------------------------------------------------------*/
 void WalletProvider::transferCreationRole(const std::string& p_collectionID, const std::string& p_address) const
@@ -720,6 +686,9 @@ void WalletProvider::transferCreationRole(const std::string& p_collectionID, con
 
     for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
         std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == "ESDTNFTCreateRoleTransfer")
         {
@@ -746,10 +715,10 @@ std::string WalletProvider::emitSFTUnits(const std::string& p_collectionID, cons
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildCreateSFTUnitTransaction(p_collectionID,p_name, p_emitAmount, p_royalties, p_attributes, p_uri),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildCreateTokensTransaction(p_collectionID,p_name, p_emitAmount, p_royalties, p_attributes, p_uri),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildCreateSFTUnitTransaction(p_collectionID,p_name, p_emitAmount, p_royalties, p_attributes, p_uri),false).value();
+    std::string t_transactionHash = pushTransaction(buildCreateTokensTransaction(p_collectionID,p_name, p_emitAmount, p_royalties, p_attributes, p_uri),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -770,10 +739,10 @@ std::string WalletProvider::emitNFTUnit(const std::string& p_collectionID, const
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildCreateNFTUnitTransaction(p_collectionID,p_name, p_royalties, p_attributes, p_uri),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildCreateTokensTransaction(p_collectionID,p_name, "1", p_royalties, p_attributes, p_uri),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildCreateNFTUnitTransaction(p_collectionID,p_name, p_royalties, p_attributes, p_uri),false).value();
+    std::string t_transactionHash = pushTransaction(buildCreateTokensTransaction(p_collectionID,p_name, "1", p_royalties, p_attributes, p_uri),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -795,10 +764,10 @@ void WalletProvider::addSFTQuantity(const std::string& p_collectionID, const uin
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildAddSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildAddBurnSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity, true),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildAddSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity),false).value();
+    std::string t_transactionHash = pushTransaction(buildAddBurnSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity, true),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -819,10 +788,10 @@ void WalletProvider::burnSFTQuantity(const std::string& p_collectionID, const ui
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildBurnSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildAddBurnSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity, false),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildBurnSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity),false).value();
+    std::string t_transactionHash = pushTransaction(buildAddBurnSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity, false),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -868,10 +837,10 @@ void WalletProvider::freezeNFT(const std::string& p_collectionID, const uint64_t
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildFreezeNFTTransaction(p_collectionID, p_nonce, p_ownerAddress),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildFreezeUnfreezeTransaction(p_collectionID, p_nonce, p_ownerAddress, true),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildFreezeNFTTransaction(p_collectionID, p_nonce, p_ownerAddress),false).value();
+    std::string t_transactionHash = pushTransaction(buildFreezeUnfreezeTransaction(p_collectionID, p_nonce, p_ownerAddress, true),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -893,10 +862,10 @@ void WalletProvider::unfreezeNFT(const std::string& p_collectionID, const uint64
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildUnfreezeNFTTransaction(p_collectionID, p_nonce, p_ownerAddress),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildFreezeUnfreezeTransaction(p_collectionID, p_nonce, p_ownerAddress, false),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildUnfreezeNFTTransaction(p_collectionID, p_nonce, p_ownerAddress),false).value();
+    std::string t_transactionHash = pushTransaction(buildFreezeUnfreezeTransaction(p_collectionID, p_nonce, p_ownerAddress, false),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash); //returns code + transaction status
 
@@ -910,6 +879,59 @@ void WalletProvider::unfreezeNFT(const std::string& p_collectionID, const uint64
     }
     throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("unfreezeNFT"));
 }
+/*-------------------------------------------------------------------------*
+* Freezes the given token.                                                 *
+*-------------------------------------------------------------------------*/
+/*
+void WalletProvider::freezeAddress(const std::string& p_collectionID, const std::string& p_ownerAddress) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildFreezeUnfreezeAccountCollectionTransaction(p_collectionID, p_ownerAddress, true),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildFreezeUnfreezeAccountCollectionTransaction(p_collectionID, p_ownerAddress, true),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            return;
+        }
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("freeze"));
+}
+*/
+/*-------------------------------------------------------------------------*
+* Unfreezes the given token.                                               *
+*-------------------------------------------------------------------------*/
+/*
+void WalletProvider::unfreezeAddress(const std::string& p_collectionID, const std::string& p_ownerAddress) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildFreezeUnfreezeAccountCollectionTransaction(p_collectionID, p_ownerAddress, false),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildFreezeUnfreezeAccountCollectionTransaction(p_collectionID, p_ownerAddress, false),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash); //returns code + transaction status
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            return;
+        }
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("unfreezeNFT"));
+}
+*/
 /*-------------------------------------------------------------------------*
 * Adds the given URI to the given NFT token.                               *
 *-------------------------------------------------------------------------*/
@@ -935,6 +957,30 @@ void WalletProvider::addURI(const std::string& p_collectionID, const uint64_t p_
     throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("addURI"));
 }
 /*-------------------------------------------------------------------------*
+* Adds the given URI to the given NFT token.                               *
+*-------------------------------------------------------------------------*/
+void WalletProvider::upgradeAttributes(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_attribute) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildUpgradeAttributesTransaction(p_collectionID, p_nonce, p_attribute),true);
+    }
+
+    std::string t_transactionHash = pushTransaction(buildUpgradeAttributesTransaction(p_collectionID, p_nonce, p_attribute),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            return;
+        }
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("upgradeAttributes"));
+}
+/*-------------------------------------------------------------------------*
 * Stops the ability to create new tokens of the given collection.          *
 *-------------------------------------------------------------------------*/
 void WalletProvider::stopCreation(const std::string& p_collectionID) const
@@ -952,6 +998,9 @@ void WalletProvider::stopCreation(const std::string& p_collectionID) const
 
     for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
         std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == "ESDTUnSetRole")
         {
@@ -971,6 +1020,84 @@ void WalletProvider::stopCreation(const std::string& p_collectionID) const
     throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("stopCreation"));
 }
 /*-------------------------------------------------------------------------*
+* Stops the ability to create new tokens of the given collection.          *
+*-------------------------------------------------------------------------*/
+void WalletProvider::pauseTransactions(const std::string& p_collectionID) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildPauseUnpauseTransaction(p_collectionID, true),true);
+    }
+
+    std::string t_transactionHash = pushTransaction(buildPauseUnpauseTransaction(p_collectionID, true),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    std::vector<std::string> t_necessaryTokens {"ESDTPause",INTERNAL_TRANSACTION_SUCCESSFUL};
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+        if(t_dataMap[0] == "ESDTPause")
+        {
+            t_necessaryTokens.erase(t_necessaryTokens.begin());
+            continue;
+        }
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            t_necessaryTokens.pop_back();
+            return;
+        }
+    }
+    if (!t_necessaryTokens.size())
+    {
+        return;
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("pauseCreation"));
+}
+/*-------------------------------------------------------------------------*
+* Stops the ability to create new tokens of the given collection.          *
+*-------------------------------------------------------------------------*/
+void WalletProvider::unpauseTransactions(const std::string& p_collectionID) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildPauseUnpauseTransaction(p_collectionID, false),true);
+    }
+
+    std::string t_transactionHash = pushTransaction(buildPauseUnpauseTransaction(p_collectionID, false),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    std::vector<std::string> t_necessaryTokens {"ESDTUnpause",INTERNAL_TRANSACTION_SUCCESSFUL};
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+        if(t_dataMap[0] == "ESDTUnPause")
+        {
+            t_necessaryTokens.erase(t_necessaryTokens.begin());
+            continue;
+        }
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            t_necessaryTokens.pop_back();
+            return;
+        }
+    }
+    if (!t_necessaryTokens.size())
+    {
+        return;
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("unPauseCreation"));
+}
+/*-------------------------------------------------------------------------*
 * Sends the given token to the given address.                              *
 *-------------------------------------------------------------------------*/
 void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, const std::string& p_collectionID, const uint64_t p_nonce) const
@@ -978,24 +1105,22 @@ void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, con
 
     if (__SIMULATE__)
     {
-        pushTransaction(buildNFTTransaction(p_collectionID, p_nonce, p_destinationAddress),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildTokenTransaction(p_collectionID, p_nonce, p_destinationAddress, "1"),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildNFTTransaction(p_collectionID, p_nonce, p_destinationAddress),false).value();
+    std::string t_transactionHash = pushTransaction(buildTokenTransaction(p_collectionID, p_nonce, p_destinationAddress, "1"),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    std::vector<std::string> t_necessaryTokens {"ESDTNFTTransfer",INTERNAL_TRANSACTION_SUCCESSFUL};
+    std::vector<std::string> t_necessaryTokens {INTERNAL_TRANSACTION_SUCCESSFUL};
 
     for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
         std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
 
-        if(t_dataMap[0] == "ESDTNFTTransfer")
-        {
-            t_necessaryTokens.erase(t_necessaryTokens.begin());
-            continue;
-        }
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             t_necessaryTokens.pop_back();
@@ -1015,10 +1140,33 @@ void WalletProvider::SFTTransaction(const std::string& p_destinationAddress, con
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildSFTTransaction(p_collectionID, p_nonce, p_destinationAddress,p_amount),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildTokenTransaction(p_collectionID, p_nonce, p_destinationAddress,p_amount),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    waitTillTransactionIsCompleted(pushTransaction(buildSFTTransaction(p_collectionID, p_nonce, p_destinationAddress, p_amount),false).value()); //returns code + transaction status
+    std::string t_transactionHash = pushTransaction(buildTokenTransaction(p_collectionID, p_nonce, p_destinationAddress, p_amount),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash); //returns code + transaction status
+
+    std::vector<std::string> t_necessaryTokens {INTERNAL_TRANSACTION_SUCCESSFUL};
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            t_necessaryTokens.pop_back();
+            continue;
+        }
+    }
+    if (!t_necessaryTokens.size())
+    {
+        return;
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("SFTTransaction"));
 }
 /*-------------------------------------------------------------------------*
 * Sends the given EGLD to the given address.                               *
@@ -1026,7 +1174,19 @@ void WalletProvider::SFTTransaction(const std::string& p_destinationAddress, con
 void WalletProvider::EGLDTransaction(const std::string& p_destinationAddress, const std::string& p_amount) const
 {
     //Transform the EGLD amount in quintillion format
-    uint64_t t_quantity = std::strtoull(p_amount.c_str(), nullptr, 10) * std::pow(10, 18);
+    char num_buf[p_amount.size() + 1];
+    strcpy(num_buf, p_amount.c_str());
+
+    // Replace comma with dot (if necessary) to ensure correct parsing
+    for (int i = 0; i < strlen(num_buf); i++) {
+        if (num_buf[i] == ',') {
+            num_buf[i] = '.';
+        }
+    }
+
+    double num = atof(num_buf);
+    double result = num * pow(10, 18);
+    uint64_t t_quantity = (uint64_t) result;
 
     if (__SIMULATE__)
     {

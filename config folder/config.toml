@@ -1,0 +1,22 @@
+[Config]
+CLIConfig = "Devnet"
+
+[Mainnet]
+ChainID = "1"
+ProxyUrl = "https://gateway.multiversx.com"
+ApiUrl = "https://api.multiversx.com"
+
+[Testnet]
+ChainID = "T"
+ProxyUrl = "https://testnet-gateway.multiversx.com"
+ApiUrl = "https://testnet-api.multiversx.com"
+   
+[Devnet]
+ChainID = "D"
+ProxyUrl = "https://devnet-gateway.multiversx.com"
+ApiUrl = "https://devnet-api.multiversx.com"
+
+[Local]
+ChainID = "local-testnet"
+ProxyUrl = "http://127.0.0.1:7950"
+ApiUrl = "http://127.0.0.1:7950"

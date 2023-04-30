@@ -5,6 +5,7 @@
 #include "wrappers/cryptosignwrapper.h" //for seed length
 #include <iostream>
 #include <regex> //token split
+#include <chrono>
 #include <boost/range/algorithm.hpp> //set_difference
 
 /*-------------------------------------------------------------------------*
@@ -153,11 +154,13 @@ bool UnitTests::tokenQuantityVerification(const int p_functionToUse, const std::
     //Option 2: Use API->accounts->nfts query
     else if (p_functionToUse == 2)
     {
+        std::this_thread::sleep_for(std::chrono::milliseconds(60000));
         t_rccGetBalances = Multifungible::getOwnedTokens(p_address);
     }
     //Option 3: Use API->token ID information
     else if (p_functionToUse == 3)
     {
+        std::this_thread::sleep_for(std::chrono::milliseconds(60000));
         t_rccGetBalances = Multifungible::getTokenProperties(p_tokenID.c_str());
     }
 
@@ -173,10 +176,8 @@ bool UnitTests::tokenQuantityVerification(const int p_functionToUse, const std::
     {
         // process line
         nlohmann::json t_response = nlohmann::json::parse(line);
-        std::cout << std::setw(4) << t_response << "\n\n";
         if (p_functionToUse == 1)
         {
-            std::cout << "usedProxy" << std::endl;
             if(t_response["tokenData"]["balance"] == p_quantity)
             {
                 return true;
@@ -233,8 +234,6 @@ bool UnitTests::issueTokenVerification(const char * p_dllwalletpath,
                                       p_tokenUri,
                                       p_SFTQuantity);
 
-    std::cout << t_tokenID << std::endl;
-
     return tokenQuantityVerification(1, t_tokenID, t_rccLoad.message,p_SFTQuantity);
 }
 /*-------------------------------------------------------------------------*
@@ -278,10 +277,10 @@ bool UnitTests::issueCollectionVerification(const char * p_dllwalletpath,
                                                 p_canUpgrade,
                                                 p_canAddSpecialRoles);
 
+    //Uses API, wait 1 minute
+    std::this_thread::sleep_for(std::chrono::milliseconds(60000));
     nlohmann::json currentTokenJson = wpp.getCollectionDetails(t_collectionID);
-    std::cout << std::setw(4) << currentTokenJson << "\n\n";
     std::string t_tokenUntrimmed = currentTokenJson["owner"];
-    std::cout << t_tokenUntrimmed << std::endl;
 
     if( t_tokenUntrimmed == std::string(t_rccLoad.message))
     {
@@ -296,41 +295,45 @@ bool UnitTests::issueCollectionVerification(const char * p_dllwalletpath,
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-bool UnitTests::addRoleVerification(const char * p_dllwalletpath,
+bool UnitTests::addRemoveRoleVerification(const char * p_dllwalletpath,
                                     const char * p_password,
                                     const char * p_collectionID,
                                     const char * p_esdtRole,
-                                    const char * t_addressToGiveRole)
+                                    const char * p_addressToGiveRole,
+                                    const bool p_isAdd)
 {
     //Issue the collection
     std::string t_collectionID = std::string(p_collectionID);
 
     //First issue the collection and get the properties. we should get 0 roles
-    returnCodeAndChar propertiesBefore = Multifungible::getCollectionProperties(t_collectionID.c_str());
-    if (propertiesBefore.retCode)
+    bool t_hasRoleOld = isRoleOwnedByAddress(p_collectionID,p_esdtRole,p_addressToGiveRole);
+    returnCodeAndChar t_addRemoveRoles;
+    if (p_isAdd)
     {
-        throw std::runtime_error(propertiesBefore.message);
-    }
-
-    returnCodeAndChar t_addRoles = Multifungible::addCollectionRole(p_dllwalletpath, p_password,t_collectionID.c_str(),t_addressToGiveRole, p_esdtRole);
-    if (t_addRoles.retCode)
-    {
-        throw std::runtime_error(t_addRoles.message);
-    }
-
-    returnCodeAndChar propertiesAfter = Multifungible::getCollectionProperties(t_collectionID.c_str());
-    if (propertiesAfter.retCode)
-    {
-        throw std::runtime_error(propertiesAfter.message);
-    }
-
-    if(!std::string(propertiesBefore.message).find(p_esdtRole) && std::string(propertiesAfter.message).find(p_esdtRole))
-    {
-        return false;
+        t_addRemoveRoles = Multifungible::addCollectionRole(p_dllwalletpath, p_password,t_collectionID.c_str(),p_addressToGiveRole, p_esdtRole);
     }
     else
     {
+        t_addRemoveRoles = Multifungible::removeCollectionRole(p_dllwalletpath, p_password,t_collectionID.c_str(),p_addressToGiveRole, p_esdtRole);
+    }
+    if (t_addRemoveRoles.retCode)
+    {
+        throw std::runtime_error(t_addRemoveRoles.message);
+    }
+
+    bool t_hasRoleNew = isRoleOwnedByAddress(p_collectionID,p_esdtRole,p_addressToGiveRole);
+
+    if(p_isAdd && !t_hasRoleOld && t_hasRoleNew)
+    {
         return true;
+    }
+    else if (!p_isAdd && t_hasRoleOld && !t_hasRoleNew)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 //Tries to ass quantity to a token provided. Checks if successful
@@ -346,13 +349,6 @@ bool UnitTests::addBurnQuantityVerification(const char * p_dllwalletpath,
 {
     BigUInt p_quantityToAdd(p_SFTQuantity);
 
-    std::string t_tokenID = p_tokenID;
-
-    std::pair<std::string,uint64_t> t_pairCollectionIDNonce = Multifungible::getCollectionIDAndNonceFromTokenID(p_tokenID);
-
-    std::string t_collectionID = t_pairCollectionIDNonce.first;
-    int t_nonce = t_pairCollectionIDNonce.second;
-
     BigUInt t_oldBalance(0);
 
     //Load wallet
@@ -362,14 +358,15 @@ bool UnitTests::addBurnQuantityVerification(const char * p_dllwalletpath,
         throw std::runtime_error(t_rccLoad.message);
     }
 
+    //Get old balance
     returnCodeAndChar t_rccGetOldBalances = Multifungible::getAddressTokenBalance(t_rccLoad.message,p_tokenID);
     if (t_rccGetOldBalances.retCode)
     {
         throw std::runtime_error(t_rccGetOldBalances.message);
     }
-
     t_oldBalance = BigUInt(t_rccGetOldBalances.message);
 
+    //Add or burn quantity
     returnCodeAndChar t_rccAddBurnQtt;
     if (p_isAdd)
     {
@@ -379,12 +376,12 @@ bool UnitTests::addBurnQuantityVerification(const char * p_dllwalletpath,
     {
         t_rccAddBurnQtt = Multifungible::burnSFTQuantity(p_dllwalletpath,p_password,p_tokenID,p_SFTQuantity);
     }
-
     if (t_rccAddBurnQtt.retCode)
     {
         throw std::runtime_error(t_rccAddBurnQtt.message);
     }
 
+    //Get new balance
     returnCodeAndChar t_rccGetNewalances = Multifungible::getAddressTokenBalance(t_rccLoad.message,p_tokenID);
     if (t_rccGetNewalances.retCode)
     {
@@ -392,6 +389,7 @@ bool UnitTests::addBurnQuantityVerification(const char * p_dllwalletpath,
     }
     BigUInt t_newBalance (t_rccGetNewalances.message);
 
+    //Verify if addition or substraction is correct
     if (p_isAdd)
     {
         if (t_newBalance == t_oldBalance + p_quantityToAdd)
@@ -445,7 +443,7 @@ bool UnitTests::wipeVerification(const char * p_dllwalletpath,
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-bool UnitTests::isRoleGivenToToken(const char *p_listOfRoles, const std::string &p_searchedRole)
+bool UnitTests::isPropertyGivenToToken(const char *p_listOfRoles, const std::string &p_searchedRole)
 {
     std::string tmpstr(p_listOfRoles,strlen(p_listOfRoles));
     std::istringstream is(tmpstr);
@@ -494,16 +492,11 @@ bool UnitTests::freezeUnfreezeVerification(const char * p_dllwalletpath,
     }
 
     returnCodeAndChar t_oldFreezeUnfreezeState = Multifungible::getCollectionProperties(t_collectionID.c_str());
-    bool t_isCanFreezeOld = isRoleGivenToToken(t_oldFreezeUnfreezeState.message,"CanFreeze");
-    bool t_isNFTCreateStoppedOld = isRoleGivenToToken(t_oldFreezeUnfreezeState.message,"NFTCreateStopped");
+    bool t_isCanFreezeOld = isPropertyGivenToToken(t_oldFreezeUnfreezeState.message,"CanFreeze");
 
     if (!t_isCanFreezeOld)
     {
         throw std::runtime_error(UNITTESTS_FREEZE_FREEZEROLE_ERROR);
-    }
-    if (t_isNFTCreateStoppedOld)
-    {
-        throw std::runtime_error(UNITTESTS_FREEZE_ISFROZEN_ERROR);
     }
 
     returnCodeAndChar t_rccFreezeUnfreezeToken;
@@ -520,22 +513,8 @@ bool UnitTests::freezeUnfreezeVerification(const char * p_dllwalletpath,
         throw std::runtime_error(t_rccFreezeUnfreezeToken.message);
     }
 
-    returnCodeAndChar t_newFreezeUnfreezeState = Multifungible::getCollectionProperties(t_collectionID.c_str());
-    bool t_isNFTCreateStoppedNew = isRoleGivenToToken(t_newFreezeUnfreezeState.message,"NFTCreateStopped");
-
-    if (p_isFreeze && t_isNFTCreateStoppedNew)
-    {
-        return true;
-    }
-    else if (!p_isFreeze && !t_isNFTCreateStoppedNew)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
+    //If we got here it means we made it successfully
+    return true;
 }
 
 /*-------------------------------------------------------------------------*
@@ -563,7 +542,6 @@ bool UnitTests::addURIVerification(const char * p_dllwalletpath,
     std::vector<std::string> t_addressesWithURIRole = getRolesAndOwnersMap(t_collectionID)["ESDTRoleNFTAddURI"];
     if (std::find(t_addressesWithURIRole.begin(), t_addressesWithURIRole.end(),t_rccLoad.message) == t_addressesWithURIRole.end())
     {
-        std::cout << "Adding URI role" << std::endl;
         returnCodeAndChar t_rccAddUri = Multifungible::addCollectionRole(p_dllwalletpath,p_password,t_collectionID.c_str(),t_rccLoad.message,"ESDTRoleNFTAddURI");
         if (t_rccAddUri.retCode)
         {
@@ -573,6 +551,7 @@ bool UnitTests::addURIVerification(const char * p_dllwalletpath,
 
     //Retrieve current URIs
     returnCodeAndChar t_rccOldUriStatus = Multifungible::getOwnedTokenProperties(p_tokenID,t_rccLoad.message);
+
     if (t_rccOldUriStatus.retCode)
     {
         throw std::runtime_error(t_rccOldUriStatus.message);
@@ -580,7 +559,7 @@ bool UnitTests::addURIVerification(const char * p_dllwalletpath,
 
     nlohmann::json t_jsonTokenInfoOld = nlohmann::json::parse(t_rccOldUriStatus.message);
 
-    std::vector<std::string> t_oldUrisTable (t_jsonTokenInfoOld["uris"].begin(),t_jsonTokenInfoOld["uris"].end());
+    std::vector<std::string> t_oldUrisTable (t_jsonTokenInfoOld["tokenData"]["uris"].begin(),t_jsonTokenInfoOld["tokenData"]["uris"].end());
 
     returnCodeAndChar t_rccAddUri = Multifungible::addURI(p_dllwalletpath,p_password,p_tokenID, p_uri);
     if (t_rccAddUri.retCode)
@@ -589,6 +568,7 @@ bool UnitTests::addURIVerification(const char * p_dllwalletpath,
     }
     //Retrieve current URIs
     returnCodeAndChar t_rccNewUriStatus = Multifungible::getOwnedTokenProperties(p_tokenID,t_rccLoad.message);
+
     if (t_rccNewUriStatus.retCode)
     {
         throw std::runtime_error(t_rccNewUriStatus.message);
@@ -596,13 +576,97 @@ bool UnitTests::addURIVerification(const char * p_dllwalletpath,
 
     nlohmann::json t_jsonTokenInfoNew = nlohmann::json::parse(t_rccNewUriStatus.message);
 
-    std::vector<std::string> t_newUrisTable (t_jsonTokenInfoNew["uris"].begin(),t_jsonTokenInfoNew["uris"].end());
+    std::vector<std::string> t_newUrisTable (t_jsonTokenInfoNew["tokenData"]["uris"].begin(),t_jsonTokenInfoNew["tokenData"]["uris"].end());
 
     std::vector<std::string> t_differenceUrisTable;
 
     boost::range::set_difference(t_newUrisTable,t_oldUrisTable, std::back_inserter(t_differenceUrisTable));
 
-    if (t_differenceUrisTable.size() == 1 && t_differenceUrisTable[0] == std::string(p_uri))
+    if (t_differenceUrisTable.size() == 1 && util::base64::decode(t_differenceUrisTable[0]) == std::string(p_uri))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+bool UnitTests::upgradeAttributesVerification(const char * p_dllwalletpath,
+                                             const char * p_password,
+                                             const char * p_tokenID,
+                                             const char * p_attribute)
+{
+
+    std::pair<std::string,uint64_t> t_pairCollectionIDNonce = Multifungible::getCollectionIDAndNonceFromTokenID(p_tokenID);
+
+    std::string t_collectionID = t_pairCollectionIDNonce.first;
+    int t_nonce = t_pairCollectionIDNonce.second;
+
+    //Load wallet
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
+    if (t_rccLoad.retCode)
+    {
+        throw std::runtime_error(t_rccLoad.message);
+    }
+
+    //Verify if ESDTRoleNFTUpdateAttributes role is set. If not, set it
+    std::vector<std::string> t_addressesWithUpdateAttributesRole = getRolesAndOwnersMap(t_collectionID)["ESDTRoleNFTUpdateAttributes"];
+    if (std::find(t_addressesWithUpdateAttributesRole.begin(), t_addressesWithUpdateAttributesRole.end(),t_rccLoad.message) == t_addressesWithUpdateAttributesRole.end())
+    {
+        returnCodeAndChar t_rccAddRole = Multifungible::addCollectionRole(p_dllwalletpath,p_password,t_collectionID.c_str(),t_rccLoad.message,"ESDTRoleNFTUpdateAttributes");
+        if (t_rccAddRole.retCode)
+        {
+            throw std::runtime_error(t_rccAddRole.message);
+        }
+    }
+
+    //Retrieve current media and metadata fields
+    returnCodeAndChar t_rccOldAttributeStatus = Multifungible::getTokenProperties(p_tokenID);
+    if (t_rccOldAttributeStatus.retCode)
+    {
+        throw std::runtime_error(t_rccOldAttributeStatus.message);
+    }
+
+    nlohmann::json t_jsonTokenInfoOld = nlohmann::json::parse(t_rccOldAttributeStatus.message);
+
+    std::vector<nlohmann::json> t_oldMediasTable (t_jsonTokenInfoOld["media"].begin(),t_jsonTokenInfoOld["media"].end());
+
+    nlohmann::json t_oldMetadata = t_jsonTokenInfoOld["metadata"];
+
+    std::vector<std::string> t_oldTags (t_jsonTokenInfoOld["tags"].begin(),t_jsonTokenInfoOld["tags"].end());
+
+    returnCodeAndChar t_rccUpgradeAttr = Multifungible::upgradeAttribute(p_dllwalletpath,p_password,p_tokenID, p_attribute);
+    if (t_rccUpgradeAttr.retCode)
+    {
+        throw std::runtime_error(t_rccUpgradeAttr.message);
+    }
+    //std::this_thread::sleep_for(std::chrono::milliseconds(60000));
+    //Retrieve current URIs
+    returnCodeAndChar t_rccNewAttributeStatus = Multifungible::getTokenProperties(p_tokenID);
+    if (t_rccNewAttributeStatus.retCode)
+    {
+        throw std::runtime_error(t_rccNewAttributeStatus.message);
+    }
+
+    nlohmann::json t_jsonTokenInfoNew = nlohmann::json::parse(t_rccNewAttributeStatus.message);
+
+    std::vector<nlohmann::json> t_newMediasTable (t_jsonTokenInfoNew["media"].begin(),t_jsonTokenInfoNew["media"].end());
+
+    nlohmann::json t_newMetadata = t_jsonTokenInfoNew["metadata"];
+
+    std::vector<std::string> t_newTags (t_jsonTokenInfoNew["tags"].begin(),t_jsonTokenInfoNew["tags"].end());
+
+    std::vector<nlohmann::json> t_differenceMediasTable;
+    std::vector<std::string> t_differenceTagsTable;
+
+    boost::range::set_difference(t_newMediasTable,t_oldMediasTable, std::back_inserter(t_differenceMediasTable));
+    boost::range::set_difference(t_oldTags,t_newTags, std::back_inserter(t_differenceTagsTable));
+
+    //If there are differences between the medias and metadata before and after upgrading the attributes
+    if (t_differenceMediasTable.size() > 0 ||  t_newMetadata != t_oldMetadata || t_differenceTagsTable.size() > 0)
     {
         return true;
     }
@@ -621,8 +685,6 @@ std::map<std::string,std::vector<std::string>> UnitTests::getRolesAndOwnersMap(c
 	{
 	    throw std::runtime_error(t_rccRolesAndAddresses.message);
 	}
-
-	std::cout << t_rccRolesAndAddresses.message << std::endl;
 
     nlohmann::json t_jsonRoles = nlohmann::json::parse(t_rccRolesAndAddresses.message);
     std::map<std::string,std::vector<std::string>> t_mapOfRolesAssignedToAddresses; //Key = role, value = vector of addresses who have that role
@@ -829,7 +891,6 @@ bool UnitTests::createNewAccountTest(const char * p_walletName,
     Wallet wg(p_walletName,clicf.config(),p_password,true);
     bytes privKey = wg.getSeed();
     int privKeyLength = privKey.size();
-    printf("Size of key: %d\n",privKeyLength);
     if (privKeyLength == SEED_LENGTH)
     {
         return true;
@@ -933,7 +994,6 @@ bool UnitTests::isTokenIssuedByAddress (const char * p_address, const char * p_t
     {
         // process line
         nlohmann::json t_response = nlohmann::json::parse(line);
-        std::cout << std::setw(4) << t_response << "\n\n";
         if (t_response.contains("tokenData"))
         {
             if (t_response["tokenData"]["tokenIdentifier"] == t_pairCollectionAndNonce.first && t_response["tokenData"]["creator"] == std::string(p_address))
@@ -957,7 +1017,7 @@ std::string customSplit(const std::string &str)
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-bool UnitTests::checkTokenInfo (const char * p_collectionID,
+bool UnitTests::checkCollectionInfo (const char * p_collectionID,
                                 const std::string & p_tokenName,
                                  const std::string & p_tokenType,
                                  const std::string & p_issuerAddress,
@@ -1092,7 +1152,7 @@ bool UnitTests::stopTokenCreation (const char * p_dllwalletpath,
     if (t_rccStopCreation.retCode)
     {
         std::cout << t_rccStopCreation.message << std::endl;
-        return false;
+        throw std::runtime_error(t_rccStopCreation.message);
     }
 
     returnCodeAndChar t_rccInfo = Multifungible::getCollectionProperties(p_collectionID);
@@ -1119,6 +1179,70 @@ bool UnitTests::stopTokenCreation (const char * p_dllwalletpath,
     }
 
     throw std::runtime_error(UNITTESTS_INVALID_NFTCREATESTOP(t_result));
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+bool UnitTests::pauseUnpauseCollectionTransactions (const char * p_dllwalletpath,
+                                const char * p_password,
+                                const char * p_collectionID,
+                                const bool p_isPause)
+{
+    std::string t_tokenSearched = "IsPaused";
+
+    //Check if the the collection is not paused at the beginning
+    returnCodeAndChar t_rccInfoOld = Multifungible::getCollectionProperties(p_collectionID);
+    if (t_rccInfoOld.retCode)
+    {
+        throw std::runtime_error(t_rccInfoOld.message);
+    }
+    std::string t_responseOld = t_rccInfoOld.message;
+    int posStartTokenOld = t_responseOld.find(t_tokenSearched) + t_tokenSearched.length() + 1; //start of the NFTCreateStoppedWord
+    int posStartCarriageReturnOld = t_responseOld.find('\n',t_responseOld.find(t_tokenSearched)); //start of the first \n after the position where we found NFTCreateStoppedWord
+    std::string t_resultOld = t_responseOld.substr(posStartTokenOld, posStartCarriageReturnOld - posStartTokenOld);
+    if ((t_resultOld == "true" && p_isPause) || (t_resultOld == "false" && !p_isPause))
+    {
+        throw std::runtime_error(UNITTESTS_COLLECTION_ALREADY_PAUSED);
+    }
+
+    //Pause transactions
+    returnCodeAndChar t_rccPauseUnpauseTransactions;
+    if (p_isPause)
+    {
+        t_rccPauseUnpauseTransactions = Multifungible::pauseTransactions(p_dllwalletpath, p_password,p_collectionID);
+    }
+    else
+    {
+        t_rccPauseUnpauseTransactions = Multifungible::unPauseTransactions(p_dllwalletpath, p_password,p_collectionID);
+    }
+
+    if (t_rccPauseUnpauseTransactions.retCode)
+    {
+        throw std::runtime_error(t_rccPauseUnpauseTransactions.message);
+    }
+
+    //Check if the the collection is paused/unpaused at the end
+    returnCodeAndChar t_rccInfo = Multifungible::getCollectionProperties(p_collectionID);
+    if (t_rccInfo.retCode)
+    {
+        throw std::runtime_error(t_rccInfo.message);
+    }
+    //Verify that we actually paused/unpaused transactions
+    std::string t_response = t_rccInfo.message;
+    int posStartToken = t_response.find(t_tokenSearched) + t_tokenSearched.length() + 1; //start of the NFTCreateStoppedWord
+    int posStartCarriageReturn = t_response.find('\n',t_response.find(t_tokenSearched)); //start of the first \n after the position where we found NFTCreateStoppedWord
+    std::string t_result = t_response.substr(posStartToken, posStartCarriageReturn - posStartToken);
+
+    if (t_result == "false" && !p_isPause)
+    {
+        return true;
+    }
+    else if (t_result == "true" && p_isPause)
+    {
+        return true;
+    }
+
+    throw std::runtime_error(UNITTESTS_INVALID_PAUSEUNPAUSE(t_result));
 }
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
@@ -1241,6 +1365,21 @@ bool UnitTests::transferEGLDVerification(const char * p_dllwalletpath,
                                             const char * p_address,
                                             const char * p_quantity)
 {
+    //Transform the quantity just like the method does
+    char num_buf[strlen(p_quantity) + 1];
+    strcpy(num_buf, p_quantity);
+
+    // Replace comma with dot (if necessary) to ensure correct parsing
+    for (int i = 0; i < strlen(num_buf); i++) {
+        if (num_buf[i] == ',') {
+            num_buf[i] = '.';
+        }
+    }
+
+    double num = atof(num_buf);
+    double result = num * pow(10, 18);
+    uint64_t t_quantity = (uint64_t) result;
+
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
     if (t_rccLoad.retCode)
     {
@@ -1255,10 +1394,7 @@ bool UnitTests::transferEGLDVerification(const char * p_dllwalletpath,
     //Get old EGLD balance
     BigUInt t_oldBalanceSource = WrapperProxyProvider(clicf.config()).getAccount(Address(t_rccLoad.message)).getBalance();
     BigUInt t_oldBalanceDestination = WrapperProxyProvider(clicf.config()).getAccount(Address(p_address)).getBalance();
-    std::cout << t_oldBalanceSource.getValue() << std::endl;
-    std::cout << t_oldBalanceDestination.getValue() << std::endl;
 
-    BigUInt t_quantity(p_quantity);
     //Verify how much EGLD we had before
     returnCodeAndChar t_rccSendEGLD = Multifungible::EGLDTransaction(p_dllwalletpath,
                                                                         p_password,
@@ -1273,15 +1409,20 @@ bool UnitTests::transferEGLDVerification(const char * p_dllwalletpath,
     //Get new EGLD balance
     BigUInt t_newBalanceSource = WrapperProxyProvider(clicf.config()).getAccount(Address(t_rccLoad.message)).getBalance();
     BigUInt t_newBalanceDestination = WrapperProxyProvider(clicf.config()).getAccount(Address(p_address)).getBalance();
-    std::cout << t_newBalanceSource.getValue() << std::endl;
-    std::cout << t_newBalanceDestination.getValue() << std::endl;
-
-    std::cout << BigUInt(t_oldBalanceSource - t_newBalanceSource).getValue() << std::endl;
-    std::cout << BigUInt(t_newBalanceDestination - t_oldBalanceDestination).getValue() << std::endl;
 
     //Take the transaction fee into account, usually 0.00005 EGLD
 
-    if (BigUInt(t_oldBalanceSource - t_newBalanceSource - BigUInt("50000000000000")).getValue() == p_quantity && BigUInt(t_newBalanceDestination - t_oldBalanceDestination).getValue() == p_quantity)
+    BigUInt t_resultingAbsBalance(0);
+    if (t_newBalanceDestination > t_oldBalanceDestination)
+    {
+        t_resultingAbsBalance = t_newBalanceDestination - t_oldBalanceDestination;
+    }
+    else
+    {
+        t_resultingAbsBalance = t_oldBalanceDestination - t_newBalanceDestination;
+    }
+
+    if ((t_oldBalanceSource - t_newBalanceSource - BigUInt("50000000000000")) == BigUInt(t_quantity) && t_resultingAbsBalance == BigUInt(t_quantity))
     {
         return true;
     }

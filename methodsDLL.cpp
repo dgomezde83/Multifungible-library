@@ -121,12 +121,33 @@ extern "C"
     /*-------------------------------------------------------------------------*
     *--------------------------------------------------------------------------*
     *-------------------------------------------------------------------------*/
+    EXPORT RCM CALLING_CONVENTION removeCollectionRole(const char * p_walletName,
+                                             const char * p_password,
+                                             const char * p_tokenID,
+                                             const char * p_address,
+                                             const char * p_role)
+    {
+        return Multifungible::removeCollectionRole(p_walletName, p_password,p_tokenID, p_address, p_role);
+    }
+    /*-------------------------------------------------------------------------*
+    *--------------------------------------------------------------------------*
+    *-------------------------------------------------------------------------*/
     EXPORT RCM CALLING_CONVENTION addURI(const char * p_walletName,
                                          const char * p_password,
                                          const char * p_tokenID,
                                          const char * p_uri)
     {
         return Multifungible::addURI(p_walletName, p_password,p_tokenID, p_uri);
+    }
+    /*-------------------------------------------------------------------------*
+    *--------------------------------------------------------------------------*
+    *-------------------------------------------------------------------------*/
+    EXPORT RCM CALLING_CONVENTION upgradeAttribute(const char * p_walletName,
+                                                   const char * p_password,
+                                                   const char * p_tokenID,
+                                                   const char * p_attribute)
+    {
+        return Multifungible::upgradeAttribute(p_walletName, p_password,p_tokenID, p_attribute);
     }
     /*-------------------------------------------------------------------------*
     *--------------------------------------------------------------------------*
@@ -186,6 +207,24 @@ extern "C"
                                                   const char * p_collectionID)
     {
         return Multifungible::stopTokenCreation(p_walletName, p_password,p_collectionID);
+    }
+    /*-------------------------------------------------------------------------*
+    *--------------------------------------------------------------------------*
+    *-------------------------------------------------------------------------*/
+    EXPORT RCM CALLING_CONVENTION pauseTransactions(const char * p_walletName,
+                                                  const char * p_password,
+                                                  const char * p_collectionID)
+    {
+        return Multifungible::pauseTransactions(p_walletName, p_password,p_collectionID);
+    }
+    /*-------------------------------------------------------------------------*
+    *--------------------------------------------------------------------------*
+    *-------------------------------------------------------------------------*/
+    EXPORT RCM CALLING_CONVENTION unPauseTransactions(const char * p_walletName,
+                                                  const char * p_password,
+                                                  const char * p_collectionID)
+    {
+        return Multifungible::unPauseTransactions(p_walletName, p_password,p_collectionID);
     }
     /*-------------------------------------------------------------------------*
     *--------------------------------------------------------------------------*

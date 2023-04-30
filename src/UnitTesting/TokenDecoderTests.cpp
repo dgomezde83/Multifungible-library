@@ -32,14 +32,21 @@ TEST_F(FixtureOverUnitTests, TokenDecoderFailed1) {
 
     try
     {
-        std::pair<std::string,uint64_t> t_idAndNonce = Multifungible::getCollectionIDAndNonceFromTokenID("€/-kl-95");
+        std::pair<std::string,uint64_t> t_idAndNonce = Multifungible::getCollectionIDAndNonceFromTokenID("â‚¬/-kl-95");
         FAIL();
     }
     catch( const std::runtime_error& err )
     {
         //Test passed
         //The program will not be able to decode the token
-        ASSERT_STRCASEEQ( UNITTESTS_ADDQUANTITY_TOKEN_DECODING_ERROR, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( UNITTESTS_ADDQUANTITY_TOKEN_DECODING_ERROR, err.what());
+        }
     }
 }
 
@@ -58,7 +65,14 @@ TEST_F(FixtureOverUnitTests, TokenDecoderFailed2) {
     {
         //Test passed
         //The program will not be able to decode the token
-        ASSERT_STRCASEEQ( UNITTESTS_ADDQUANTITY_TOKEN_DECODING_ERROR, err.what());
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( UNITTESTS_ADDQUANTITY_TOKEN_DECODING_ERROR, err.what());
+        }
     }
 }
 

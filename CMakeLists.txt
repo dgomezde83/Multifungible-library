@@ -138,9 +138,13 @@ set(MyDLL_TEST_FILES
     src/UnitTesting/TransferCreationRoles.cpp
     src/UnitTesting/transferOwnershipTests.cpp
     src/UnitTesting/TransferTokenRoles.cpp
-    src/UnitTesting/upgradePropertiesTests.cpp
+    src/UnitTesting/UpdatePropertiesTests.cpp
     src/UnitTesting/WalletGeneratorTests.cpp
     src/UnitTesting/WipeFreezeUnfreeze.cpp
+    src/UnitTesting/PauseUnpauseTransactionsTests.cpp
+    src/UnitTesting/RemoveRolesTests.cpp
+    src/UnitTesting/UpgradeAttributesTests.cpp
+    src/UnitTesting/transferEGLDTests.cpp
 )
 
 # External files
@@ -165,13 +169,14 @@ if (BUILD_TESTS)
         add_executable(Multifungible ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
     endif()
 else()
-    # Build the shared library (DLL)
+# Build the shared library (DLL)
     if (WIN32)
         add_library(Multifungible SHARED ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
     elseif(UNIX)
         add_library(Multifungible SHARED ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
     endif()
 endif()
+
 
 # Find pthread
 set(THREADS_PREFER_PTHREAD_FLAG ON)
