@@ -24,10 +24,18 @@ issue_SFT_Collection.restype = MyStruct
 #You'll need to create a myPEMFile.json wallet in order for this to run
 
 # Call the function
+my_parameter = ctypes.c_bool(True)
 collectionID = issue_SFT_Collection(b"./myPEMFile.json", # PEM file path (needs to be created and loaded with 0.05 EGLD)
                                b"1234",  # Password
                                b"Test",  # Collection name
-                               b"TST" ) # Collection ticker
+                               b"TST" ,
+				my_parameter,
+				my_parameter,
+				my_parameter,
+				my_parameter,
+				my_parameter,
+				my_parameter,
+				my_parameter) # Collection ticker
 if collectionID.my_int == 1:
   raise Exception("Error: {}".format(collectionID.my_string.decode()))
            
@@ -43,7 +51,7 @@ tokenID = issue_SFT_Collection(b"./myPEMFile.json", # PEM file path (needs to be
                                b"10",                    # quantity
                                b"8500",                  # Royalties (85.00%)
                                b"metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3", # metadata 
-                               b"https://...") # URL
+                               b"") # URL
 
 if tokenID.my_int == 1:
   raise Exception("Error: {}".format(tokenID.my_string.decode()))
