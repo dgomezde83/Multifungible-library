@@ -2,7 +2,7 @@ import ctypes
 import os
 
 # Load the dynamic library
-mylibrary = ctypes.cdll.LoadLibrary("../../../bin/libMultifungible.so")
+mylibrary = ctypes.cdll.LoadLibrary("../../../lib/libMultifungible.so")
 
 # Define the struct returned by the function
 class MyStruct(ctypes.Structure):

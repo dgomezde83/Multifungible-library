@@ -5,9 +5,9 @@ import platform
 # Load the dynamic library
 mylibrary = None
 if platform.system() == "Windows":
-    mylibrary = ctypes.cdll.LoadLibrary("../../libMultifungible.dll")
+    mylibrary = ctypes.cdll.LoadLibrary("../../lib/libMultifungible.dll")
 elif platform.system() == "Linux":
-    mylibrary = ctypes.cdll.LoadLibrary("../../libMultifungible.so")
+    mylibrary = ctypes.cdll.LoadLibrary("../../lib/libMultifungible.so")
 else:
     # Raise an exception for other platforms
     raise Exception("Unsupported platform: {}".format(platform.system()))
@@ -20,6 +20,8 @@ class MyStruct(ctypes.Structure):
 # Define the function signature for issuing a collection
 issue_SFT_Collection = mylibrary.issueSFTCollection
 issue_SFT_Collection.restype = MyStruct
+
+#You'll need to create a myPEMFile.json wallet in order for this to run
 
 # Call the function
 collectionID = issue_SFT_Collection(b"./myPEMFile.json", # PEM file path (needs to be created and loaded with 0.05 EGLD)

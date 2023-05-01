@@ -91,23 +91,23 @@ extern "C"
                                            const char * p_password,
                                            const char * p_sftName,
                                            const char * p_sftTicker,
-                                           const bool p_canFreeze = true,
-                                           const bool p_canWipe = true,
-                                           const bool p_canPause = true,
-                                           const bool p_canTransferNFTCreateRole = true,
-                                           const bool p_canChangeOwner = true,
-                                           const bool p_canUpgrade = true,
-                                           const bool p_canAddSpecialRoles = true);
+                                           const bool p_canFreeze,
+                                           const bool p_canWipe,
+                                           const bool p_canPause,
+                                           const bool p_canTransferNFTCreateRole,
+                                           const bool p_canChangeOwner,
+                                           const bool p_canUpgrade,
+                                           const bool p_canAddSpecialRoles);
     EXPORT RCM CALLING_CONVENTION issueNFTCollection(const char * p_walletName,
                                            const char * p_password,
                                            const char * p_sftName,
                                            const char * p_sftTicker,
-                                           const bool p_canFreeze = true,
-                                           const bool p_canWipe = true,
-                                           const bool p_canPause = true,
-                                           const bool p_canTransferNFTCreateRole = true,
-                                           const bool p_canChangeOwner = true,
-                                           const bool p_canUpgrade = true,
-                                           const bool p_canAddSpecialRoles = true);
+                                           const bool p_canFreeze,
+                                           const bool p_canWipe,
+                                           const bool p_canPause,
+                                           const bool p_canTransferNFTCreateRole,
+                                           const bool p_canChangeOwner,
+                                           const bool p_canUpgrade,
+                                           const bool p_canAddSpecialRoles);
     }
 #endif // __MAIN_H__

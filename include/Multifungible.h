@@ -60,24 +60,24 @@ class Multifungible
                                           const char * p_password,
                                           const char * p_nftName,
                                           const char * p_nftTicker,
-                                          const bool p_canFreeze = false,
-                                          const bool p_canWipe = false,
-                                          const bool p_canPause = false,
-                                          const bool p_canTransferNFTCreateRole = false,
-                                          const bool p_canChangeOwner = false,
-                                          const bool p_canUpgrade = false,
-                                          const bool p_canAddSpecialRoles = false);
+                                          const bool p_canFreeze,
+                                          const bool p_canWipe,
+                                          const bool p_canPause,
+                                          const bool p_canTransferNFTCreateRole,
+                                          const bool p_canChangeOwner,
+                                          const bool p_canUpgrade,
+                                          const bool p_canAddSpecialRoles);
         static returnCodeAndChar issueSFTCollection(const char * p_walletName,
                                           const char * p_password,
                                           const char * p_sftName,
                                           const char * p_sftTicker,
-                                          const bool p_canFreeze = false,
-                                          const bool p_canWipe = false,
-                                          const bool p_canPause = false,
-                                          const bool p_canTransferNFTCreateRole = false,
-                                          const bool p_canChangeOwner = false,
-                                          const bool p_canUpgrade = false,
-                                          const bool p_canAddSpecialRoles = false);
+                                          const bool p_canFreeze,
+                                          const bool p_canWipe,
+                                          const bool p_canPause,
+                                          const bool p_canTransferNFTCreateRole,
+                                          const bool p_canChangeOwner,
+                                          const bool p_canUpgrade,
+                                          const bool p_canAddSpecialRoles);
         static returnCodeAndChar upgradeProperties (const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_property, const bool p_newValue);
         static returnCodeAndChar transferOwnership (const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address);
         static returnCodeAndChar addCollectionRole(const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address, const char * p_role);
