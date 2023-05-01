@@ -57,7 +57,7 @@ issue_SFT_Token.restype = MyStruct
 # Call the function
 tokenID = issue_SFT_Token(b"./myPEMFile.json", # PEM file path (needs to be created and loaded with 0.05 EGLD)
                                b"1234",                  # Password
-                               collectionID.encode("utf-8"),  # collection name
+                               collectionID.my_string.encode("utf-8"),  # collection name
                                b"tokenTest",             # Name of the token
                                b"10",                    # quantity
                                b"8500",                  # Royalties (85.00%)
