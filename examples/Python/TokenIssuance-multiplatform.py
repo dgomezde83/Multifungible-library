@@ -18,15 +18,17 @@ class MyStruct(ctypes.Structure):
                 ("my_string", ctypes.c_char_p)]
 
 # Create a new wallet with the name myPEMFile.json and load it with > 0.05 EGLD (you have to do this on your own)
-create_wallet = mylibrary.createWallet
-create_wallet.restype = MyStruct
 
-# Call the function
-wallet = create_wallet(b"myPEMFile.json",b"1234")
-
-# Access the struct fields
-print(wallet.my_int)
-print(wallet.my_string.decode())
+if os.path.isfile("./myPEMFile.json"):
+  load_wallet = mylibrary.loadWallet
+  load_wallet.restype = MyStruct
+  wallet = load_wallet(b"./myPEMFile.json",b"1234")
+  print(wallet.my_string.decode())
+else:
+  create_wallet = mylibrary.createWallet
+  create_wallet.restype = MyStruct
+  wallet = create_wallet(b"./myPEMFile.json",b"1234")
+  print(wallet.my_string.decode())
 
 # Define the function signature for issuing a collection
 issue_SFT_Collection = mylibrary.issueSFTCollection
