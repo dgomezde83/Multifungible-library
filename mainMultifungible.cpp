@@ -4,11 +4,47 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-#define MAIN_INTERMEDIARY_WALLET_1 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet1.json"
-#define MAIN_INTERMEDIARY_WALLET_2 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet2.json"
-#define MAIN_INTERMEDIARY_WALLET_3 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet3.json"
-#define MAIN_INTERMEDIARY_WALLET_4 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet4.json"
-#define MAIN_INTERMEDIARY_WALLET_5 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet5.json"
+#ifdef __UNIX__
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#endif
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+#define MAIN_INTERMEDIARY_WALLET_1 TO_LITERAL(TEST_ROOT_PATH)"/intermediaryWallet1.json"
+#define MAIN_INTERMEDIARY_WALLET_2 TO_LITERAL(TEST_ROOT_PATH)"/intermediaryWallet2.json"
+#define MAIN_INTERMEDIARY_WALLET_3 TO_LITERAL(TEST_ROOT_PATH)"/intermediaryWallet3.json"
+#define MAIN_INTERMEDIARY_WALLET_4 TO_LITERAL(TEST_ROOT_PATH)"/intermediaryWallet4.json"
+#define MAIN_INTERMEDIARY_WALLET_5 TO_LITERAL(TEST_ROOT_PATH)"/intermediaryWallet5.json"
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+//Create tests folder
+int createTestFolder()
+{
+    #ifdef __WINDOWS__
+            if (CreateDirectory(TO_LITERAL(TEST_ROOT_PATH), NULL) || ERROR_ALREADY_EXISTS == GetLastError()) {
+                printf("Test folder created or already exists.\n");
+            }
+            else {
+                printf("Failed to create test folder.\n");
+                return 1;
+            }
+        #elif __UNIX__
+            if (access(TO_LITERAL(TEST_ROOT_PATH), F_OK) != -1) {
+                printf("Test folder already exists.\n");
+            }
+            else if (mkdir(TO_LITERAL(TEST_ROOT_PATH), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH) == 0) {
+                printf("Test folder created.\n");
+            }
+            else {
+                printf("Failed to create test folder.\n");
+                return 1;
+            }
+        #endif
+    return 0;
+}
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
@@ -108,6 +144,11 @@ int main(int argc, char** argv)
         return RUN_ALL_TESTS();
     } else if (strcmp(argv[1], "-c") == 0) {
         printf("Creating wallet suite ...\n");
+
+        if (createTestFolder() == 1)
+        { return 1; }
+
+        //create wallets
         returnCodeAndChar t_rccMULTIFUNGIBLE_MAINWALLET = Multifungible::createWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
         returnCodeAndChar t_rccMULTIFUNGIBLE_AUXILLIARYWALLET = Multifungible::createWallet(MULTIFUNGIBLE_AUXILLIARYWALLET,WALLETPASSWORD);
         returnCodeAndChar t_rccMULTIFUNGIBLE_WALLET_NOTINBLOCKCHAIN = Multifungible::createWallet(MULTIFUNGIBLE_WALLET_NOTINBLOCKCHAIN,WALLETPASSWORD);
@@ -175,6 +216,8 @@ int main(int argc, char** argv)
                t_rccMULTIFUNGIBLE_WALLET_NOMONEY.message,
                t_rccMULTIFUNGIBLE_GETEMITTEDCOLLECTIONS.message);
     } else if (strcmp(argv[1], "-l") == 0) { //load the wallets
+        if (createTestFolder() == 1)
+        { return 1; }
         loadIntermediaryAddresses();
     } else if (strcmp(argv[1], "-t") == 0) { //send EGLD to main
         sendIntermediaryAddressesToMain();
