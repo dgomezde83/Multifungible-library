@@ -17,25 +17,34 @@ class MyStruct(ctypes.Structure):
     _fields_ = [("my_int", ctypes.c_int),
                 ("my_string", ctypes.c_char_p)]
 
+# Create a new wallet with the name myPEMFile.json and load it with > 0.05 EGLD (you have to do this on your own)
+create_wallet = mylibrary.createWallet
+create_wallet.restype = MyStruct
+
+# Call the function
+wallet = create_wallet(b"myPEMFile.json",b"1234")
+
+# Access the struct fields
+print(wallet.my_int)
+print(wallet.my_string.decode())
+
 # Define the function signature for issuing a collection
 issue_SFT_Collection = mylibrary.issueSFTCollection
 issue_SFT_Collection.restype = MyStruct
 
-#You'll need to create a myPEMFile.json wallet in order for this to run
-
 # Call the function
-my_parameter = ctypes.c_bool(True)
+c_true = ctypes.c_bool(True)
 collectionID = issue_SFT_Collection(b"./myPEMFile.json", # PEM file path (needs to be created and loaded with 0.05 EGLD)
                                b"1234",  # Password
                                b"Test",  # Collection name
                                b"TST" ,
-				my_parameter,
-				my_parameter,
-				my_parameter,
-				my_parameter,
-				my_parameter,
-				my_parameter,
-				my_parameter) # Collection ticker
+				c_true,
+				c_true,
+				c_true,
+				c_true,
+				c_true,
+				c_true,
+				c_true) # Collection ticker
 if collectionID.my_int == 1:
   raise Exception("Error: {}".format(collectionID.my_string.decode()))
            
@@ -44,7 +53,7 @@ issue_SFT_Token = mylibrary.issueSemiFungibleToken
 issue_SFT_Token.restype = MyStruct
 
 # Call the function
-tokenID = issue_SFT_Collection(b"./myPEMFile.json", # PEM file path (needs to be created and loaded with 0.05 EGLD)
+tokenID = issue_SFT_Token(b"./myPEMFile.json", # PEM file path (needs to be created and loaded with 0.05 EGLD)
                                b"1234",                  # Password
                                collectionID.encode("utf-8"),  # collection name
                                b"tokenTest",             # Name of the token
