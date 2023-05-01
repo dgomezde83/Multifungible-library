@@ -7,7 +7,7 @@
 
 //Creation of an account
 TEST_F(FixtureOverUnitTests, createNewAccountTest) {
-    EXPECT_EQ(m_ut->createNewAccountTest("./tests/createNewAccountTest.json",WALLETPASSWORD), true);
+    EXPECT_EQ(m_ut->createNewAccountTest(TO_LITERAL(TEST_ROOT_PATH)"/tests/createNewAccountTest.json",WALLETPASSWORD), true);
 }
 
 /*-------------------------------------------------------------------------*
@@ -15,7 +15,7 @@ TEST_F(FixtureOverUnitTests, createNewAccountTest) {
 *-------------------------------------------------------------------------*/
 //Verify a signature with an account
 TEST_F(FixtureOverUnitTests, verifySignatureTest) {
-    EXPECT_EQ(m_ut->verifySignatureTest("./tests/verifySignatureTest.json",WALLETPASSWORD), true);
+    EXPECT_EQ(m_ut->verifySignatureTest(TO_LITERAL(TEST_ROOT_PATH)"/tests/verifySignatureTest.json",WALLETPASSWORD), true);
 }
 
 /*-------------------------------------------------------------------------*
@@ -26,7 +26,7 @@ TEST_F(FixtureOverUnitTests, verifySignatureTest) {
 TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoJson) {
     try
     {
-        m_ut->retrieveSecretKeyTest("./tests/retrieveSecretKeyTest",WALLETPASSWORD);
+        m_ut->retrieveSecretKeyTest(TO_LITERAL(TEST_ROOT_PATH)"/tests/retrieveSecretKeyTest",WALLETPASSWORD);
         FAIL();
     }
     catch( const std::runtime_error& err )
@@ -51,7 +51,7 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoJson) {
 TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoJson2) {
     try
     {
-        m_ut->retrieveSecretKeyTest("./tests/retrieveSecretKeyTestNoJson",WALLETPASSWORD);
+        m_ut->retrieveSecretKeyTest(TO_LITERAL(TEST_ROOT_PATH)"/tests/retrieveSecretKeyTestNoJson",WALLETPASSWORD);
         FAIL();
     }
     catch( const std::runtime_error& err )
@@ -76,7 +76,7 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoJson2) {
 TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoJson3) {
     try
     {
-        m_ut->retrieveSecretKeyTest("./tests/retrieveSecretKeyTestNo.jsonNothingtodo",WALLETPASSWORD);
+        m_ut->retrieveSecretKeyTest(TO_LITERAL(TEST_ROOT_PATH)"/tests/retrieveSecretKeyTestNo.jsonNothingtodo",WALLETPASSWORD);
         FAIL();
     }
     catch( const std::runtime_error& err )
@@ -126,7 +126,7 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoFilename) {
 TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoPassword) {
     try
     {
-        m_ut->retrieveSecretKeyTest("./tests/retrieveSecretKeyTestNoPassword.json","");
+        m_ut->retrieveSecretKeyTest(TO_LITERAL(TEST_ROOT_PATH)"/tests/retrieveSecretKeyTestNoPassword.json","");
         FAIL();
     }
     catch( const std::runtime_error& err )
@@ -148,7 +148,7 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoPassword) {
 
 //Test of the secret key retrieval from the .json file
 TEST_F(FixtureOverUnitTests, retrieveSecretKeyTest) {
-    EXPECT_EQ(m_ut->retrieveSecretKeyTest("./tests/retrieveSecretKeyTestNoPassword.json",WALLETPASSWORD), true);
+    EXPECT_EQ(m_ut->retrieveSecretKeyTest(TO_LITERAL(TEST_ROOT_PATH)"/tests/retrieveSecretKeyTestNoPassword.json",WALLETPASSWORD), true);
 }
 
 /*-------------------------------------------------------------------------*
@@ -157,5 +157,5 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTest) {
 
 //Create and load a wallet. Verify if addresses match
 TEST_F(FixtureOverUnitTests, DLLcreateWallet) {
-    EXPECT_EQ(m_ut->CreateLoadWalletTests("./tests/createWallet.json",WALLETPASSWORD), true);
+    EXPECT_EQ(m_ut->CreateLoadWalletTests(TO_LITERAL(TEST_ROOT_PATH)"/tests/createWallet.json",WALLETPASSWORD), true);
 }

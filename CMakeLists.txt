@@ -40,6 +40,10 @@ if (NOT DEFINED MULTIFUNGIBLE_CONFIG_FILE)
     set(MULTIFUNGIBLE_CONFIG_FILE ./config.toml)
 endif()
 add_definitions(-DMULTIFUNGIBLE_CONFIG_FILE=${MULTIFUNGIBLE_CONFIG_FILE})
+if (NOT DEFINED TEST_ROOT_PATH)
+    set(TEST_ROOT_PATH "..")
+endif()
+add_definitions(-DTEST_ROOT_PATH=${TEST_ROOT_PATH})
 
 # Porject name
 project(Multifungible)

@@ -4,11 +4,11 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-#define MAIN_INTERMEDIARY_WALLET_1 "../tests/intermediaryWallet1.json"
-#define MAIN_INTERMEDIARY_WALLET_2 "../tests/intermediaryWallet2.json"
-#define MAIN_INTERMEDIARY_WALLET_3 "../tests/intermediaryWallet3.json"
-#define MAIN_INTERMEDIARY_WALLET_4 "../tests/intermediaryWallet4.json"
-#define MAIN_INTERMEDIARY_WALLET_5 "../tests/intermediaryWallet5.json"
+#define MAIN_INTERMEDIARY_WALLET_1 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet1.json"
+#define MAIN_INTERMEDIARY_WALLET_2 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet2.json"
+#define MAIN_INTERMEDIARY_WALLET_3 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet3.json"
+#define MAIN_INTERMEDIARY_WALLET_4 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet4.json"
+#define MAIN_INTERMEDIARY_WALLET_5 TO_LITERAL(TEST_ROOT_PATH)"/tests/intermediaryWallet5.json"
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
