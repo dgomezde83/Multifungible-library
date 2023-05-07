@@ -275,12 +275,13 @@ bool UnitTests::issueCollectionVerification(const char * p_dllwalletpath,
                                                 p_canUpgrade,
                                                 p_canAddSpecialRoles);
 
-    //Uses API, wait 1 minute
-    std::this_thread::sleep_for(std::chrono::milliseconds(60000));
-    nlohmann::json currentTokenJson = wpp.getCollectionDetails(t_collectionID);
-    std::string t_tokenUntrimmed = currentTokenJson["owner"];
+    returnCodeAndChar t_rccOwner = Multifungible::getOwnerAddress(t_collectionID.c_str());
+    if (t_rccOwner.retCode)
+    {
+        throw std::runtime_error(t_rccOwner.message);
+    }
 
-    if( t_tokenUntrimmed == std::string(t_rccLoad.message))
+    if( !strcmp(t_rccOwner.message,t_rccLoad.message))
     {
         return true;
     }
