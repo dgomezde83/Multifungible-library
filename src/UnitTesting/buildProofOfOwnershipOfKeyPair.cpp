@@ -374,6 +374,7 @@ TEST_F(FixtureOverUnitTests, buildProofOfCollectionOwnershipSuccessTransferOwner
         FAIL();
     }
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(60000));
     //This test uses the API, so it might be a bit slower sometimes and fail
     EXPECT_STRCASEEQ(t_rccProofOfIssuanceNewOwner.message,"true");
     EXPECT_STRCASEEQ(t_rccProofOfIssuanceOldOwner.message,"false");
