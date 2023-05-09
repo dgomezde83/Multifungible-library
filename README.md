@@ -20,11 +20,11 @@ A quick look into some functions from this library:
 ### C++
 ```c++
 // C++ example using the uncompiled source code
-Multifungible::createWallet("./myPEMFile.json","1234");
+Multifungible::createWallet("./myWalletFile.json","1234");
 
 //Issue an SFT collection with first wallet
 std::string t_collectionID;
-returnCodeAndChar t_IssueCollection = Multifungible::issueSFTCollection("./myPEMFile.json", //PEM file path
+returnCodeAndChar t_IssueCollection = Multifungible::issueSFTCollection("./myWalletFile.json", //Wallet file path
                                                                        "1234", //Password
                                                                        "Test", //Collection name
                                                                        "TST"); //Collection ticker
@@ -36,7 +36,7 @@ std::cout << "Issued collection: " << t_collectionID << std::endl;
 
 // Issue 10 certificates of affiliation with first wallet, with 85% of royalties on transfer
 std::string t_tokenID;
-returnCodeAndChar t_IssueSFTToken = Multifungible::issueSemiFungibleToken("./myPEMFile.json", //PEM file path
+returnCodeAndChar t_IssueSFTToken = Multifungible::issueSemiFungibleToken("./myWalletFile.json", //Wallet file path
                                                                      "1234",                  //Password
                                                                      t_collectionID.c_str(),  //collection name
                                                                      "tokenTest",             //Name of the token
@@ -71,17 +71,17 @@ class MyStruct(ctypes.Structure):
     _fields_ = [("my_int", ctypes.c_int),
                 ("my_string", ctypes.c_char_p)]
 
-# Create a new wallet with the name myPEMFile.json and load it with > 0.05 EGLD (you have to do this on your own)
+# Create a new wallet with the name myWalletFile.json and load it with > 0.05 EGLD (you have to do this on your own)
 
-if os.path.isfile("./myPEMFile.json"):
+if os.path.isfile("./myWalletFile.json"):
   load_wallet = mylibrary.loadWallet
   load_wallet.restype = MyStruct
-  wallet = load_wallet(b"./myPEMFile.json",b"1234")
+  wallet = load_wallet(b"./myWalletFile.json",b"1234")
   print(wallet.my_string.decode())
 else:
   create_wallet = mylibrary.createWallet
   create_wallet.restype = MyStruct
-  wallet = create_wallet(b"./myPEMFile.json",b"1234")
+  wallet = create_wallet(b"./myWalletFile.json",b"1234")
   print(wallet.my_string.decode())
 
 # Define the function signature for issuing a collection
@@ -90,7 +90,7 @@ issue_SFT_Collection.restype = MyStruct
 
 # Call the function
 c_true = ctypes.c_bool(True)
-collectionID = issue_SFT_Collection(b"./myPEMFile.json", # PEM file path (needs to be created and loaded with 0.05 EGLD)
+collectionID = issue_SFT_Collection(b"./myWalletFile.json", # Wallet file path (needs to be created and loaded with 0.05 EGLD)
                                b"1234",  # Password
                                b"Test",  # Collection name
                                b"TST" ,
@@ -109,7 +109,7 @@ issue_SFT_Token = mylibrary.issueSemiFungibleToken
 issue_SFT_Token.restype = MyStruct
 
 # Call the function
-tokenID = issue_SFT_Token(b"./myPEMFile.json", # PEM file path (needs to be created and loaded with 0.05 EGLD)
+tokenID = issue_SFT_Token(b"./myWalletFile.json", # Wallet file path (needs to be created and loaded with 0.05 EGLD)
                                b"1234",                  # Password
                                collectionID.my_string,  # collection name
                                b"tokenTest",             # Name of the token
