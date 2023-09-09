@@ -8,6 +8,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_TESTS "Build test program" OFF)
+option(BUILD_CLI "Build CLI program" OFF)
 
 # Compiler
 if (WIN32)
@@ -45,7 +46,7 @@ if (NOT DEFINED TEST_ROOT_PATH)
 endif()
 add_definitions(-DTEST_ROOT_PATH=${TEST_ROOT_PATH})
 
-# Porject name
+# Project name
 project(Multifungible)
 
 # Main root files
@@ -171,6 +172,13 @@ if (BUILD_TESTS)
         add_executable(Multifungible ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
     elseif(UNIX)
         add_executable(Multifungible ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
+    endif()
+# Build executable for CLI
+elseif(BUILD_CLI)
+    if (WIN32)
+        add_executable(Multifungible main_cli.cpp ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
+    elseif(UNIX)
+        add_executable(Multifungible main_cli.cpp ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
     endif()
 else()
 # Build the shared library (DLL)
