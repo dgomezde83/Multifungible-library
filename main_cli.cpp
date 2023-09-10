@@ -5,6 +5,8 @@
 *-------------------------------------------------------------------------*/
 #include <iostream>
 #include <stdio.h>
+#include <iomanip>
+#include "json/json.hpp"
 
 // Max size is crypto_pwhash_scryptsalsa208sha256_PASSWD_MAX
 // Instead, we allocate 100000
@@ -114,10 +116,35 @@ int main(int argc, char** argv)
     char t_password [CLI_SIZE_PASSWORD];
 
     // Use a switch statement to handle the first argument as a whole word
+    if (firstArgument == "help")
+    {
+        std::cout << std::endl;
+        std::cout << "    Welcome to the Multifungible CLI!" << std::endl;
+        std::cout << std::endl;
+        std::cout << " -- To call a function, type the function name, followed by its arguments" << std::endl;
+        std::cout << "    between \"\" (except password, for which a password prompt will be" << std::endl;
+        std::cout << "    displayed after the call), separated by spaces. If you want to provide"<< std::endl;
+        std::cout << "    an empty argument, just write \"\"." << std::endl;
+        std::cout << std::endl;
+        std::cout << " -- Refer to the documentation for the function names and the arguments they take." << std::endl;
+        std::cout << std::endl;
+        std::cout << " -- Example 1: I want to create a JSON wallet. Type:" << std::endl;
+        std::cout << "    createWallet \"my wallet.json\"" << std::endl;
+        std::cout << "    Press enter. A prompt will appear, asking for the password you want to use to" << std::endl;
+        std::cout << "    encrypt the wallet (between 0 (no password, not recommended!) and 100000 characters)." << std::endl;
+        std::cout << "    Press enter again. The function will create a wallet with name: \"my wallet.json\", " << std::endl;
+        std::cout << "    and the function will print its result (in this case, the wallet address)." << std::endl;
+        std::cout << std::endl;
+        std::cout << " -- Example 2: I want to issue an NFT token from the wallet I just created (and loaded with funds!). Type:" << std::endl;
+        std::cout << "    issueNonFungibleToken \"mywalletname.json\" \"ABCD-012345\" \"MyTokenName\" \"7500\"" << std::endl;
+        std::cout << "    \"metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3\" \"\"" << std::endl;
+        std::cout << "    Press enter again. The function will print its result (in this case, the token identifier)." << std::endl;
+        std::cout << "    Note that we left the URL argument empty. We indicate that by writing \"\"." << std::endl;
+        return 0;
+    }
     if (firstArgument == "createWallet")
     {
-        std::cout << "createWallet" << std::endl;
-        if (argc != 2 + 1) //Takes one arguments
+        if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -129,7 +156,6 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "loadWallet")
     {
-        std::cout << "loadWallet" << std::endl;
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -141,7 +167,6 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "issueSFTCollection")
     {
-        std::cout << "issueSFTCollection" << std::endl;
         if (argc != 2 + 10) 
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -159,8 +184,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "issueNFTCollection")
     {
-        std::cout << "issueNFTCollection" << std::endl;
-        if (argc != 2 + 10) //Takes two arguments
+        if (argc != 2 + 10)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -177,8 +201,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "issueSemiFungibleToken")
     {
-        std::cout << "issueSemiFungibleToken" << std::endl;
-        if (argc != 2 + 7) //Takes two arguments
+        if (argc != 2 + 7)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -188,8 +211,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "issueNonFungibleToken")
     {
-        std::cout << "issueNonFungibleToken" << std::endl;
-        if (argc != 2 + 6) //Takes two arguments
+        if (argc != 2 + 6)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -199,8 +221,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "addCollectionRole")
     {
-        std::cout << "addCollectionRole" << std::endl;
-        if (argc != 2 + 4) //Takes two arguments
+        if (argc != 2 + 4)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -210,8 +231,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "removeCollectionRole")
     {
-        std::cout << "removeCollectionRole" << std::endl;
-        if (argc != 2 + 4) //Takes two arguments
+        if (argc != 2 + 4)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -221,8 +241,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "addURI")
     {
-        std::cout << "addURI" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -232,8 +251,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "upgradeAttribute")
     {
-        std::cout << "upgradeAttribute" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -243,8 +261,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "addSFTQuantity")
     {
-        std::cout << "addSFTQuantity" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -254,8 +271,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "burnSFTQuantity")
     {
-        std::cout << "burnSFTQuantity" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -265,8 +281,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "wipeNFT")
     {
-        std::cout << "wipeNFT" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -276,8 +291,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "freezeNFT")
     {
-        std::cout << "freezeNFT" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -287,8 +301,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "unfreezeNFT")
     {
-        std::cout << "unfreezeNFT" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -298,8 +311,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "transferCreationRole")
     {
-        std::cout << "transferCreationRole" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -309,8 +321,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "stopTokenCreation")
     {
-        std::cout << "stopTokenCreation" << std::endl;
-        if (argc != 2 + 2) //Takes two arguments
+        if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -320,8 +331,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "pauseTransactions")
     {
-        std::cout << "pauseTransactions" << std::endl;
-        if (argc != 2 + 2) //Takes two arguments
+        if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -331,8 +341,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "unPauseTransactions")
     {
-        std::cout << "unPauseTransactions" << std::endl;
-        if (argc != 2 + 2) //Takes two arguments
+        if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -342,8 +351,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "upgradeProperties")
     {
-        std::cout << "upgradeProperties" << std::endl;
-        if (argc != 2 + 4) //Takes two arguments
+        if (argc != 2 + 4)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -353,8 +361,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "transferOwnership")
     {
-        std::cout << "transferOwnership" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -364,8 +371,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "NFTTransaction")
     {
-        std::cout << "NFTTransaction" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -375,8 +381,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "SFTTransaction")
     {
-        std::cout << "SFTTransaction" << std::endl;
-        if (argc != 2 + 4) //Takes two arguments
+        if (argc != 2 + 4)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -386,8 +391,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "EGLDTransaction")
     {
-        std::cout << "EGLDTransaction" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -397,18 +401,23 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getOwnedTokens")
     {
-        std::cout << "getOwnedTokens" << std::endl;
-        if (argc != 2 + 1) //Takes two arguments
+        if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
         }
         t_rcc = Multifungible::getOwnedTokens(argv[2]);
+        char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
+        while (line != nullptr) {
+            nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
+            std::cout << std::setw(4) << t_jsonLine << std::endl;
+            line = strtok(nullptr, "\n"); // Tokenize the next line
+        }        
+        return 0;
     }
     else if (firstArgument == "getAddressTokenBalance")
     {
-        std::cout << "getAddressTokenBalance" << std::endl;
-        if (argc != 2 + 2) //Takes two arguments
+        if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -417,28 +426,39 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getTokenProperties")
     {
-        std::cout << "getTokenProperties" << std::endl;
-        if (argc != 2 + 1) //Takes two arguments
+        if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
         }
         t_rcc = Multifungible::getTokenProperties(argv[2]);
+        char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
+        while (line != nullptr) {
+            nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
+            std::cout << std::setw(4) << t_jsonLine << std::endl;
+            line = strtok(nullptr, "\n"); // Tokenize the next line
+        }        
+        return 0;
     }
     else if (firstArgument == "getOwnedTokenProperties")
     {
-        std::cout << "getOwnedTokenProperties" << std::endl;
-        if (argc != 2 + 2) //Takes two arguments
+        if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
         }
         t_rcc = Multifungible::getOwnedTokenProperties(argv[2],argv[3]);
+        char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
+        while (line != nullptr) {
+            nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
+            std::cout << std::setw(4) << t_jsonLine << std::endl;
+            line = strtok(nullptr, "\n"); // Tokenize the next line
+        }        
+        return 0;
     }
     else if (firstArgument == "getCollectionProperties")
     {
-        std::cout << "getCollectionProperties" << std::endl;
-        if (argc != 2 + 1) //Takes two arguments
+        if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -447,8 +467,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "buildProofOfOwnershipOfKeyPair")
     {
-        std::cout << "buildProofOfOwnershipOfKeyPair" << std::endl;
-        if (argc != 2 + 2) //Takes two arguments
+        if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -458,8 +477,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getProofOfCollectionOwnership")
     {
-        std::cout << "getProofOfCollectionOwnership" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -469,8 +487,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getProofOfTokenOwnership")
     {
-        std::cout << "getProofOfTokenOwnership" << std::endl;
-        if (argc != 2 + 3) //Takes two arguments
+        if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -480,8 +497,7 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getOwnerAddress")
     {
-        std::cout << "getOwnerAddress" << std::endl;
-        if (argc != 2 + 1) //Takes two arguments
+        if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
@@ -490,27 +506,34 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getEmittedCollections")
     {
-        std::cout << "getEmittedCollections" << std::endl;
-        if (argc != 2 + 1) //Takes two arguments
+        if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
         }
         t_rcc = Multifungible::getEmittedCollections(argv[2]);
+        char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
+        while (line != nullptr) {
+            nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
+            std::cout << std::setw(4) << t_jsonLine << std::endl;
+            line = strtok(nullptr, "\n"); // Tokenize the next line
+        }        
+        return 0;
     }
     else if (firstArgument == "getRolesAndAddresses")
     {
-        std::cout << "getRolesAndAddresses" << std::endl;
-        if (argc != 2 + 1) //Takes two arguments
+        if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
             return 1;
         }
+        //os << setw(4) << dt.year << "-"
         t_rcc = Multifungible::getRolesAndAddresses(argv[2]);
     }
     else
     {
         std::cout << "Unknown first argument: " << firstArgument << std::endl;
+        return 1;
     }    
 
     std::cout << t_rcc.message << std::endl;
