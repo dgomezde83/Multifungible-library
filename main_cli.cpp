@@ -173,14 +173,14 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::issueSFTCollection(argv[2],t_password,argv[4],argv[5],
+        t_rcc = Multifungible::issueSFTCollection(argv[2],t_password,argv[3],argv[4],
+                                            argv[5] == "false" ? false : true,
                                             argv[6] == "false" ? false : true,
                                             argv[7] == "false" ? false : true,
                                             argv[8] == "false" ? false : true,
                                             argv[9] == "false" ? false : true,
                                             argv[10] == "false" ? false : true,
-                                            argv[11] == "false" ? false : true,
-                                            argv[12] == "false" ? false : true);
+                                            argv[11] == "false" ? false : true);
     }
     else if (firstArgument == "issueNFTCollection")
     {
@@ -190,14 +190,14 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::issueNFTCollection(argv[2],t_password,argv[4],argv[5],
+        t_rcc = Multifungible::issueNFTCollection(argv[2],t_password,argv[3],argv[4],
+                                            argv[5] == "false" ? false : true,
                                             argv[6] == "false" ? false : true,
                                             argv[7] == "false" ? false : true,
                                             argv[8] == "false" ? false : true,
                                             argv[9] == "false" ? false : true,
                                             argv[10] == "false" ? false : true,
-                                            argv[11] == "false" ? false : true,
-                                            argv[12] == "false" ? false : true);
+                                            argv[11] == "false" ? false : true);
     }
     else if (firstArgument == "issueSemiFungibleToken")
     {
@@ -207,7 +207,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::issueSemiFungibleToken(argv[2],t_password,argv[4],argv[5],argv[6],argv[7],argv[8],argv[9]);
+        t_rcc = Multifungible::issueSemiFungibleToken(argv[2],t_password,argv[3],argv[4],argv[5],argv[6],argv[7],argv[8]);
     }
     else if (firstArgument == "issueNonFungibleToken")
     {
@@ -217,7 +217,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::issueNonFungibleToken(argv[2],t_password,argv[4],argv[5],argv[6],argv[7],argv[8]);
+        t_rcc = Multifungible::issueNonFungibleToken(argv[2],t_password,argv[3],argv[4],argv[5],argv[6],argv[7]);
     }
     else if (firstArgument == "addCollectionRole")
     {
@@ -227,7 +227,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::addCollectionRole(argv[2],t_password,argv[4],argv[5],argv[6]);
+        t_rcc = Multifungible::addCollectionRole(argv[2],t_password,argv[3],argv[4],argv[5]);
     }
     else if (firstArgument == "removeCollectionRole")
     {
@@ -237,7 +237,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::removeCollectionRole(argv[2],t_password,argv[4],argv[5],argv[6]);
+        t_rcc = Multifungible::removeCollectionRole(argv[2],t_password,argv[3],argv[4],argv[5]);
     }
     else if (firstArgument == "addURI")
     {
@@ -247,7 +247,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::addURI(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::addURI(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "upgradeAttribute")
     {
@@ -257,7 +257,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::upgradeAttribute(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::upgradeAttribute(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "addSFTQuantity")
     {
@@ -267,7 +267,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::addSFTQuantity(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::addSFTQuantity(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "burnSFTQuantity")
     {
@@ -277,7 +277,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::burnSFTQuantity(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::burnSFTQuantity(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "wipeNFT")
     {
@@ -287,7 +287,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::wipeNFT(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::wipeNFT(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "freezeNFT")
     {
@@ -297,7 +297,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::freezeNFT(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::freezeNFT(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "unfreezeNFT")
     {
@@ -307,7 +307,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::unfreezeNFT(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::unfreezeNFT(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "transferCreationRole")
     {
@@ -317,7 +317,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::transferCreationRole(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::transferCreationRole(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "stopTokenCreation")
     {
@@ -327,7 +327,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::stopTokenCreation(argv[2],t_password,argv[4]);
+        t_rcc = Multifungible::stopTokenCreation(argv[2],t_password,argv[3]);
     }
     else if (firstArgument == "pauseTransactions")
     {
@@ -337,7 +337,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::pauseTransactions(argv[2],t_password,argv[4]);
+        t_rcc = Multifungible::pauseTransactions(argv[2],t_password,argv[3]);
     }
     else if (firstArgument == "unPauseTransactions")
     {
@@ -347,7 +347,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::unPauseTransactions(argv[2],t_password,argv[4]);
+        t_rcc = Multifungible::unPauseTransactions(argv[2],t_password,argv[3]);
     }
     else if (firstArgument == "upgradeProperties")
     {
@@ -357,7 +357,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::upgradeProperties(argv[2],t_password,argv[4],argv[5],argv[6]);
+        t_rcc = Multifungible::upgradeProperties(argv[2],t_password,argv[3],argv[4],argv[5]);
     }
     else if (firstArgument == "transferOwnership")
     {
@@ -367,7 +367,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::transferOwnership(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::transferOwnership(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "NFTTransaction")
     {
@@ -377,7 +377,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::NFTTransaction(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::NFTTransaction(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "SFTTransaction")
     {
@@ -387,7 +387,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::SFTTransaction(argv[2],t_password,argv[4],argv[5],argv[6]);
+        t_rcc = Multifungible::SFTTransaction(argv[2],t_password,argv[3],argv[4],argv[5]);
     }
     else if (firstArgument == "EGLDTransaction")
     {
@@ -397,7 +397,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::EGLDTransaction(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::EGLDTransaction(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "getOwnedTokens")
     {
@@ -473,7 +473,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::buildProofOfOwnershipOfKeyPair(argv[2],t_password,argv[4]);
+        t_rcc = Multifungible::buildProofOfOwnershipOfKeyPair(argv[2],t_password,argv[3]);
     }
     else if (firstArgument == "getProofOfCollectionOwnership")
     {
@@ -483,7 +483,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::getProofOfCollectionOwnership(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::getProofOfCollectionOwnership(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "getProofOfTokenOwnership")
     {
@@ -493,7 +493,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::getProofOfTokenOwnership(argv[2],t_password,argv[4],argv[5]);
+        t_rcc = Multifungible::getProofOfTokenOwnership(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "getOwnerAddress")
     {

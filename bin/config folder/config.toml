@@ -1,5 +1,5 @@
 [Config]
-CLIConfig = "Local"
+CLIConfig = "Devnet"
 
 [Mainnet]
 ChainID = "1"
