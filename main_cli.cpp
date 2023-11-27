@@ -407,12 +407,20 @@ int main(int argc, char** argv)
             return 1;
         }
         t_rcc = Multifungible::getOwnedTokens(argv[2]);
-        char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
-        while (line != nullptr) {
-            nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
-            std::cout << std::setw(4) << t_jsonLine << std::endl;
-            line = strtok(nullptr, "\n"); // Tokenize the next line
-        }        
+        if (!t_rcc.retCode)
+        {
+            char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
+            while (line != nullptr)
+            {
+                nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
+                std::cout << std::setw(4) << t_jsonLine << std::endl;
+                line = strtok(nullptr, "\n"); // Tokenize the next line
+            }
+        }
+        else
+        {
+            std::cout << t_rcc.message << std::endl;
+        }    
         return 0;
     }
     else if (firstArgument == "getAddressTokenBalance")
@@ -432,12 +440,20 @@ int main(int argc, char** argv)
             return 1;
         }
         t_rcc = Multifungible::getTokenProperties(argv[2]);
-        char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
-        while (line != nullptr) {
+        if (!t_rcc.retCode)
+        {
+            char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
+            while (line != nullptr)
+            {
             nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
             std::cout << std::setw(4) << t_jsonLine << std::endl;
             line = strtok(nullptr, "\n"); // Tokenize the next line
-        }        
+            }
+        }
+        else
+        {
+            std::cout << t_rcc.message << std::endl;
+        }
         return 0;
     }
     else if (firstArgument == "getOwnedTokenProperties")
@@ -448,12 +464,20 @@ int main(int argc, char** argv)
             return 1;
         }
         t_rcc = Multifungible::getOwnedTokenProperties(argv[2],argv[3]);
-        char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
-        while (line != nullptr) {
-            nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
-            std::cout << std::setw(4) << t_jsonLine << std::endl;
-            line = strtok(nullptr, "\n"); // Tokenize the next line
-        }        
+        if (!t_rcc.retCode)
+        {
+            char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
+            while (line != nullptr)
+            {
+                nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
+                std::cout << std::setw(4) << t_jsonLine << std::endl;
+                line = strtok(nullptr, "\n"); // Tokenize the next line
+            }
+        }
+        else
+        {
+            std::cout << t_rcc.message << std::endl;
+        }
         return 0;
     }
     else if (firstArgument == "getCollectionProperties")
@@ -512,12 +536,20 @@ int main(int argc, char** argv)
             return 1;
         }
         t_rcc = Multifungible::getEmittedCollections(argv[2]);
-        char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
-        while (line != nullptr) {
-            nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
-            std::cout << std::setw(4) << t_jsonLine << std::endl;
-            line = strtok(nullptr, "\n"); // Tokenize the next line
-        }        
+        if (!t_rcc.retCode)
+        {
+            char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
+            while (line != nullptr)
+            {
+                nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
+                std::cout << std::setw(4) << t_jsonLine << std::endl;
+                line = strtok(nullptr, "\n"); // Tokenize the next line
+            }
+        }
+        else
+        {
+            std::cout << t_rcc.message << std::endl;
+        }   
         return 0;
     }
     else if (firstArgument == "getRolesAndAddresses")
