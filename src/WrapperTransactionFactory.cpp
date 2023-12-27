@@ -146,6 +146,29 @@ Transaction TransactionBuilderWrapped::build()
 /*-------------------------------------------------------------------------*
 * Builds a transaction to issue an SFT or NFT collection.                  *
 *-------------------------------------------------------------------------*/
+std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createESDTIssue(const uint64_t nonce,
+                                                        const Address &sender,
+                                                        std::string const &tokenName,
+                                                        std::string const &tokenTicker,
+                                                        BigUInt const &initialSupply,
+                                                        uint32_t const &numOfDecimals,
+                                                        const ESDTProperties &p_esdtProperties) const
+{
+    WrapperProxyProvider proxy(m_config);
+    NetworkConfig networkConfig = proxy.getNetworkConfig();
+
+    return TransactionFactory(networkConfig).createESDTIssue(nonce,
+                            sender,
+                            MULTIVERSX_GAS_PRICE,
+                            tokenName,
+                            tokenTicker,
+                            initialSupply,
+                            numOfDecimals,
+                            p_esdtProperties);
+}
+/*-------------------------------------------------------------------------*
+* Builds a transaction to issue an SFT or NFT collection.                  *
+*-------------------------------------------------------------------------*/
 std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createCollectionIssue(const uint64_t nonce,
                                                                                       const bool p_isNFT,
                                                                                      const Address &sender,

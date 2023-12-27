@@ -73,6 +73,18 @@ class WalletProvider
 
         virtual ~WalletProvider();
 
+        //ESDT
+        std::string issueESDTToken(const std::string& p_esdtName,
+                                    const std::string& p_esdtTicker,
+                                    const std::string& p_initialSupply,
+                                    const uint32_t p_nbDecimals,
+                                    const bool p_canFreeze,
+                                    const bool p_canWipe,
+                                    const bool p_canPause,
+                                    const bool p_canChangeOwner,
+                                    const bool p_canUpgrade,
+                                    const bool p_canAddSpecialRoles) const;
+
         //SFT/NFT
         std::string issueSFTCollection(const std::string& p_sftName,
                              const std::string& p_sftTicker,
@@ -146,6 +158,17 @@ class WalletProvider
         const WrapperTransactionFactory m_wpf;
 
         Transaction buildMoneyTransaction(const std::string & p_destinataryAddress, const uint64_t p_amount) const;
+
+        Transaction buildESDTEmissionTransaction(const std::string& p_esdtName,
+                                                const std::string& p_esdtTicker,
+                                                const std::string& p_initialSupply,
+                                                const uint32_t p_nbDecimals,
+                                                const bool p_canFreeze,
+                                                const bool p_canWipe,
+                                                const bool p_canPause,
+                                                const bool p_canChangeOwner,
+                                                const bool p_canUpgrade,
+                                                const bool p_canAddSpecialRoles) const;
 
         Transaction buildCollectionEmissionTransaction(const std::string& p_nftName,
                                                 const std::string& p_nftTicker,

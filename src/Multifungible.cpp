@@ -6,6 +6,23 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
+std::optional<uint32_t> convertToUint32(const char* str) {
+    char* end;
+    errno = 0; // To detect overflow
+
+    unsigned long number = strtoul(str, &end, 10);
+
+    if (end == str || *end != '\0' || errno == ERANGE || number > UINT32_MAX) {
+        // Conversion failed or number out of range
+        return std::optional<uint32_t>();
+    } else {
+        // Successful conversion
+        return static_cast<uint32_t>(number);
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
 Multifungible::Multifungible(){}
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
@@ -359,6 +376,49 @@ returnCodeAndChar Multifungible::getAddressTokenBalance (const char * p_address,
         BigUInt t_balance = WrapperProxyProvider(clicf.config()).getOwnedNFTorSFTBalance(Address(p_address),t_collectionIDAndNonce.first,t_collectionIDAndNonce.second);
 
         return Multifungible::transformIntoRCC(0,t_balance.getValue());
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::issueESDTToken(const char * p_walletName,
+                                                const char * p_password,
+                                                const char * p_esdtName,
+                                                const char * p_esdtTicker,
+                                                const char * p_initialSupply,
+                                                const char * p_nbDecimals,
+                                                const bool p_canFreeze,
+                                                const bool p_canWipe,
+                                                const bool p_canPause,
+                                                const bool p_canChangeOwner,
+                                                const bool p_canUpgrade,
+                                                const bool p_canAddSpecialRoles)
+{
+    try
+    {
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        std::shared_ptr<Wallet> t_wallet = std::make_unique<Wallet>(p_walletName, clicf.config(), p_password, false);
+
+        WalletProvider wwgen(clicf.config(),t_wallet);
+
+        uint32_t t_nbDecimals = convertToUint32(p_nbDecimals).value();
+
+        std::string t_sftName = wwgen.issueESDTToken(p_esdtName,p_esdtTicker, p_initialSupply, t_nbDecimals, p_canFreeze,p_canWipe, p_canPause, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles);
+
+        if(p_canAddSpecialRoles)
+        {
+            wwgen.addCollectionRole(t_sftName, t_wallet->getPublicKey(), "ESDTRoleNFTCreate");
+            wwgen.addCollectionRole(t_sftName, t_wallet->getPublicKey(), "ESDTRoleNFTAddQuantity");
+        }
+
+        return Multifungible::transformIntoRCC(0,t_sftName);
     }
     catch (const std::exception& e)
     {

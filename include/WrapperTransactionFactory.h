@@ -70,6 +70,14 @@ class WrapperTransactionFactory
                                                                    const Address &sender,
                                                                    const Address &receiver) const;
 
+        std::unique_ptr<ITransactionBuilder> createESDTIssue(const uint64_t nonce,
+                                                        const Address &sender,
+                                                        std::string const &tokenName,
+                                                        std::string const &tokenTicker,
+                                                        BigUInt const &initialSupply,
+                                                        uint32_t const &numOfDecimals,
+                                                        const ESDTProperties &p_esdtProperties) const;
+
         std::unique_ptr<ITransactionBuilder> createCollectionIssue(const uint64_t nonce,
                                                                    const bool p_isNFT,
                                                                      const Address &sender,

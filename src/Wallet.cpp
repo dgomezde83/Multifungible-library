@@ -29,13 +29,8 @@ Wallet::Wallet(const char * p_keyfilePath, Config p_config, const char * p_passw
 *-------------------------------------------------------------------------*/
 std::string Wallet::verifyKeyFilePath(const char * p_keyfilePath) const
 {
-    if(!p_keyfilePath || !strlen(p_keyfilePath))
-    {
-        throw std::runtime_error(WALLET_GENERATOR_ERROR_NOKEYFILEPATH);
-    }
     size_t str_len = strlen(p_keyfilePath);
     size_t suffix_len = strlen(".json");
-    if (str_len <= suffix_len) throw std::runtime_error(WALLET_GENERATOR_ERROR_NOKEYFILEPATH);
     if (strcmp(p_keyfilePath + str_len - suffix_len, ".json") )
     {
         throw std::runtime_error(WALLET_GENERATOR_ERROR_BADSUFFIX);

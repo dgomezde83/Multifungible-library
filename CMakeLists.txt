@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.19)
 
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_GENERATOR "MinGW Makefiles")
@@ -9,6 +9,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_TESTS "Build test program" OFF)
 option(BUILD_CLI "Build CLI program" OFF)
+if (APPLE)
+    set(CMAKE_OSX_ARCHITECTURES arm64)
+endif()
 
 # Compiler
 if (WIN32)
@@ -18,6 +21,15 @@ if (WIN32)
 	if (NOT DEFINED CMAKE_CXX_COMPILER)
     		set(CMAKE_CXX_COMPILER "C:/TDM-GCC-64/bin/g++.exe")
 	endif()
+elseif(APPLE)
+    # macOS specific compiler settings (if needed)
+    # Set the default C and C++ compiler for macOS, if not already defined
+    if (NOT DEFINED CMAKE_C_COMPILER)
+        set(CMAKE_C_COMPILER "/usr/bin/gcc") #Careful, this might be Apple clang compiler
+    endif()
+    if (NOT DEFINED CMAKE_CXX_COMPILER)
+        set(CMAKE_CXX_COMPILER "/usr/bin/g++")
+    endif()
 endif()
 set(CMAKE_CXX_FLAGS "-fPIC")
 
@@ -25,8 +37,10 @@ set(CMAKE_CXX_FLAGS "-fPIC")
 add_definitions(-DCPPHTTPLIB_OPENSSL_SUPPORT)
 if (WIN32)
 	add_definitions(-D__WINDOWS__)
-elseif(UNIX)
+elseif(UNIX AND NOT APPLE)
 	add_definitions(-D__UNIX__)
+elseif(APPLE)
+    add_definitions(-D__APPLE__)
 endif()
 add_definitions(-DMAKEDLL)
 if (NOT DEFINED MULTIFUNGIBLE_NETWORK)
@@ -152,6 +166,28 @@ set(MyDLL_TEST_FILES
     src/UnitTesting/transferEGLDTests.cpp
 )
 
+set(SDK_TEST_FILES
+    #tests/test_integration/test_proxyprovider/test_proxyprovider.cpp
+    #tests/test_integration/test_wrappers/test_wrapper_client.cpp
+    tests/test_src/test_account/test_account.cpp
+    #tests/test_src/test_filehandler/test_filehandler.cpp
+    tests/test_src/test_canonical_path/test_canonical_path.cpp
+    tests/test_src/test_internal/test_internal.cpp
+    tests/test_src/test_provider/test_apiresponse.cpp
+    tests/test_src/test_provider/test_data_transaction.cpp
+    tests/test_src/test_smart_contracts/test_smart_contracts.cpp
+    tests/test_src/test_transaction/test_esdt.cpp
+    tests/test_src/test_transaction/test_gas_estimator.cpp
+    tests/test_src/test_transaction/test_message_signer.cpp
+    tests/test_src/test_transaction/test_payload_builder.cpp
+    tests/test_src/test_transaction/test_signer.cpp
+    tests/test_src/test_transaction/test_token_payment.cpp
+    tests/test_src/test_transaction/test_transaction_factory.cpp
+    tests/test_src/test_transaction/test_transaction.cpp
+    tests/test_src/test_utils/test_utils.cpp
+    tests/test_src/test_wrappers/test_wrappers.cpp
+)
+
 # External files
 set(MyDLL_EXTERNAL
     external/json/json.hpp
@@ -167,24 +203,25 @@ set(MyDLL_EXTERNAL
 # Build executable for google tests
 if (BUILD_TESTS)
     include_directories(include/UnitTesting)
+    include_directories(tests/test_common)
     include_directories(include/boost_1_81_0)
     if (WIN32)
-        add_executable(Multifungible ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
-    elseif(UNIX)
-        add_executable(Multifungible ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
+        add_executable(Multifungible ${SDK_TEST_FILES} ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
+    else()
+        add_executable(Multifungible ${SDK_TEST_FILES} ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
     endif()
 # Build executable for CLI
 elseif(BUILD_CLI)
     if (WIN32)
         add_executable(Multifungible main_cli.cpp ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
-    elseif(UNIX)
+    elseif(UNIX OR APPLE)
         add_executable(Multifungible main_cli.cpp ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
     endif()
 else()
 # Build the shared library (DLL)
     if (WIN32)
         add_library(Multifungible SHARED ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
-    elseif(UNIX)
+    elseif(UNIX OR APPLE)
         add_library(Multifungible SHARED ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
     endif()
 endif()
@@ -202,7 +239,7 @@ include_directories(src)
 include_directories(src/utils)
 include_directories(src/wrappers)
 include_directories(AddressGen)
-if (UNIX)
+if (UNIX AND NOT APPLE)
     set(LIBSODIUM_INCLUDE_PATH "/usr/local/include")
     set(LIBSODIUM_LIB_PATH "/usr/local/lib")
     find_library(LIBSODIUM_LIBRARY libsodium.so.23.3.0 ${LIBSODIUM_LIB_PATH} REQUIRED)
@@ -278,5 +315,45 @@ elseif(WIN32)
         set_target_properties(libgtest PROPERTIES IMPORTED_LOCATION "${GOOGLETESTS_LIB_PATH}/libgtest.a")
         target_link_libraries(Multifungible libgtest)
     endif ()
+elseif(APPLE) # macOS specific library settings
+    # Libsodium headers
+    if (NOT DEFINED LIBSODIUM_INCLUDE_PATH)
+        find_path(LIBSODIUM_INCLUDE_PATH NAMES sodium.h PATHS /opt/homebrew/Cellar/libsodium/*/include NO_DEFAULT_PATH)
+        if(NOT DEFINED LIBSODIUM_INCLUDE_PATH)
+            message(FATAL_ERROR "sodium.h not found")
+        endif()
+    endif()
+
+    # Set the paths for libsodium
+    if (NOT DEFINED LIBSODIUM_LIB_PATH)
+        find_path(LIBSODIUM_LIB_PATH NAMES libsodium.a PATHS /opt/homebrew/Cellar/libsodium/*/lib NO_DEFAULT_PATH)
+        if(NOT DEFINED LIBSODIUM_LIB_PATH)
+            message(FATAL_ERROR "libsodium.a not found")
+        endif()
+    endif()
+    
+    # Find the libsodium library
+    add_library(libsodium STATIC IMPORTED)
+    set_target_properties(libsodium PROPERTIES IMPORTED_LOCATION "${LIBSODIUM_LIB_PATH}/libsodium.a")
+    target_link_libraries(Multifungible libsodium)
+
+    # OpenSSL package
+    find_package(OpenSSL REQUIRED)
+    if(OPENSSL_FOUND)
+        set(HTTPLIB_IS_USING_OPENSSL TRUE)
+        include_directories(${OPENSSL_INCLUDE_DIR})
+    endif()
+
+    # Link libraries
+    target_link_libraries(Multifungible ${OPENSSL_CRYPTO_LIBRARY})
+    target_link_libraries(Multifungible ${OPENSSL_SSL_LIBRARY})
+    target_link_libraries(Multifungible ${LIBSODIUM_LIBRARY})
+
+    # Link Google Test for unit testing
+    if (BUILD_TESTS)
+        find_package(GTest REQUIRED)
+        include_directories(${GTEST_INCLUDE_DIRS})
+        target_link_libraries(Multifungible ${GTEST_BOTH_LIBRARIES})
+    endif()
 endif()
 include_directories(${LIBSODIUM_INCLUDE_PATH})

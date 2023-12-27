@@ -34,6 +34,62 @@ WalletProvider::~WalletProvider(){}
 /*-------------------------------------------------------------------------*
 * Create a transaction for an NFT collection emission.                     *
 *-------------------------------------------------------------------------*/
+Transaction WalletProvider::buildESDTEmissionTransaction(const std::string& p_esdtName,
+                                                const std::string& p_esdtTicker,
+                                                const std::string& p_initialSupply,
+                                                const uint32_t p_nbDecimals,
+                                                const bool p_canFreeze,
+                                                const bool p_canWipe,
+                                                const bool p_canPause,
+                                                const bool p_canChangeOwner,
+                                                const bool p_canUpgrade,
+                                                const bool p_canAddSpecialRoles) const
+{
+    if(!p_esdtName.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PARAMETERMISSING("SFT Name"));
+    }
+    if(!p_esdtTicker.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PARAMETERMISSING("SFT Ticker"));
+    }
+    if(p_esdtName.size() < 3 || p_esdtName.size() > 20)
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_INVALID_TOKEN_LENGTH);
+    }
+    if(p_esdtTicker.size() < 3 || p_esdtTicker.size() > 10)
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_INVALID_TICKER_LENGTH);
+    }
+    if(!StringAlphaAndUpper::isAlphanumeric(p_esdtName))
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TOKEN_NOT_ALPHA);
+    }
+    if(!StringAlphaAndUpper::isAlphanumeric(p_esdtTicker))
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TICKER_NOT_ALPHA);
+    }
+    if(!StringAlphaAndUpper::isUpperCase(p_esdtTicker))
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TICKER_NOT_UPPER);
+    }
+    Transaction t_ts = m_wpf.createESDTIssue(m_wg->getAccount().getNonce(),
+                                            m_wg->getPublicAddress(),
+                                            p_esdtName,
+                                            p_esdtTicker,
+                                            BigUInt(p_initialSupply),
+                                            p_nbDecimals,
+                                            {p_canFreeze,
+                                            p_canWipe,
+                                            p_canPause,
+                                            p_canChangeOwner,
+                                            p_canUpgrade,
+                                            p_canAddSpecialRoles})->buildSigned(m_wg->getSeed());
+    return t_ts;
+}
+/*-------------------------------------------------------------------------*
+* Create a transaction for an NFT collection emission.                     *
+*-------------------------------------------------------------------------*/
 Transaction WalletProvider::buildCollectionEmissionTransaction(const std::string& p_nftName,
                                                                 const std::string& p_nftTicker,
                                                                 const bool p_isNFT,
@@ -473,6 +529,40 @@ std::vector<std::string> WalletProvider::getTransactionsData(const std::string &
                    });
 
    return t_data;
+}
+/*-------------------------------------------------------------------------*
+* Issue an ESDT token and return its collection ID in case of success.     *
+*-------------------------------------------------------------------------*/
+std::string WalletProvider::issueESDTToken(const std::string& p_esdtName,
+                                             const std::string& p_esdtTicker,
+                                             const std::string& p_initialSupply,
+                                             const uint32_t p_nbDecimals,
+                                             const bool p_canFreeze,
+                                             const bool p_canWipe,
+                                             const bool p_canPause,
+                                             const bool p_canChangeOwner,
+                                             const bool p_canUpgrade,
+                                             const bool p_canAddSpecialRoles) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildESDTEmissionTransaction(p_esdtName,p_esdtTicker, p_initialSupply, p_nbDecimals, p_canFreeze, p_canWipe, p_canPause, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildESDTEmissionTransaction(p_esdtName,p_esdtTicker, p_initialSupply, p_nbDecimals, p_canFreeze, p_canWipe, p_canPause, p_canChangeOwner, p_canUpgrade, p_canAddSpecialRoles),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            return util::hexToString(t_dataMap[1]);
+        }
+    }
+
+    throw std::runtime_error(WRAPPER_WALLET_ERROR_TRANSACTION("issueSFTCollection","collection"));
 }
 /*-------------------------------------------------------------------------*
 * Issue an NFT collection and return its collection ID in case of success. *

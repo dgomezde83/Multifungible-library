@@ -4,7 +4,7 @@
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
-#ifdef __UNIX__
+#if defined(__UNIX__) || defined(__APPLE__)
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -23,7 +23,7 @@ int createTestFolder()
                 printf("Failed to create test folder.\n");
                 return 1;
             }
-        #elif __UNIX__
+        #elif __UNIX__ || __APPLE__
             if (access(TO_LITERAL(TEST_ROOT_PATH), F_OK) != -1) {
                 printf("Test folder already exists.\n");
             }
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
         file.close();
         printf("Successfully saved public addresses\n");
         printf("Now launch xNetwork and give 1.000.000 EGLD to: %s\n",t_rccMULTIFUNGIBLE_MAINWALLET.message);
-        printf("When you're ready, tap ENTER\n");
+        printf("When xNetwork has finished launching, tap ENTER\n");
         fflush(stdout);   // flush stdout to ensure prompt is displayed
         while (getchar() != '\n');  // wait for user to press Enter
 

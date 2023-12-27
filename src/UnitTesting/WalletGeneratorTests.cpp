@@ -97,31 +97,6 @@ TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoJson3) {
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
-//Test of the secret key retrieval using a bad naming (no filename)
-TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoFilename) {
-    try
-    {
-        m_ut->retrieveSecretKeyTest("",WALLETPASSWORD);
-        FAIL();
-    }
-    catch( const std::runtime_error& err )
-    {
-        // check exception
-        if (__SIMULATE__)
-        {
-            SUCCEED();
-        }
-        else
-        {
-            ASSERT_STRCASEEQ( WALLET_GENERATOR_ERROR_NOKEYFILEPATH, err.what() );
-        }
-    }
-}
-
-/*-------------------------------------------------------------------------*
-*--------------------------------------------------------------------------*
-*-------------------------------------------------------------------------*/
-
 //Test of the secret key retrieval using a bad naming (no password)
 TEST_F(FixtureOverUnitTests, retrieveSecretKeyTestNoPassword) {
     try

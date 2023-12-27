@@ -12,7 +12,7 @@
 // Instead, we allocate 100000
 #define CLI_SIZE_PASSWORD 100000
 
-#ifdef __UNIX__
+#if defined(__UNIX__) || defined(__APPLE__) 
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstring>
@@ -103,12 +103,46 @@ void getPassword(char *password, uint64_t maxSize) {
     std::cout << std::endl;
 }
 #endif
-
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+void displayHelpMessage()
+{
+    std::cout << std::endl;
+    std::cout << "    Welcome to the Multifungible CLI!" << std::endl;
+    std::cout << std::endl;
+    std::cout << " -- To call a function, type the function name, followed by its arguments" << std::endl;
+    std::cout << "    between \"\" (except password, for which a password prompt will be" << std::endl;
+    std::cout << "    displayed after the call), separated by spaces. If you want to provide"<< std::endl;
+    std::cout << "    an empty argument, just write \"\"." << std::endl;
+    std::cout << std::endl;
+    std::cout << " -- Refer to the documentation for the function names and the arguments they take." << std::endl;
+    std::cout << std::endl;
+    std::cout << " -- Example 1: I want to create a JSON wallet. Type:" << std::endl;
+    std::cout << "    createWallet \"my wallet.json\"" << std::endl;
+    std::cout << "    Press enter. A prompt will appear, asking for the password you want to use to" << std::endl;
+    std::cout << "    encrypt the wallet (between 0 (no password, not recommended!) and 100000 characters)." << std::endl;
+    std::cout << "    Press enter again. The function will create a wallet with name: \"my wallet.json\", " << std::endl;
+    std::cout << "    and the function will print its result (in this case, the wallet address)." << std::endl;
+    std::cout << std::endl;
+    std::cout << " -- Example 2: I want to issue an NFT token from the wallet I just created (and loaded with funds!). Type:" << std::endl;
+    std::cout << "    issueNonFungibleToken \"mywalletname.json\" \"ABCD-012345\" \"MyTokenName\" \"7500\"" << std::endl;
+    std::cout << "    \"metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3\" \"\"" << std::endl;
+    std::cout << "    Press enter again. The function will print its result (in this case, the token identifier)." << std::endl;
+    std::cout << "    Note that we left the URL argument empty. We indicate that by writing \"\"." << std::endl;
+}
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 int main(int argc, char** argv)
 {
+    // Check if any arguments were provided
+    if (argc == 1) {
+        std::cout << "No arguments provided. Displaying help:" << std::endl;
+        displayHelpMessage();
+        return 0;
+    }
+
     std::string firstArgument = argv[1];
 
     returnCodeAndChar t_rcc;
@@ -116,30 +150,9 @@ int main(int argc, char** argv)
     char t_password [CLI_SIZE_PASSWORD];
 
     // Use a switch statement to handle the first argument as a whole word
-    if (firstArgument == "help")
+    if (firstArgument == "help" || firstArgument == "-h" || firstArgument == "--help")
     {
-        std::cout << std::endl;
-        std::cout << "    Welcome to the Multifungible CLI!" << std::endl;
-        std::cout << std::endl;
-        std::cout << " -- To call a function, type the function name, followed by its arguments" << std::endl;
-        std::cout << "    between \"\" (except password, for which a password prompt will be" << std::endl;
-        std::cout << "    displayed after the call), separated by spaces. If you want to provide"<< std::endl;
-        std::cout << "    an empty argument, just write \"\"." << std::endl;
-        std::cout << std::endl;
-        std::cout << " -- Refer to the documentation for the function names and the arguments they take." << std::endl;
-        std::cout << std::endl;
-        std::cout << " -- Example 1: I want to create a JSON wallet. Type:" << std::endl;
-        std::cout << "    createWallet \"my wallet.json\"" << std::endl;
-        std::cout << "    Press enter. A prompt will appear, asking for the password you want to use to" << std::endl;
-        std::cout << "    encrypt the wallet (between 0 (no password, not recommended!) and 100000 characters)." << std::endl;
-        std::cout << "    Press enter again. The function will create a wallet with name: \"my wallet.json\", " << std::endl;
-        std::cout << "    and the function will print its result (in this case, the wallet address)." << std::endl;
-        std::cout << std::endl;
-        std::cout << " -- Example 2: I want to issue an NFT token from the wallet I just created (and loaded with funds!). Type:" << std::endl;
-        std::cout << "    issueNonFungibleToken \"mywalletname.json\" \"ABCD-012345\" \"MyTokenName\" \"7500\"" << std::endl;
-        std::cout << "    \"metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3\" \"\"" << std::endl;
-        std::cout << "    Press enter again. The function will print its result (in this case, the token identifier)." << std::endl;
-        std::cout << "    Note that we left the URL argument empty. We indicate that by writing \"\"." << std::endl;
+        displayHelpMessage();
         return 0;
     }
     if (firstArgument == "createWallet")
@@ -165,6 +178,22 @@ int main(int argc, char** argv)
         // Call function
         t_rcc = Multifungible::loadWallet(argv[2],t_password);
     }
+    else if (firstArgument == "issueESDTToken")
+    {
+        if (argc != 2 + 11) 
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        getPassword(t_password,CLI_SIZE_PASSWORD);
+        t_rcc = Multifungible::issueESDTToken(argv[2],t_password,argv[3],argv[4],argv[5],argv[6],
+                                            !strcmp(argv[7],"false") ? false : true,
+                                            !strcmp(argv[8],"false") ? false : true,
+                                            !strcmp(argv[9],"false") ? false : true,
+                                            !strcmp(argv[10],"false") ? false : true,
+                                            !strcmp(argv[11],"false") ? false : true,
+                                            !strcmp(argv[12],"false") ? false : true);
+    }
     else if (firstArgument == "issueSFTCollection")
     {
         if (argc != 2 + 10) 
@@ -174,13 +203,13 @@ int main(int argc, char** argv)
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::issueSFTCollection(argv[2],t_password,argv[3],argv[4],
-                                            argv[5] == "false" ? false : true,
-                                            argv[6] == "false" ? false : true,
-                                            argv[7] == "false" ? false : true,
-                                            argv[8] == "false" ? false : true,
-                                            argv[9] == "false" ? false : true,
-                                            argv[10] == "false" ? false : true,
-                                            argv[11] == "false" ? false : true);
+                                            !strcmp(argv[5],"false") ? false : true,
+                                            !strcmp(argv[6],"false") ? false : true,
+                                            !strcmp(argv[7],"false") ? false : true,
+                                            !strcmp(argv[8],"false") ? false : true,
+                                            !strcmp(argv[9],"false") ? false : true,
+                                            !strcmp(argv[10],"false") ? false : true,
+                                            !strcmp(argv[11],"false") ? false : true);
     }
     else if (firstArgument == "issueNFTCollection")
     {
@@ -191,13 +220,13 @@ int main(int argc, char** argv)
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::issueNFTCollection(argv[2],t_password,argv[3],argv[4],
-                                            argv[5] == "false" ? false : true,
-                                            argv[6] == "false" ? false : true,
-                                            argv[7] == "false" ? false : true,
-                                            argv[8] == "false" ? false : true,
-                                            argv[9] == "false" ? false : true,
-                                            argv[10] == "false" ? false : true,
-                                            argv[11] == "false" ? false : true);
+                                            !strcmp(argv[5],"false") ? false : true,
+                                            !strcmp(argv[6],"false") ? false : true,
+                                            !strcmp(argv[7],"false") ? false : true,
+                                            !strcmp(argv[8],"false") ? false : true,
+                                            !strcmp(argv[9],"false") ? false : true,
+                                            !strcmp(argv[10],"false") ? false : true,
+                                            !strcmp(argv[11],"false") ? false : true);
     }
     else if (firstArgument == "issueSemiFungibleToken")
     {

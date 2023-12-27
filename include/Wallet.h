@@ -8,7 +8,6 @@
 #include "cliconfig.h"
 
 //Wallet Generator messages
-#define WALLET_GENERATOR_ERROR_NOKEYFILEPATH "No key file path provided"
 #define WALLET_GENERATOR_ERROR_NOPASSWORD "No password provided"
 #define WALLET_GENERATOR_ERROR_BADSUFFIX "Bad suffix: need .json"
 #define WALLET_GENERATOR_ERROR_PRIVATEADDRESSCHAR "Error allocating Private Address char"

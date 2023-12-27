@@ -56,6 +56,18 @@ class Multifungible
                                                          const char * p_royalties,
                                                          const char * p_attributes,
                                                          const char * p_uri);
+        static returnCodeAndChar issueESDTToken(const char * p_walletName,
+                                                const char * p_password,
+                                                const char * p_esdtName,
+                                                const char * p_esdtTicker,
+                                                const char * p_initialSupply,
+                                                const char * p_nbDecimals,
+                                                const bool p_canFreeze,
+                                                const bool p_canWipe,
+                                                const bool p_canPause,
+                                                const bool p_canChangeOwner,
+                                                const bool p_canUpgrade,
+                                                const bool p_canAddSpecialRoles);
         static returnCodeAndChar issueNFTCollection(const char * p_walletName,
                                           const char * p_password,
                                           const char * p_nftName,

@@ -218,8 +218,14 @@ integer::operator int64_t() const {
 // Bitwise Operators
 integer integer::operator&(const integer & rhs) const {
     integer::REP out;
-
+#if defined(__APPLE__)
+const integer::REP_SIZE_T max_bits = std::max(
+    static_cast<integer::REP_SIZE_T>(static_cast<int64_t>(bits())), 
+    static_cast<integer::REP_SIZE_T>(static_cast<int64_t>(rhs.bits()))
+);
+#else
     const integer::REP_SIZE_T max_bits = std::max(bits(), rhs.bits());
+#endif
     const integer             left     = (    _sign == integer::POSITIVE)?*this:twos_complement(max_bits);
     const integer             right    = (rhs._sign == integer::POSITIVE)?rhs:rhs.twos_complement(max_bits);
 
@@ -243,7 +249,14 @@ integer & integer::operator&=(const integer & rhs){
 }
 
 integer integer::operator|(const integer & rhs) const {
+#if defined(__APPLE__)
+const integer::REP_SIZE_T max_bits = std::max(
+    static_cast<integer::REP_SIZE_T>(static_cast<int64_t>(bits())), 
+    static_cast<integer::REP_SIZE_T>(static_cast<int64_t>(rhs.bits()))
+);
+#else
     const integer::REP_SIZE_T max_bits = std::max(bits(), rhs.bits());
+#endif
     const integer             left     = (    _sign == integer::POSITIVE)?*this:twos_complement(max_bits);
     const integer             right    = (rhs._sign == integer::POSITIVE)?rhs:rhs.twos_complement(max_bits);
 
@@ -278,7 +291,14 @@ integer & integer::operator|=(const integer & rhs){
 }
 
 integer integer::operator^(const integer & rhs) const {
+#if defined(__APPLE__)
+const integer::REP_SIZE_T max_bits = std::max(
+    static_cast<integer::REP_SIZE_T>(static_cast<int64_t>(bits())), 
+    static_cast<integer::REP_SIZE_T>(static_cast<int64_t>(rhs.bits()))
+);
+#else
     const integer::REP_SIZE_T max_bits = std::max(bits(), rhs.bits());
+#endif
     const integer             left     = (    _sign == integer::POSITIVE)?*this:twos_complement(max_bits);
     const integer             right    = (rhs._sign == integer::POSITIVE)?rhs:rhs.twos_complement(max_bits);
 
@@ -378,7 +398,15 @@ integer integer::operator<<(const integer & shift) const {
     }
     else{
         // push back zeros, excluding the one already there
+    #if defined(__APPLE__)
+        auto whole_uint64 = static_cast<uint64_t>(whole); // Cast `whole` to uint64_t
+        std::size_t whole_size_t = static_cast<std::size_t>(whole_uint64); // Then cast to size_t
+        if (whole_size_t > 0) { // Check to avoid underflow
+            out.insert(out.end(), whole_size_t - 1, static_cast<unsigned char>(0));
+        }
+    #else
         out.insert(out.end(), whole - 1, 0);
+    #endif
     }
 
     return integer(out, _sign);
@@ -1053,7 +1081,11 @@ integer & integer::operator*=(const integer & rhs){
 // Non-Recursive version of above algorithm
 std::pair <integer, integer> integer::non_recursive_divmod(const integer & lhs, const integer & rhs) const {
     std::pair <integer, integer> qr (0, 0);
+#if defined(__APPLE__)
+for (integer::REP_SIZE_T x = static_cast<integer::REP_SIZE_T>(static_cast<uint64_t>(lhs.bits())); x > 0; x--){
+#else
     for(integer::REP_SIZE_T x = lhs.bits(); x > 0; x--){
+#endif
         qr.first  <<= 1;
         qr.second <<= 1;
 
@@ -1255,7 +1287,11 @@ std::string integer::str(const integer & base, const std::string::size_type & le
             std::pair <integer, integer> qr;
             do{
                 qr = dm(rhs, base);
+                #if defined(__APPLE__)
+                out = digits[static_cast<std::size_t>(static_cast<uint64_t>(qr.second))] + out;
+                #else
                 out = digits[qr.second] + out;
+                #endif
                 rhs = qr.first;
             } while (rhs);
         }

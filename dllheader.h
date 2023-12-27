@@ -13,7 +13,7 @@
     #else
         #define EXPORT __declspec(dllimport)
     #endif
-#elif __UNIX__
+#elif defined(__UNIX__) || defined(__APPLE__)
     #define EXPORT
 #endif
 
@@ -87,6 +87,18 @@ extern "C"
                                                   const char * p_password,
                                                   const char * p_strAddress,
                                                   const char * p_amount);
+    EXPORT RCM CALLING_CONVENTION issueESDTToken(const char * p_walletName,
+                                                const char * p_password,
+                                                const char * p_esdtName,
+                                                const char * p_esdtTicker,
+                                                const char * p_initialSupply,
+                                                const char * p_nbDecimals,
+                                                const bool p_canFreeze,
+                                                const bool p_canWipe,
+                                                const bool p_canPause,
+                                                const bool p_canChangeOwner,
+                                                const bool p_canUpgrade,
+                                                const bool p_canAddSpecialRoles);
     EXPORT RCM CALLING_CONVENTION issueSFTCollection(const char * p_walletName,
                                            const char * p_password,
                                            const char * p_sftName,
