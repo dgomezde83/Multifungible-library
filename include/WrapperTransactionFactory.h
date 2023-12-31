@@ -63,6 +63,11 @@ class WrapperTransactionFactory
                                                                 const Address &receiver,
                                                                 const std::string &data = std::string()) const;
 
+        std::unique_ptr<ITransactionBuilder> createESDTTransfer(const TokenPayment &tokenPayment,
+                                                                   const uint64_t nonce,
+                                                                   std::string const & quantity,
+                                                                   const Address &sender,
+                                                                   const Address &receiver) const;
 
         std::unique_ptr<ITransactionBuilder> createSFTTransfer(const TokenPayment &tokenPayment,
                                                                    const uint64_t nonce,
@@ -113,8 +118,19 @@ class WrapperTransactionFactory
                                                                const std::string & p_supplyToEmmitOrBurn,
                                                                const uint64_t nonce,
                                                                const Address &sender) const;
+        
+        std::unique_ptr<ITransactionBuilder> mintBurnQuantityOfESDTs(const TokenPayment &p_tokenPayment,
+                                                                                  const bool p_isMint,
+                                                                                   const std::string & p_supplyToEmmitOrBurn,
+                                                                                   const uint64_t nonce,
+                                                                                   const Address &sender) const;
 
         std::unique_ptr<ITransactionBuilder> wipeNFT(const TokenPayment &p_tokenPayment,
+                                                               const std::string &p_ownerAddress,
+                                                               const uint64_t nonce,
+                                                               const Address &sender) const;
+
+        std::unique_ptr<ITransactionBuilder> wipeESDT(const TokenPayment &p_tokenPayment,
                                                                const std::string &p_ownerAddress,
                                                                const uint64_t nonce,
                                                                const Address &sender) const;
@@ -125,13 +141,11 @@ class WrapperTransactionFactory
                                                                const uint64_t nonce,
                                                                const Address &sender) const;
 
-        /*
-        std::unique_ptr<ITransactionBuilder> freezeUnfreezeAccountCollection(const std::string &p_collectionID,
-                                                                           const bool p_isFreeze,
-                                                                           const std::string &p_ownerAddress,
-                                                                           const uint64_t nonce,
-                                                                           const Address &sender) const;
-        */
+        std::unique_ptr<ITransactionBuilder> freezeUnfreezeESDT(const TokenPayment &p_tokenPayment,
+                                                               const bool p_isFreeze,
+                                                               const std::string &p_ownerAddress,
+                                                               const uint64_t nonce,
+                                                               const Address &sender) const;
 
         std::unique_ptr<ITransactionBuilder> addURI(const TokenPayment &p_tokenPayment,
                                                                const std::string &p_uri,

@@ -65,10 +65,14 @@ extern "C"
     EXPORT RCM CALLING_CONVENTION addURI (const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_uri);
     EXPORT RCM CALLING_CONVENTION upgradeAttribute(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_attribute);
     EXPORT RCM CALLING_CONVENTION addSFTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_quantity);
+    EXPORT RCM CALLING_CONVENTION mintESDTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_quantity);
     EXPORT RCM CALLING_CONVENTION burnSFTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_quantity);
     EXPORT RCM CALLING_CONVENTION wipeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
+    EXPORT RCM CALLING_CONVENTION wipeESDT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
     EXPORT RCM CALLING_CONVENTION freezeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
+    EXPORT RCM CALLING_CONVENTION freezeESDT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
     EXPORT RCM CALLING_CONVENTION unfreezeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
+    EXPORT RCM CALLING_CONVENTION unfreezeESDT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
     EXPORT RCM CALLING_CONVENTION stopTokenCreation(const char * p_walletName, const char * p_password,const char * p_collectionID);
     EXPORT RCM CALLING_CONVENTION pauseTransactions(const char * p_walletName, const char * p_password,const char * p_collectionID);
     EXPORT RCM CALLING_CONVENTION unPauseTransactions(const char * p_walletName, const char * p_password,const char * p_collectionID);
@@ -79,6 +83,11 @@ extern "C"
                                                  const char * p_destinationAddress,
                                                  const char * p_tokenID);
     EXPORT RCM CALLING_CONVENTION SFTTransaction(const char * p_walletName,
+                                                 const char * p_password,
+                                                 const char * p_destinationAddress,
+                                                 const char * p_tokenID,
+                                                 const char * p_quantity);
+    EXPORT RCM CALLING_CONVENTION ESDTTransaction(const char * p_walletName,
                                                  const char * p_password,
                                                  const char * p_destinationAddress,
                                                  const char * p_tokenID,

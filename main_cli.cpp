@@ -248,7 +248,7 @@ int main(int argc, char** argv)
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::issueNonFungibleToken(argv[2],t_password,argv[3],argv[4],argv[5],argv[6],argv[7]);
     }
-    else if (firstArgument == "addCollectionRole")
+    else if (firstArgument == "addCollectionRole") //For ESDT and NFT/SFT
     {
         if (argc != 2 + 4)
         {
@@ -258,7 +258,7 @@ int main(int argc, char** argv)
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::addCollectionRole(argv[2],t_password,argv[3],argv[4],argv[5]);
     }
-    else if (firstArgument == "removeCollectionRole")
+    else if (firstArgument == "removeCollectionRole") //For ESDT and NFT/SFT
     {
         if (argc != 2 + 4)
         {
@@ -298,6 +298,16 @@ int main(int argc, char** argv)
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::addSFTQuantity(argv[2],t_password,argv[3],argv[4]);
     }
+    else if (firstArgument == "mintESDTQuantity")
+    {
+        if (argc != 2 + 3)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        getPassword(t_password,CLI_SIZE_PASSWORD);
+        t_rcc = Multifungible::mintESDTQuantity(argv[2],t_password,argv[3],argv[4]);
+    }
     else if (firstArgument == "burnSFTQuantity")
     {
         if (argc != 2 + 3)
@@ -307,6 +317,16 @@ int main(int argc, char** argv)
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::burnSFTQuantity(argv[2],t_password,argv[3],argv[4]);
+    }
+    else if (firstArgument == "burnESDTQuantity")
+    {
+        if (argc != 2 + 3)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        getPassword(t_password,CLI_SIZE_PASSWORD);
+        t_rcc = Multifungible::burnESDTQuantity(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "wipeNFT")
     {
@@ -318,6 +338,16 @@ int main(int argc, char** argv)
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::wipeNFT(argv[2],t_password,argv[3],argv[4]);
     }
+    else if (firstArgument == "wipeESDT")
+    {
+        if (argc != 2 + 3)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        getPassword(t_password,CLI_SIZE_PASSWORD);
+        t_rcc = Multifungible::wipeESDT(argv[2],t_password,argv[3],argv[4]);
+    }
     else if (firstArgument == "freezeNFT")
     {
         if (argc != 2 + 3)
@@ -328,6 +358,16 @@ int main(int argc, char** argv)
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::freezeNFT(argv[2],t_password,argv[3],argv[4]);
     }
+    else if (firstArgument == "freezeESDT")
+    {
+        if (argc != 2 + 3)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        getPassword(t_password,CLI_SIZE_PASSWORD);
+        t_rcc = Multifungible::freezeESDT(argv[2],t_password,argv[3],argv[4]);
+    }
     else if (firstArgument == "unfreezeNFT")
     {
         if (argc != 2 + 3)
@@ -337,6 +377,16 @@ int main(int argc, char** argv)
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::unfreezeNFT(argv[2],t_password,argv[3],argv[4]);
+    }
+    else if (firstArgument == "unfreezeESDT")
+    {
+        if (argc != 2 + 3)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        getPassword(t_password,CLI_SIZE_PASSWORD);
+        t_rcc = Multifungible::unfreezeESDT(argv[2],t_password,argv[3],argv[4]);
     }
     else if (firstArgument == "transferCreationRole")
     {
@@ -417,6 +467,16 @@ int main(int argc, char** argv)
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::SFTTransaction(argv[2],t_password,argv[3],argv[4],argv[5]);
+    }
+    else if (firstArgument == "ESDTTransaction")
+    {
+        if (argc != 2 + 4)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        getPassword(t_password,CLI_SIZE_PASSWORD);
+        t_rcc = Multifungible::ESDTTransaction(argv[2],t_password,argv[3],argv[4],argv[5]);
     }
     else if (firstArgument == "EGLDTransaction")
     {

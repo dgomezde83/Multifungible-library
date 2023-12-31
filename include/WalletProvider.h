@@ -122,17 +122,23 @@ class WalletProvider
 
         void addSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const;
 
+        void mintESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity) const;
+        
         void burnSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const;
+
+        void burnESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity) const;
 
         void wipeNFT(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const;
 
+        void wipeESDT(const std::string& p_collectionID, const std::string& p_ownerAddress) const;
+
         void freezeNFT(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const;
+
+        void freezeESDT(const std::string& p_collectionID, const std::string& p_ownerAddress) const;
 
         void unfreezeNFT(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const;
 
-        //void freezeAddress(const std::string& p_collectionID, const std::string& p_ownerAddress) const;
-
-        //void unfreezeAddress(const std::string& p_collectionID, const std::string& p_ownerAddress) const;
+        void unfreezeESDT(const std::string& p_collectionID, const std::string& p_ownerAddress) const;
 
         void addURI(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_uri) const;
 
@@ -147,6 +153,8 @@ class WalletProvider
         void NFTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const uint64_t p_nonce) const;
 
         void SFTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_amount) const;
+        
+        void ESDTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_amount) const;
 
         void EGLDTransaction(const std::string& p_destinationAddress, const std::string& p_amount) const;
 
@@ -181,15 +189,21 @@ class WalletProvider
                                                 const bool p_canUpgrade,
                                                 const bool p_canAddSpecialRoles) const;
 
+        Transaction buildESDTTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress, const std::string & p_quantity) const;
+
         Transaction buildTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress, const std::string & p_quantity) const;
 
         Transaction buildAddBurnSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity, const bool p_isAdd) const;
 
+        Transaction buildMintBurnESDTQuantityTransaction(const std::string& p_collectionID, const std::string& p_quantity, const bool p_isAdd) const;
+
         Transaction buildWipeNFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const;
+
+        Transaction buildWipeESDTTransaction(const std::string& p_collectionID, const std::string& p_ownerAddress) const;
 
         Transaction buildFreezeUnfreezeTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress, const bool p_isFreeze) const;
 
-        //Transaction buildFreezeUnfreezeAccountCollectionTransaction(const std::string& p_collectionID, const std::string& p_ownerAddress, const bool p_isFreeze) const;
+        Transaction buildFreezeUnfreezeESDTTransaction(const std::string& p_collectionID, const std::string& p_ownerAddress, const bool p_isFreeze) const;
 
         Transaction buildUpgradePropertyTransaction(const std::string& p_collectionID, const std::string p_property, const bool p_newValue) const;
 

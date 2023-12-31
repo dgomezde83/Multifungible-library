@@ -31,12 +31,15 @@
 #define SFT_ADDROLE_PREFIX std::string("setSpecialRole")
 #define SFT_UNSETROLE_PREFIX std::string("unSetSpecialRole")
 #define SFT_ADDQUANTITY_PREFIX std::string("ESDTNFTAddQuantity")
+#define ESDT_MINTQUANTITY_PREFIX std::string("ESDTLocalMint")
 #define SFT_BURNQUANTITY_PREFIX std::string("ESDTNFTBurn")
+#define ESDT_BURNQUANTITY_PREFIX std::string("ESDTLocalBurn")
 #define SFT_WIPE_PREFIX std::string("wipeSingleNFT")
+#define ESDT_WIPE_PREFIX std::string("wipe")
 #define SFT_FREEZE_PREFIX std::string("freezeSingleNFT")
 #define SFT_UNFREEZE_PREFIX std::string("unFreezeSingleNFT")
-#define SFT_FREEZECOLLECTION_PREFIX std::string("freeze")
-#define SFT_UNFREEZECOLLECTION_PREFIX std::string("unFreeze")
+#define ESDT_FREEZE_PREFIX std::string("freeze")
+#define ESDT_UNFREEZE_PREFIX std::string("unFreeze")
 #define SFT_ADDURI_PREFIX std::string("ESDTNFTAddURI")
 #define SFT_CREATEUNIT_PREFIX std::string("ESDTNFTCreate")
 #define SFT_TRANSFERTOKENUNITS_PREFIX std::string("ESDTNFTTransfer")
@@ -405,6 +408,38 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::addBurnQuantityO
     return std::make_unique<TransactionBuilderWrapped>(builder);
 }
 /*-------------------------------------------------------------------------*
+* Builds a transaction to add a quantity of tokens to an existing token    *
+* from an SFT collection.                                                  *
+*-------------------------------------------------------------------------*/
+std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::mintBurnQuantityOfESDTs(const TokenPayment &p_tokenPayment,
+                                                                                  const bool p_isMint,
+                                                                                   const std::string & p_supplyToEmmitOrBurn,
+                                                                                   const uint64_t nonce,
+                                                                                   const Address &sender) const
+{
+    WrapperProxyProvider proxy(m_config);
+    NetworkConfig networkConfig = proxy.getNetworkConfig();
+    GasEstimator t_gasEstimator(networkConfig);
+
+    SCArguments args;
+    args.add(p_tokenPayment.tokenIdentifier());
+    args.add(BigUInt(p_supplyToEmmitOrBurn));
+
+    std::string data = (p_isMint ? ESDT_MINTQUANTITY_PREFIX : ESDT_BURNQUANTITY_PREFIX) + args.asOnData();
+
+    TransactionBuilderWrapped builder({nonce,
+                                            BigUInt(SFT_FREE_VALUE),
+                                            std::move(sender),
+                                            std::move(sender),
+                                            std::move(data),
+                                            MULTIVERSX_GAS_PRICE,
+                                            networkConfig.chainId,
+                                            t_gasEstimator,
+                                            SFT_ADDBURNQUANTITY_GAS_LIMIT}, forESDTNFTTransfer);
+
+    return std::make_unique<TransactionBuilderWrapped>(builder);
+}
+/*-------------------------------------------------------------------------*
 * Builds a transaction to wipe a token from a collection.                  *
 *-------------------------------------------------------------------------*/
 std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::wipeNFT(const TokenPayment &p_tokenPayment,
@@ -422,6 +457,36 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::wipeNFT(const To
     args.add(Address(p_ownerAddress));
 
     std::string data = SFT_WIPE_PREFIX + args.asOnData();
+
+    TransactionBuilderWrapped builder({nonce,
+                                            BigUInt(SFT_FREE_VALUE),
+                                            std::move(sender),
+                                            ESDT_ISSUANCE_ADDRESS,
+                                            std::move(data),
+                                            MULTIVERSX_GAS_PRICE,
+                                            networkConfig.chainId,
+                                            t_gasEstimator,
+                                            SFT_WIPEFREEZEUNFREEZE_GAS_LIMIT}, forESDTNFTTransfer);
+
+    return std::make_unique<TransactionBuilderWrapped>(builder);
+}
+/*-------------------------------------------------------------------------*
+* Builds a transaction to wipe all the ESDT tokens from a frozen address.  *
+*-------------------------------------------------------------------------*/
+std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::wipeESDT(const TokenPayment &p_tokenPayment,
+                                                                                   const std::string &p_ownerAddress,
+                                                                                   const uint64_t nonce,
+                                                                                   const Address &sender) const
+{
+    WrapperProxyProvider proxy(m_config);
+    NetworkConfig networkConfig = proxy.getNetworkConfig();
+    GasEstimator t_gasEstimator(networkConfig);
+
+    SCArguments args;
+    args.add(p_tokenPayment.tokenIdentifier());
+    args.add(Address(p_ownerAddress));
+
+    std::string data = ESDT_WIPE_PREFIX + args.asOnData();
 
     TransactionBuilderWrapped builder({nonce,
                                             BigUInt(SFT_FREE_VALUE),
@@ -468,11 +533,10 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::freezeUnfreezeNF
     return std::make_unique<TransactionBuilderWrapped>(builder);
 }
 /*-------------------------------------------------------------------------*
-* Builds a transaction to freeze a token from a collection.                *
+* Builds a transaction to freeze an ESDT token.                            *
 *-------------------------------------------------------------------------*/
-/*
-std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::freezeUnfreezeAccountCollection(const std::string &p_collectionID,
-                                                                           const bool p_isFreeze,
+std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::freezeUnfreezeESDT(const TokenPayment &p_tokenPayment,
+                                                                          const bool p_isFreeze,
                                                                            const std::string &p_ownerAddress,
                                                                            const uint64_t nonce,
                                                                            const Address &sender) const
@@ -482,10 +546,11 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::freezeUnfreezeAc
     GasEstimator t_gasEstimator(networkConfig);
 
     SCArguments args;
-    args.add(p_collectionID);
+    args.add(p_tokenPayment.tokenIdentifier());
+    args.add(BigUInt(p_tokenPayment.nonce()));
     args.add(Address(p_ownerAddress));
 
-    std::string data = (p_isFreeze ? SFT_FREEZECOLLECTION_PREFIX : SFT_UNFREEZECOLLECTION_PREFIX) + args.asOnData();
+    std::string data = (p_isFreeze ? ESDT_FREEZE_PREFIX : ESDT_UNFREEZE_PREFIX) + args.asOnData();
 
     TransactionBuilderWrapped builder({nonce,
                                             BigUInt(SFT_FREE_VALUE),
@@ -499,7 +564,6 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::freezeUnfreezeAc
 
     return std::make_unique<TransactionBuilderWrapped>(builder);
 }
-*/
 /*-------------------------------------------------------------------------*
 * Builds a transaction to add a URI to a token.                            *
 *-------------------------------------------------------------------------*/
@@ -530,6 +594,25 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::addURI(const Tok
                                             SFT_ADDURI_GAS_LIMIT}, forESDTNFTTransfer);
 
     return std::make_unique<TransactionBuilderWrapped>(builder);
+}
+/*-------------------------------------------------------------------------*
+* Builds a transaction to transfer an SFT token to another address.        *
+*-------------------------------------------------------------------------*/
+std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createESDTTransfer(const TokenPayment &tokenPayment,
+                                                                                   const uint64_t nonce,
+                                                                                   std::string const & quantity,
+                                                                                   const Address &sender,
+                                                                                   const Address &receiver) const
+{
+    WrapperProxyProvider proxy(m_config);
+    NetworkConfig networkConfig = proxy.getNetworkConfig();
+    GasEstimator t_gasEstimator(networkConfig);
+
+    return TransactionFactory(networkConfig).createESDTTransfer(tokenPayment,
+                            nonce,
+                            sender,
+                            receiver,
+                            MULTIVERSX_GAS_PRICE);
 }
 /*-------------------------------------------------------------------------*
 * Builds a transaction to transfer an SFT token to another address.        *

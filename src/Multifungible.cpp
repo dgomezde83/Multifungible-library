@@ -800,6 +800,28 @@ returnCodeAndChar Multifungible::addSFTQuantity(const char * p_walletName, const
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::mintESDTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_quantity)
+{
+    try
+    {
+        //Wallet, transactor and Proxy set up
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).mintESDTQuantity(p_tokenID,p_quantity);
+
+        return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_ADDQUANTITY_SUCCESSFUL(p_quantity));
+
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
 returnCodeAndChar Multifungible::burnSFTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_quantity)
 {
     try
@@ -824,6 +846,28 @@ returnCodeAndChar Multifungible::burnSFTQuantity(const char * p_walletName, cons
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::burnESDTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_quantity)
+{
+    try
+    {
+        //Wallet, transactor and Proxy set up
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).burnESDTQuantity(p_tokenID,p_quantity);
+
+        return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_BURNQUANTITY_SUCCESSFUL(p_quantity));
+
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
 returnCodeAndChar Multifungible::wipeNFT(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_ownerAddress)
 {
     try
@@ -836,6 +880,28 @@ returnCodeAndChar Multifungible::wipeNFT(const char * p_walletName, const char *
         std::pair<std::string,uint64_t> t_collectionIDAndNonce = Multifungible::getCollectionIDAndNonceFromTokenID(std::string(p_tokenID));
 
         WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).wipeNFT(t_collectionIDAndNonce.first,t_collectionIDAndNonce.second, p_ownerAddress);
+
+        return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_WIPE_SUCCESSFUL);
+
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::wipeESDT(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_ownerAddress)
+{
+    try
+    {
+        //Wallet, transactor and Proxy set up
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).wipeESDT(p_tokenID, p_ownerAddress);
 
         return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_WIPE_SUCCESSFUL);
 
@@ -873,6 +939,29 @@ returnCodeAndChar Multifungible::freezeNFT(const char * p_walletName, const char
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::freezeESDT(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_ownerAddress)
+{
+    try
+    {
+        //Wallet, transactor and Proxy set up
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        //WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).freezeAddress(t_collectionIDAndNonce.first, p_ownerAddress);
+        WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).freezeESDT(p_tokenID, p_ownerAddress);
+
+        return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_FREEZE_SUCCESSFUL);
+
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
 returnCodeAndChar Multifungible::unfreezeNFT(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_ownerAddress)
 {
     try
@@ -887,6 +976,29 @@ returnCodeAndChar Multifungible::unfreezeNFT(const char * p_walletName, const ch
         WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).unfreezeNFT(t_collectionIDAndNonce.first,t_collectionIDAndNonce.second, p_ownerAddress);
 
         return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_UNFREEZE_SUCCESSFUL);
+
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::unfreezeESDT(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_ownerAddress)
+{
+    try
+    {
+        //Wallet, transactor and Proxy set up
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        //WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).freezeAddress(t_collectionIDAndNonce.first, p_ownerAddress);
+        WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).unfreezeESDT(p_tokenID, p_ownerAddress);
+
+        return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_FREEZE_SUCCESSFUL);
 
     }
     catch (const std::exception& e)
@@ -932,6 +1044,29 @@ returnCodeAndChar Multifungible::SFTTransaction(const char * p_walletName, const
         std::pair<std::string,uint64_t> t_collectionIDAndNonce = Multifungible::getCollectionIDAndNonceFromTokenID(std::string(p_tokenID));
 
         WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).SFTTransaction(p_destinationAddress, t_collectionIDAndNonce.first,t_collectionIDAndNonce.second, p_amount);
+
+        return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_SFTTRANSACTION_SUCCESSFUL(p_amount,t_collectionIDAndNonce.first,t_collectionIDAndNonce.second,p_destinationAddress));
+
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::ESDTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress, const char * p_tokenID, const char * p_amount)
+{
+    try
+    {
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        std::pair<std::string,uint64_t> t_collectionIDAndNonce = Multifungible::getCollectionIDAndNonceFromTokenID(std::string(p_tokenID));
+
+        WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).ESDTTransaction(p_destinationAddress, t_collectionIDAndNonce.first,t_collectionIDAndNonce.second, p_amount);
 
         return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_SFTTRANSACTION_SUCCESSFUL(p_amount,t_collectionIDAndNonce.first,t_collectionIDAndNonce.second,p_destinationAddress));
 

@@ -13,7 +13,7 @@
 #define TRANSACTION_FAILED "failed"
 #define TRANSACTION_EXECUTED "executed"
 
-//can also be ok/6f6b if hex is used my multiversX
+//can also be ok/6f6b if hex is used by multiversX
 #define INTERNAL_TRANSACTION_SUCCESSFUL "6f6b"
 #define SET_BURN_ROLE_FOR_ALL "ESDTSetBurnRoleForAll"
 
@@ -165,6 +165,23 @@ Transaction WalletProvider::buildAddBurnSFTQuantityTransaction(const std::string
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
+* Create a transaction for adding a quantity of a token.                   *
+*-------------------------------------------------------------------------*/
+Transaction WalletProvider::buildMintBurnESDTQuantityTransaction(const std::string& p_collectionID, const std::string& p_quantity, const bool p_isAdd) const
+{
+    if(!p_collectionID.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
+    }
+    if(!p_quantity.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_QUANTITY_MISSING);
+    }
+    TokenPayment t_tp = TokenPayment::fungibleFromAmount(p_collectionID,BigUInt(p_quantity),);
+    Transaction t_ts = m_wpf.mintBurnQuantityOfESDTs(t_tp, p_isAdd, p_quantity,m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    return t_ts;
+}
+/*-------------------------------------------------------------------------*
 * Create a transaction for wiping a token.                                 *
 *-------------------------------------------------------------------------*/
 Transaction WalletProvider::buildWipeNFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const
@@ -183,6 +200,24 @@ Transaction WalletProvider::buildWipeNFTTransaction(const std::string& p_collect
     }
     TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID,p_nonce);
     Transaction t_ts = m_wpf.wipeNFT(t_tp, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    return t_ts;
+}
+/*-------------------------------------------------------------------------*
+* Create a transaction for wiping an ESDT token.                           *
+*-------------------------------------------------------------------------*/
+Transaction WalletProvider::buildWipeESDTTransaction(const std::string& p_collectionID, const std::string& p_ownerAddress) const
+{
+    if(!p_collectionID.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
+    }
+    if(!p_ownerAddress.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_OWNERADDRESS_MISSING);
+    }
+    // The amount and nb of decimals don't matter, because we are gonna wipe all the tokens of the frozen address
+    TokenPayment t_tp = TokenPayment::fungibleFromAmount(p_collectionID,0,0);
+    Transaction t_ts = m_wpf.wipeESDT(t_tp, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -207,10 +242,9 @@ Transaction WalletProvider::buildFreezeUnfreezeTransaction(const std::string& p_
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
-* Create a transaction for freezing a n address on a collection.           *
+* Create a transaction for freezing an ESDT token.                         *
 *-------------------------------------------------------------------------*/
-/*
-Transaction WalletProvider::buildFreezeUnfreezeAccountCollectionTransaction(const std::string& p_collectionID, const std::string& p_ownerAddress, const bool p_isFreeze) const
+Transaction WalletProvider::buildFreezeUnfreezeESDTTransaction(const std::string& p_collectionID, const std::string& p_ownerAddress, const bool p_isFreeze) const
 {
     if(!p_collectionID.size())
     {
@@ -220,10 +254,10 @@ Transaction WalletProvider::buildFreezeUnfreezeAccountCollectionTransaction(cons
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_OWNERADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.freezeUnfreezeAccountCollection(p_collectionID, p_isFreeze, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    TokenPayment t_tp = TokenPayment::fungibleFromAmount(p_collectionID,0,0);
+    Transaction t_ts = m_wpf.freezeUnfreezeESDT(t_tp, p_isFreeze, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
-*/
 /*-------------------------------------------------------------------------*
 * Create a transaction for adding a URI to an NFT a token.                 *
 *-------------------------------------------------------------------------*/
@@ -280,6 +314,27 @@ Transaction WalletProvider::buildMoneyTransaction(const std::string & p_destinat
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
     Transaction t_ts = m_wpf.createEGLDTransfer(m_wg->getAccount().getNonce(),BigUInt(p_amount),m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
+    return t_ts;
+}
+/*-------------------------------------------------------------------------*
+* Create a transaction for sending an ESDT token to another address.       *
+*-------------------------------------------------------------------------*/
+Transaction WalletProvider::buildESDTTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce,const std::string & p_destinataryAddress, const std::string & p_amount) const
+{
+    if(!p_collectionID.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
+    }
+    if(!p_amount.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_AMOUNT_MISSING);
+    }
+    if(!p_destinataryAddress.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
+    }
+    TokenPayment t_tp = TokenPayment::semiFungible(p_collectionID,p_nonce,BigUInt(p_amount));
+    Transaction t_ts = m_wpf.createESDTTransfer(t_tp,m_wg->getAccount().getNonce(),p_amount,m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -553,16 +608,36 @@ std::string WalletProvider::issueESDTToken(const std::string& p_esdtName,
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
+    //The workings for an ESDT token issuance are a bit different from an NFT/SFT collection
+    bool t_esdtOK = false;
+    std::string t_esdtName;
+
+    int decimalNumber = atoi(p_initialSupply.c_str()); // Convert string to int
+    std::stringstream ss;
+    ss << std::hex << decimalNumber;
+    std::string t_nbInitialSupplyHex = ss.str();
+
     for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
-        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL) //We must have a dataMap with only one element, OK
         {
-            return util::hexToString(t_dataMap[1]);
+            t_esdtOK = true;
+            continue;
+        }
+        //We must have a datamap with three elements: ESDTTransfer, the token name, the token amount sent back to us = token supply.
+        if(t_dataMap[0] == ESDT_TRANSFER_PREFIX && t_dataMap[2] == t_nbInitialSupplyHex) 
+        {
+            
+            t_esdtName = util::hexToString(t_dataMap[1]);
+            continue;
         }
     }
-
-    throw std::runtime_error(WRAPPER_WALLET_ERROR_TRANSACTION("issueSFTCollection","collection"));
+    if (t_esdtOK && t_esdtName.length())
+    {
+        return t_esdtName;
+    }
+    throw std::runtime_error(WRAPPER_WALLET_ERROR_TRANSACTION("issueESDTToken","collection"));
 }
 /*-------------------------------------------------------------------------*
 * Issue an NFT collection and return its collection ID in case of success. *
@@ -872,6 +947,31 @@ void WalletProvider::addSFTQuantity(const std::string& p_collectionID, const uin
     throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("addSFTQuantity"));
 }
 /*-------------------------------------------------------------------------*
+* Mints the given quantity of tokens to the given ESDT (in the form of     *
+* collection ID and nonce)                                                 *
+*-------------------------------------------------------------------------*/
+void WalletProvider::mintESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, p_quantity, true),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, p_quantity, true),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            return;
+        }
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("addSFTQuantity"));
+}
+/*-------------------------------------------------------------------------*
 * Burns the given quantity of the given token.                             *
 *-------------------------------------------------------------------------*/
 void WalletProvider::burnSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const
@@ -882,6 +982,31 @@ void WalletProvider::burnSFTQuantity(const std::string& p_collectionID, const ui
     }
 
     std::string t_transactionHash = pushTransaction(buildAddBurnSFTQuantityTransaction(p_collectionID, p_nonce, p_quantity, false),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            return;
+        }
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("burnSFTQuantity"));
+}
+/*-------------------------------------------------------------------------*
+* Burns the given quantity of the given ESDT token.                        *
+*-------------------------------------------------------------------------*/
+void WalletProvider::burnESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, p_quantity, false),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, p_quantity, false),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -921,6 +1046,30 @@ void WalletProvider::wipeNFT(const std::string& p_collectionID, const uint64_t p
     throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("wipeNFT"));
 }
 /*-------------------------------------------------------------------------*
+* Wipes the given token.                                                   *
+*-------------------------------------------------------------------------*/
+void WalletProvider::wipeESDT(const std::string& p_collectionID, const std::string& p_ownerAddress) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildWipeESDTTransaction(p_collectionID, p_ownerAddress),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildWipeESDTTransaction(p_collectionID, p_ownerAddress),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            return;
+        }
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("wipeNFT"));
+}
+/*-------------------------------------------------------------------------*
 * Freezes the given token.                                                 *
 *-------------------------------------------------------------------------*/
 void WalletProvider::freezeNFT(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const
@@ -931,6 +1080,31 @@ void WalletProvider::freezeNFT(const std::string& p_collectionID, const uint64_t
     }
 
     std::string t_transactionHash = pushTransaction(buildFreezeUnfreezeTransaction(p_collectionID, p_nonce, p_ownerAddress, true),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash);
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            return;
+        }
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("freezeNFT"));
+}
+/*-------------------------------------------------------------------------*
+* Freezes the given ESDT token.                                            *
+*-------------------------------------------------------------------------*/
+void WalletProvider::freezeESDT(const std::string& p_collectionID, const std::string& p_ownerAddress) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildFreezeUnfreezeESDTTransaction(p_collectionID, p_ownerAddress, true),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildFreezeUnfreezeESDTTransaction(p_collectionID, p_ownerAddress, true),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
@@ -970,44 +1144,16 @@ void WalletProvider::unfreezeNFT(const std::string& p_collectionID, const uint64
     throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("unfreezeNFT"));
 }
 /*-------------------------------------------------------------------------*
-* Freezes the given token.                                                 *
-*-------------------------------------------------------------------------*/
-/*
-void WalletProvider::freezeAddress(const std::string& p_collectionID, const std::string& p_ownerAddress) const
-{
-    if (__SIMULATE__)
-    {
-        pushTransaction(buildFreezeUnfreezeAccountCollectionTransaction(p_collectionID, p_ownerAddress, true),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
-    }
-
-    std::string t_transactionHash = pushTransaction(buildFreezeUnfreezeAccountCollectionTransaction(p_collectionID, p_ownerAddress, true),false).value();
-
-    waitTillTransactionIsCompleted(t_transactionHash);
-
-    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
-    {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
-
-        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
-        {
-            return;
-        }
-    }
-    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("freeze"));
-}
-*/
-/*-------------------------------------------------------------------------*
 * Unfreezes the given token.                                               *
 *-------------------------------------------------------------------------*/
-/*
-void WalletProvider::unfreezeAddress(const std::string& p_collectionID, const std::string& p_ownerAddress) const
+void WalletProvider::unfreezeESDT(const std::string& p_collectionID, const std::string& p_ownerAddress) const
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildFreezeUnfreezeAccountCollectionTransaction(p_collectionID, p_ownerAddress, false),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildFreezeUnfreezeESDTTransaction(p_collectionID, p_ownerAddress, false),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildFreezeUnfreezeAccountCollectionTransaction(p_collectionID, p_ownerAddress, false),false).value();
+    std::string t_transactionHash = pushTransaction(buildFreezeUnfreezeESDTTransaction(p_collectionID, p_ownerAddress, false),false).value();
 
     waitTillTransactionIsCompleted(t_transactionHash); //returns code + transaction status
 
@@ -1021,7 +1167,6 @@ void WalletProvider::unfreezeAddress(const std::string& p_collectionID, const st
     }
     throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("unfreezeNFT"));
 }
-*/
 /*-------------------------------------------------------------------------*
 * Adds the given URI to the given NFT token.                               *
 *-------------------------------------------------------------------------*/
@@ -1222,6 +1367,41 @@ void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, con
         return;
     }
     throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("NFTTransaction"));
+}
+/*-------------------------------------------------------------------------*
+* Sends the given tokens to the given address.                              *
+*-------------------------------------------------------------------------*/
+void WalletProvider::ESDTTransaction(const std::string& p_destinationAddress, const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_amount) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildESDTTokenTransaction(p_collectionID, p_nonce, p_destinationAddress,p_amount),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildESDTTokenTransaction(p_collectionID, p_nonce, p_destinationAddress, p_amount),false).value();
+
+    waitTillTransactionIsCompleted(t_transactionHash); //returns code + transaction status
+
+    std::vector<std::string> t_necessaryTokens {INTERNAL_TRANSACTION_SUCCESSFUL};
+
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
+    {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            t_necessaryTokens.pop_back();
+            continue;
+        }
+    }
+    if (!t_necessaryTokens.size())
+    {
+        return;
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("SFTTransaction"));
 }
 /*-------------------------------------------------------------------------*
 * Sends the given tokens to the given address.                              *

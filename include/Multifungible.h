@@ -97,15 +97,21 @@ class Multifungible
         static returnCodeAndChar addURI(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_uri);
         static returnCodeAndChar upgradeAttribute(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_attribute);
         static returnCodeAndChar addSFTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_quantity);
+        static returnCodeAndChar mintESDTQuantity(const char * p_walletName, const char * p_password, const char * p_tokenID, const char * p_quantity);
         static returnCodeAndChar burnSFTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_quantity);
+        static returnCodeAndChar burnESDTQuantity(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_quantity);
         static returnCodeAndChar wipeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
+        static returnCodeAndChar wipeESDT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
         static returnCodeAndChar freezeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
+        static returnCodeAndChar freezeESDT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
         static returnCodeAndChar unfreezeNFT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
+        static returnCodeAndChar unfreezeESDT(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_ownerAddress);
         static returnCodeAndChar transferCreationRole(const char * p_walletName, const char * p_password,const char * p_collectionID, const char * p_address);
         static returnCodeAndChar stopTokenCreation(const char * p_walletName, const char * p_password,const char * p_collectionID);
         static returnCodeAndChar pauseTransactions(const char * p_walletName, const char * p_password,const char * p_collectionID);
         static returnCodeAndChar unPauseTransactions(const char * p_walletName, const char * p_password,const char * p_collectionID);
         static returnCodeAndChar NFTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress, const char * p_tokenID);
+        static returnCodeAndChar ESDTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress,const char * p_tokenID, const char * p_amount);
         static returnCodeAndChar SFTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress,const char * p_tokenID, const char * p_amount);
         static returnCodeAndChar EGLDTransaction(const char * p_walletName, const char * p_password,const char * p_strAddress, const char * p_amount);
 
