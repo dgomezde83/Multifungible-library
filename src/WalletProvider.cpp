@@ -480,9 +480,9 @@ void WalletProvider::waitTillTransactionIsCompleted(const std::string &p_txHash)
     std::chrono::time_point<std::chrono::system_clock> end_time = now_time + std::chrono::milliseconds(TRANSACTION_TIMEOUT_MS);
 
     //Execute the transaction and give a timeout
-    while (!m_wpp.getTransactionStatus(p_txHash).isExecuted() && (std::chrono::system_clock::now() <= end_time))
+    while (m_wpp.getTransactionStatus(p_txHash).isPending() && (std::chrono::system_clock::now() <= end_time))
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     //If its successful, just return
@@ -491,19 +491,16 @@ void WalletProvider::waitTillTransactionIsCompleted(const std::string &p_txHash)
         return;
     }
 
-    //If its still pending after timeout, throw error
-    if(m_wpp.getTransactionStatus(p_txHash).isPending())
-    {
-        throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_TIMEOUT_EXPIRED);
-    }
-
     //If it failed, return
     if(m_wpp.getTransactionStatus(p_txHash).isFailed() || m_wpp.getTransactionStatus(p_txHash).isInvalid())
     {
         //Call the transaction vector decoder, which will throw an exception, as the transaction failed
-        m_wpp.getTransactionResponseVector(p_txHash);
+        //m_wpp.getTransactionResponseVector(p_txHash);
+        getTransactionsData(p_txHash);
         //throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_REJECTED);
     }
+    
+    throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_TIMEOUT_EXPIRED);
 }
 /*-------------------------------------------------------------------------*
 * Push the transaction to the blockchain (optionally, in simulated mode).  *
@@ -530,69 +527,53 @@ std::optional<std::string> WalletProvider::pushTransaction(Transaction p_ts, con
 * hashes. For each one, retrieve it's data and wait for the transaction    *
 * to complete. This ensures entire operations are finished.                *
 *-------------------------------------------------------------------------*/
-std::vector<nlohmann::json> WalletProvider::getTransactionsData(const std::string &p_transactionHash) const
+std::vector<std::string> WalletProvider::getTransactionsData(const std::string &p_transactionHash) const
+
 {
-    //Get vector of JSON transaction data
-    std::vector<nlohmann::json> t_listOfResponses = m_wpp.getTransactionResponseVector(p_transactionHash);
+    //get transaction from the API
+    nlohmann::json t_transactionResult = m_wpp.getTransactionResult(p_transactionHash);
 
-    //Build a vector of futures
-    std::vector<std::future<void>> t_futureTransactionStatuses(t_listOfResponses.size());
+    std::cout << std::setw(4) << t_transactionResult << std::endl;
+    
+    if (t_transactionResult.contains("status") && t_transactionResult["status"] != "success")
+    {
+        std::cout << "Operations: " << std::endl;
+        std::cout << std::setw(4) << *t_transactionResult["operations"].begin() << std::endl;
+        //Transaction failed, retrieve the reason and throw error
+        if (t_transactionResult.contains("operations"))
+        {
 
-    //For each transaction, build a promise
-    std::accumulate(t_listOfResponses.begin(),
-                    t_listOfResponses.end(),
-                    0,
-                    [&]
-                    (const int p_vecNb, const nlohmann::json & p_json)->int
+            for (nlohmann::json::const_iterator it = t_transactionResult["operations"].begin(); it != t_transactionResult["operations"].end(); it++)
+            {
+                if ((*it).contains("type") && (*it)["type"] == "error")
+                {
+                    if ((*it).contains("message"))
                     {
-                        t_futureTransactionStatuses[p_vecNb] = std::async(std::launch::deferred, [&]
+                        throw std::runtime_error((*it)["message"]);
+                    }
+                }
+            }
+        }
+        //If specific error not found, throw general exception
+        throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_NOOPERATION);
+    }
+
+    //Transaction succeeded, decode data from 'results' field
+    std::vector<std::string> t_data;
+    if (t_transactionResult.contains("results"))
+    {
+        //Transaction failed, retrieve the reason and throw error
+        std::for_each(t_transactionResult["results"].begin(),t_transactionResult["results"].end(),
+                      [&]
+                      (const nlohmann::json & p_resultJson)->void
+                      {
+                        if (p_resultJson.contains("data"))
                         {
-                            if (p_json.contains("hash"))
-                            {
-                                waitTillTransactionIsCompleted(std::string(p_json["hash"]));
-                            }
-                            else
-                            {
-                                throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_NOHASH);
-                            }
-                        });
-                        return p_vecNb + 1;
-                    });
-
-    //Launch the thread executing each future
-    std::for_each(t_futureTransactionStatuses.begin(),
-                    t_futureTransactionStatuses.end(),
-                    []
-                    (std::future<void> & p_future)->void
-                    {
-                        p_future.get();
-                    });
-
-    //If we got here without exceptions, it means all transactions completed successfully in the given timeout
-
-   return t_listOfResponses;
-}
-/*-------------------------------------------------------------------------*
-* Get transaction data from a transaction result.                          *
-*-------------------------------------------------------------------------*/
-std::string WalletProvider::getTransactionsData(const nlohmann::json &p_transactionData) const
-{
-    if (p_transactionData.contains("data"))
-    {
-        return p_transactionData["data"];
+                        t_data.push_back(util::base64::decode(p_resultJson["data"]));
+                        }
+                      });
     }
-    throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_NODATA);
-}
-/*-------------------------------------------------------------------------*
-* Get the transaction hash from a transaction result.                      *
-*-------------------------------------------------------------------------*/
-std::string WalletProvider::getTransactionsHash(const nlohmann::json &p_transactionData) const
-{
-    if (p_transactionData.contains("hash"))
-    {
-        return p_transactionData["hash"];
-    }
-    throw std::runtime_error(WRAPPER_WALLET_TRANSACTION_NOHASH);
+   return t_data;
 }
 /*-------------------------------------------------------------------------*
 * Issue an ESDT token and return its collection ID in case of success.     *
@@ -626,9 +607,9 @@ std::string WalletProvider::issueESDTToken(const std::string& p_esdtName,
     ss << std::hex << decimalNumber;
     std::string t_nbInitialSupplyHex = ss.str();
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL) //We must have a dataMap with only one element, OK
         {
             t_esdtOK = true;
@@ -670,9 +651,9 @@ std::string WalletProvider::issueNFTCollection(const std::string& p_nftName,
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return util::hexToString(t_dataMap[1]);
@@ -703,9 +684,9 @@ std::string WalletProvider::issueSFTCollection(const std::string& p_sftName,
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return util::hexToString(t_dataMap[1]);
@@ -728,9 +709,9 @@ void WalletProvider::upgradeCollectionProperty(const std::string& p_collectionID
 
     waitTillTransactionIsCompleted(t_transactionHash); //returns code + transaction status
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
 
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
@@ -753,9 +734,9 @@ void WalletProvider::transferCollectionOwnership(const std::string& p_collection
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
 
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
@@ -780,12 +761,12 @@ void WalletProvider::addCollectionRole(const std::string& p_collectionID, const 
 
     std::vector<std::string> t_necessaryTokens {"ESDTSetRole",INTERNAL_TRANSACTION_SUCCESSFUL};
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         if (!t_necessaryTokens.size())
         { break ; }
 
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == "ESDTSetRole")
         {
             t_necessaryTokens.erase(t_necessaryTokens.begin());
@@ -819,12 +800,12 @@ void WalletProvider::removeCollectionRole(const std::string& p_collectionID, con
 
     std::vector<std::string> t_necessaryTokens {"ESDTUnSetRole",INTERNAL_TRANSACTION_SUCCESSFUL};
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         if (!t_necessaryTokens.size())
         { break ; }
 
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == "ESDTUnSetRole")
         {
             t_necessaryTokens.erase(t_necessaryTokens.begin());
@@ -858,12 +839,12 @@ void WalletProvider::transferCreationRole(const std::string& p_collectionID, con
 
     std::vector<std::string> t_necessaryTokens {"ESDTNFTCreateRoleTransfer",INTERNAL_TRANSACTION_SUCCESSFUL};
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         if (!t_necessaryTokens.size())
         { break ; }
 
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == "ESDTNFTCreateRoleTransfer")
         {
             t_necessaryTokens.erase(t_necessaryTokens.begin());
@@ -896,9 +877,9 @@ std::string WalletProvider::emitSFTUnits(const std::string& p_collectionID, cons
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return t_dataMap[1];
@@ -920,9 +901,9 @@ std::string WalletProvider::emitNFTUnit(const std::string& p_collectionID, const
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return t_dataMap[1];
@@ -945,9 +926,9 @@ void WalletProvider::addSFTQuantity(const std::string& p_collectionID, const uin
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return;
@@ -970,9 +951,9 @@ void WalletProvider::mintESDTQuantity(const std::string& p_collectionID, const s
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return;
@@ -994,9 +975,9 @@ void WalletProvider::burnSFTQuantity(const std::string& p_collectionID, const ui
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
 
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
@@ -1019,9 +1000,9 @@ void WalletProvider::burnESDTQuantity(const std::string& p_collectionID, const s
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
 
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
@@ -1044,9 +1025,9 @@ void WalletProvider::wipeNFT(const std::string& p_collectionID, const uint64_t p
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return;
@@ -1069,11 +1050,10 @@ void WalletProvider::wipeESDT(const std::string& p_collectionID, const std::stri
     waitTillTransactionIsCompleted(t_transactionHash);
 
     //Wait for all the transactions to finish, and then decode the resulting data
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         //Verify all the smart contract executions where successful by querying the API and looking for signal errors
-        m_wpp.getSCTransactionSuccess(getTransactionsHash(p_transactionData));
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return;
@@ -1096,9 +1076,9 @@ void WalletProvider::freezeNFT(const std::string& p_collectionID, const uint64_t
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
 
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
@@ -1124,9 +1104,9 @@ void WalletProvider::freezeESDT(const std::string& p_collectionID, const std::st
     bool t_transOK = false;
     bool t_esdtOk = false;
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL) //We must have a dataMap with only one element, OK
         {
             t_transOK = true;
@@ -1160,9 +1140,9 @@ void WalletProvider::unfreezeNFT(const std::string& p_collectionID, const uint64
 
     waitTillTransactionIsCompleted(t_transactionHash); //returns code + transaction status
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return;
@@ -1184,9 +1164,9 @@ void WalletProvider::unfreezeESDT(const std::string& p_collectionID, const std::
 
     waitTillTransactionIsCompleted(t_transactionHash); //returns code + transaction status
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return;
@@ -1208,9 +1188,9 @@ void WalletProvider::addURI(const std::string& p_collectionID, const uint64_t p_
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return;
@@ -1232,9 +1212,9 @@ void WalletProvider::upgradeAttributes(const std::string& p_collectionID, const 
 
     waitTillTransactionIsCompleted(t_transactionHash);
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
             return;
@@ -1258,12 +1238,12 @@ void WalletProvider::stopCreation(const std::string& p_collectionID) const
 
     std::vector<std::string> t_necessaryTokens {"ESDTUnSetRole",INTERNAL_TRANSACTION_SUCCESSFUL};
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         if (!t_necessaryTokens.size())
         { break ; }
 
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == "ESDTUnSetRole")
         {
             t_necessaryTokens.erase(t_necessaryTokens.begin());
@@ -1297,12 +1277,12 @@ void WalletProvider::pauseTransactions(const std::string& p_collectionID) const
 
     std::vector<std::string> t_necessaryTokens {"ESDTPause",INTERNAL_TRANSACTION_SUCCESSFUL};
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         if (!t_necessaryTokens.size())
         { break ; }
 
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == "ESDTPause")
         {
             t_necessaryTokens.erase(t_necessaryTokens.begin());
@@ -1336,12 +1316,12 @@ void WalletProvider::unpauseTransactions(const std::string& p_collectionID) cons
 
     std::vector<std::string> t_necessaryTokens {"ESDTUnpause",INTERNAL_TRANSACTION_SUCCESSFUL};
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         if (!t_necessaryTokens.size())
         { break ; }
 
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
         if(t_dataMap[0] == "ESDTUnPause")
         {
             t_necessaryTokens.erase(t_necessaryTokens.begin());
@@ -1376,12 +1356,12 @@ void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, con
 
     std::vector<std::string> t_necessaryTokens {INTERNAL_TRANSACTION_SUCCESSFUL};
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         if (!t_necessaryTokens.size())
         { break ; }
 
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
 
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
@@ -1411,12 +1391,12 @@ void WalletProvider::ESDTTransaction(const std::string& p_destinationAddress, co
 
     std::vector<std::string> t_necessaryTokens {INTERNAL_TRANSACTION_SUCCESSFUL};
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         if (!t_necessaryTokens.size())
         { break ; }
 
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
 
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {
@@ -1446,12 +1426,12 @@ void WalletProvider::SFTTransaction(const std::string& p_destinationAddress, con
 
     std::vector<std::string> t_necessaryTokens {INTERNAL_TRANSACTION_SUCCESSFUL};
 
-    for (const nlohmann::json & p_transactionData : getTransactionsData(t_transactionHash))
+    for (const std::string & p_transactionData : getTransactionsData(t_transactionHash))
     {
         if (!t_necessaryTokens.size())
         { break ; }
 
-        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(getTransactionsData(p_transactionData));
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
 
         if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
         {

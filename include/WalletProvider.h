@@ -29,8 +29,9 @@
 #define WRAPPER_WALLET_TRANSACTION_TIMEOUT_EXPIRED "Timeout expired"
 #define WRAPPER_WALLET_UNEXPECTED_TRANSACTION(x) std::string(x) + std::string(": Unexpected transaction")
 #define WRAPPER_WALLET_ERROR_TRANSACTION(x,y) std::string(x) + std::string(": failed retrieving ") + std::string(y)
-#define WRAPPER_WALLET_TRANSACTION_NODATA "Transaction contains no data"
-#define WRAPPER_WALLET_TRANSACTION_NOHASH "Transaction contains no hash"
+//#define WRAPPER_WALLET_TRANSACTION_NODATA "Transaction contains no data"
+//#define WRAPPER_WALLET_TRANSACTION_NOHASH "Transaction contains no hash"
+#define WRAPPER_WALLET_TRANSACTION_NOOPERATION "Transaction failed without specific error"
 
 //Not used for now
 #define MULTIVERSX_NOTENOUGHBALANCEOFTOKEN(x) std::string("Not enough balance of NFT ") + std::string(x);
@@ -227,11 +228,7 @@ class WalletProvider
 
         std::optional<std::string> pushTransaction(Transaction p_ts, const bool p_simulate) const;
 
-        std::vector<nlohmann::json> getTransactionsData(const std::string &p_transactionHash) const;
-
-        std::string getTransactionsData(const nlohmann::json &p_transactionData) const;
-
-        std::string getTransactionsHash(const nlohmann::json &p_transactionData) const;
+        std::vector<std::string> getTransactionsData(const std::string &p_transactionHash) const;
 };
 
 #endif // WALLETPROVIDER_H

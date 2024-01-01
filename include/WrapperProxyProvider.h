@@ -7,8 +7,6 @@
 #include "wrappers/jsonwrapper.h"
 #include "cliconfig.h"
 
-#define WRAPPER_PROXY_TRANSACTION_ERROR "Error retrieving Smart Contract Results"
-
 class WrapperProxyProvider
 {
     public:
@@ -52,9 +50,7 @@ class WrapperProxyProvider
 
         std::string decryptSimulationFailedResult(nlohmann::json data) const;
 
-        std::vector<nlohmann::json> getTransactionResponseVector(const std::string & p_thash) const;
-
-        void getSCTransactionSuccess(const std::string & p_thash) const;
+        nlohmann::json getTransactionResult(const std::string & p_thash) const;
 
         std::map<int,std::string> getMapOfBlockchainResponse(const std::string & p_str) const;
 
