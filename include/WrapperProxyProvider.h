@@ -7,7 +7,7 @@
 #include "wrappers/jsonwrapper.h"
 #include "cliconfig.h"
 
-#define WRAPPER_PROXY_TRANSACTION_ERROR "Unknown transaction error"
+#define WRAPPER_PROXY_TRANSACTION_ERROR "Error retrieving Smart Contract Results"
 
 class WrapperProxyProvider
 {
@@ -36,6 +36,8 @@ class WrapperProxyProvider
 
         nlohmann::json getCollectionDetails(const std::string &p_collectionID) const;
 
+        nlohmann::json getESDTInfo(const std::string &p_esdtID) const;
+
         nlohmann::json getTokenDetails(const std::string &p_tokenID) const;
 
         std::map<int,std::string> querySmartContract(const std::string &p_funcName, const std::list<std::string>& p_args) const;
@@ -51,6 +53,8 @@ class WrapperProxyProvider
         std::string decryptSimulationFailedResult(nlohmann::json data) const;
 
         std::vector<nlohmann::json> getTransactionResponseVector(const std::string & p_thash) const;
+
+        void getSCTransactionSuccess(const std::string & p_thash) const;
 
         std::map<int,std::string> getMapOfBlockchainResponse(const std::string & p_str) const;
 

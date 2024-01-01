@@ -5,6 +5,7 @@
 #define TO_LITERAL(string) VALUE(string)
 
 #include "../dllheader.h"
+#include <string>
 
 //DLL MESSAGES
 #define MULTIFUNGIBLE_ERROR_DECODING_TOKEN "Error decoding token"
@@ -16,18 +17,16 @@
 #define MULTIFUNGIBLE_UPGRADEATTRIBUTE_SUCCESSFUL "Upgraded attribute successfully"
 #define MULTIFUNGIBLE_TRANSFERROLE_SUCCESSFUL "Role transfered successfully"
 #define MULTIFUNGIBLE_CREATION_STOPPED_SUCCESSFUL "Creation stopped successfully"
-#define MULTIFUNGIBLE_ADDQUANTITY_SUCCESSFUL(x) std::string("Emitted ") + x + std::string(" token") + std::string(( x != "0" ) ? "s" : "" ) + std::string(" successfully")
-#define MULTIFUNGIBLE_BURNQUANTITY_SUCCESSFUL(x) std::string("Burned ") + x + std::string(" token") + std::string(( x != "0" ) ? "s" : "" ) + std::string(" successfully")
+#define MULTIFUNGIBLE_ADDQUANTITY_SUCCESSFUL(x) std::string("Emitted ") + x + std::string(" token") + std::string(( std::string(x).compare("0") != 0 ) ? "s" : "" ) + std::string(" successfully")
+#define MULTIFUNGIBLE_BURNQUANTITY_SUCCESSFUL(x) std::string("Burned ") + x + std::string(" token") + std::string(( std::string(x).compare("0") != 0 ) ? "s" : "" ) + std::string(" successfully")
 #define MULTIFUNGIBLE_PAUSE_SUCCESSFUL "Paused collection transactions successfully"
 #define MULTIFUNGIBLE_UNPAUSE_SUCCESSFUL "Unpaused collection transactions successfully"
-#define MULTIFUNGIBLE_WIPE_SUCCESSFUL "Wiped NFT successfully"
-#define MULTIFUNGIBLE_FREEZE_SUCCESSFUL "Froze NFT successfully"
-#define MULTIFUNGIBLE_UNFREEZE_SUCCESSFUL "Unfroze NFT successfully"
+#define MULTIFUNGIBLE_WIPE_SUCCESSFUL(x) std::string("Wiped ") + std::string(x) + std::string(" successfully")
+#define MULTIFUNGIBLE_FREEZE_SUCCESSFUL(x) std::string("Froze ") + std::string(x) + std::string(" successfully")
+#define MULTIFUNGIBLE_UNFREEZE_SUCCESSFUL(x) std::string("Unfroze ") + std::string(x) + std::string(" successfully")
 #define MULTIFUNGIBLE_NFTTRANSACTION_SUCCESSFUL(x,y,z) std::string("Sent ") + std::string(x) + std::string("-") + std::to_string(y) + std::string(" to ") + std::string(z) + std::string(" successfully")
-#define MULTIFUNGIBLE_SFTTRANSACTION_SUCCESSFUL(w,x,y,z) std::string("Sent ") + std::string(w) + std::string(( w != "0" ) ? " units of " : " unit of " ) + std::string(x) + std::string("-") + std::to_string(y) + std::string(" to ") + std::string(z) + std::string(" successfully")
-#define MULTIFUNGIBLE_EGLDTRANSACTION_SUCCESSFUL(x) std::string("Sent ") + std::string(x) + std::string(( x != "1" ) ? " units of " : " unit of " ) + std::string("EGLD successfully")
-
-#include <string>
+#define MULTIFUNGIBLE_SFTTRANSACTION_SUCCESSFUL(w,x,y,z) std::string("Sent ") + std::string(w) + std::string(( std::string(w).compare("0") != 0 ) ? " units of " : " unit of " ) + std::string(x) + std::string("-") + std::to_string(y) + std::string(" to ") + std::string(z) + std::string(" successfully")
+#define MULTIFUNGIBLE_EGLDTRANSACTION_SUCCESSFUL(x) std::string("Sent ") + std::string(x) + std::string(( std::string(x).compare("1") != 0 ) ? " units of " : " unit of " ) + std::string("EGLD successfully")
 
 class Multifungible
 {

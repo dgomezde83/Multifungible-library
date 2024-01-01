@@ -122,11 +122,11 @@ class WalletProvider
 
         void addSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const;
 
-        void mintESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity) const;
+        void mintESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity, const uint32_t p_decimals) const;
         
         void burnSFTQuantity(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity) const;
 
-        void burnESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity) const;
+        void burnESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity, const uint32_t p_decimals) const;
 
         void wipeNFT(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const;
 
@@ -195,7 +195,7 @@ class WalletProvider
 
         Transaction buildAddBurnSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity, const bool p_isAdd) const;
 
-        Transaction buildMintBurnESDTQuantityTransaction(const std::string& p_collectionID, const std::string& p_quantity, const bool p_isAdd) const;
+        Transaction buildMintBurnESDTQuantityTransaction(const std::string& p_collectionID, const std::string& p_quantity, const uint32_t p_decimals, const bool p_isAdd) const;
 
         Transaction buildWipeNFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const;
 
@@ -227,7 +227,11 @@ class WalletProvider
 
         std::optional<std::string> pushTransaction(Transaction p_ts, const bool p_simulate) const;
 
-        std::vector<std::string> getTransactionsData(const std::string &p_transactionHash) const;
+        std::vector<nlohmann::json> getTransactionsData(const std::string &p_transactionHash) const;
+
+        std::string getTransactionsData(const nlohmann::json &p_transactionData) const;
+
+        std::string getTransactionsHash(const nlohmann::json &p_transactionData) const;
 };
 
 #endif // WALLETPROVIDER_H

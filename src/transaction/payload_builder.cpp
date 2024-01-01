@@ -19,12 +19,9 @@ std::string ESDTPropertiesAsOnData(ESDTProperties const &esdtProperties)
     return ESDTPropertyField("canFreeze", esdtProperties.canFreeze) +
            ESDTPropertyField("canWipe", esdtProperties.canWipe) +
            ESDTPropertyField("canPause", esdtProperties.canPause) +
-           ESDTPropertyField("canMint", esdtProperties.canMint) +
-           ESDTPropertyField("canBurn", esdtProperties.canBurn) +
            ESDTPropertyField("canChangeOwner", esdtProperties.canChangeOwner) +
            ESDTPropertyField("canUpgrade", esdtProperties.canUpgrade) +
-           ESDTPropertyField("canAddSpecialRoles", esdtProperties.canAddSpecialRoles) +
-           ESDTPropertyField("canTransferNFTCreateRole", esdtProperties.canTransferNFTCreateRole);
+           ESDTPropertyField("canAddSpecialRoles", esdtProperties.canAddSpecialRoles);
 }
 
 }

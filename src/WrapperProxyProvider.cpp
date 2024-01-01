@@ -165,6 +165,17 @@ nlohmann::json WrapperProxyProvider::getOwnedTokens(const std::string &p_address
     return getAPIPayLoad(result); //parse the result as a json
 }
 /*-------------------------------------------------------------------------*
+* Gets a JSON with the list of tokens owned by our address.                *
+*-------------------------------------------------------------------------*/
+nlohmann::json WrapperProxyProvider::getESDTInfo(const std::string &p_esdtID) const
+{
+    wrapper::http::Client apiClient(m_config.apiUrl);
+
+    wrapper::http::Result const resultForToken = apiClient.get("/tokens/" + p_esdtID);
+
+    return getAPIPayLoad(resultForToken);
+}
+/*-------------------------------------------------------------------------*
 * Gets the network configuration.                                          *
 *-------------------------------------------------------------------------*/
 NetworkConfig WrapperProxyProvider::getNetworkConfig() const
@@ -290,31 +301,29 @@ std::map<int,std::string> WrapperProxyProvider::getMapOfBlockchainResponse(const
     return mapTokens;
 }
 /*-------------------------------------------------------------------------*
-* Retrieves a vector of transaction associated with the given one.         *
+* Looks up for the given transaction in the API, and verifies if it's      *
+* successful or not, by looking up some signalError.                       *
+* If some transaction is not successful, throws error with message.        *
 *-------------------------------------------------------------------------*/
-std::vector<nlohmann::json> WrapperProxyProvider::getTransactionResponseVector(const std::string & p_thash) const
+void WrapperProxyProvider::getSCTransactionSuccess(const std::string & p_thash) const
 {
     std::vector<nlohmann::json> t_listOfJsons;
 
-    wrapper::http::Client client(m_config.proxyUrl);
+    wrapper::http::Client client(m_config.apiUrl);
 
-    wrapper::http::Result const result = client.get("/transaction/" + p_thash + "?withResults=true&withLogs=true&withReceipt=true");
+    wrapper::http::Result const result = client.get("/transaction/" + p_thash);
 
-    nlohmann::json response = getPayLoad(result);
+    nlohmann::json response = getAPIPayLoad(result);
 
-    //If the response went well, we will have a "smart contract results" field
-    if (getTransactionStatus(p_thash).isSuccessful() && response["transaction"].contains("smartContractResults"))
+    //First, just check of the transaction was successful
+    if (response.contains("status") && response["status"] == "success")
     {
-        std::transform(response["transaction"]["smartContractResults"].begin(),
-                       response["transaction"]["smartContractResults"].end(),
-                       std::back_inserter(t_listOfJsons),
-                       []
-                       (const nlohmann::json & p_json)
-                       {
-                           return p_json;
-                       });
-        return t_listOfJsons;
+        return;
     }
+
+    //If the transactuion failed, we go look into the logs field for what happened
+    
+    /*
     //if not, The transaction failed. We will have a "logs" field, with events and topics
     //or a receipt field
     if (response["transaction"].contains("logs"))
@@ -331,6 +340,35 @@ std::vector<nlohmann::json> WrapperProxyProvider::getTransactionResponseVector(c
         //Take the entire events JSON from the log array/table
         nlohmann::json t_receipt = response["transaction"]["receipt"]["data"];
         throw std::runtime_error(t_receipt);
+    }
+    */
+    throw std::runtime_error(WRAPPER_PROXY_TRANSACTION_ERROR);
+}
+/*-------------------------------------------------------------------------*
+* Retrieves a vector of transaction associated with the given one.         *
+*-------------------------------------------------------------------------*/
+std::vector<nlohmann::json> WrapperProxyProvider::getTransactionResponseVector(const std::string & p_thash) const
+{
+    std::vector<nlohmann::json> t_listOfJsons;
+
+    wrapper::http::Client client(m_config.proxyUrl);
+
+    wrapper::http::Result const result = client.get("/transaction/" + p_thash + "?withResults=true");
+
+    nlohmann::json response = getPayLoad(result);
+
+    //If the response went well, we will have a "smart contract results" field
+    if (getTransactionStatus(p_thash).isSuccessful() && response["transaction"].contains("smartContractResults"))
+    {
+        std::transform(response["transaction"]["smartContractResults"].begin(),
+                       response["transaction"]["smartContractResults"].end(),
+                       std::back_inserter(t_listOfJsons),
+                       []
+                       (const nlohmann::json & p_json)
+                       {
+                           return p_json;
+                       });
+        return t_listOfJsons;
     }
     throw std::runtime_error(WRAPPER_PROXY_TRANSACTION_ERROR);
 }

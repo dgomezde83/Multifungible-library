@@ -473,7 +473,7 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::wipeNFT(const To
 /*-------------------------------------------------------------------------*
 * Builds a transaction to wipe all the ESDT tokens from a frozen address.  *
 *-------------------------------------------------------------------------*/
-std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::wipeESDT(const TokenPayment &p_tokenPayment,
+std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::wipeESDT(const std::string &p_esdt,
                                                                                    const std::string &p_ownerAddress,
                                                                                    const uint64_t nonce,
                                                                                    const Address &sender) const
@@ -483,7 +483,7 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::wipeESDT(const T
     GasEstimator t_gasEstimator(networkConfig);
 
     SCArguments args;
-    args.add(p_tokenPayment.tokenIdentifier());
+    args.add(p_esdt);
     args.add(Address(p_ownerAddress));
 
     std::string data = ESDT_WIPE_PREFIX + args.asOnData();
@@ -535,7 +535,7 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::freezeUnfreezeNF
 /*-------------------------------------------------------------------------*
 * Builds a transaction to freeze an ESDT token.                            *
 *-------------------------------------------------------------------------*/
-std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::freezeUnfreezeESDT(const TokenPayment &p_tokenPayment,
+std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::freezeUnfreezeESDT(const std::string &p_esdt,
                                                                           const bool p_isFreeze,
                                                                            const std::string &p_ownerAddress,
                                                                            const uint64_t nonce,
@@ -546,8 +546,7 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::freezeUnfreezeES
     GasEstimator t_gasEstimator(networkConfig);
 
     SCArguments args;
-    args.add(p_tokenPayment.tokenIdentifier());
-    args.add(BigUInt(p_tokenPayment.nonce()));
+    args.add(p_esdt);
     args.add(Address(p_ownerAddress));
 
     std::string data = (p_isFreeze ? ESDT_FREEZE_PREFIX : ESDT_UNFREEZE_PREFIX) + args.asOnData();

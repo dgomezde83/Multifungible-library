@@ -19,12 +19,9 @@ struct ESDTProperties
     bool canFreeze = false;
     bool canWipe = false;
     bool canPause = false;
-    bool canMint = false;
-    bool canBurn = false;
     bool canChangeOwner = false;
     bool canUpgrade = false;
     bool canAddSpecialRoles = false;
-    bool canTransferNFTCreateRole = false;
 };
 
 bool operator==(ESDTProperties const &lhs, ESDTProperties const &rhs);

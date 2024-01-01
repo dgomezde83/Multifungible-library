@@ -130,7 +130,7 @@ class WrapperTransactionFactory
                                                                const uint64_t nonce,
                                                                const Address &sender) const;
 
-        std::unique_ptr<ITransactionBuilder> wipeESDT(const TokenPayment &p_tokenPayment,
+        std::unique_ptr<ITransactionBuilder> wipeESDT(const std::string &p_esdt,
                                                                const std::string &p_ownerAddress,
                                                                const uint64_t nonce,
                                                                const Address &sender) const;
@@ -141,7 +141,7 @@ class WrapperTransactionFactory
                                                                const uint64_t nonce,
                                                                const Address &sender) const;
 
-        std::unique_ptr<ITransactionBuilder> freezeUnfreezeESDT(const TokenPayment &p_tokenPayment,
+        std::unique_ptr<ITransactionBuilder> freezeUnfreezeESDT(const std::string &p_esdt,
                                                                const bool p_isFreeze,
                                                                const std::string &p_ownerAddress,
                                                                const uint64_t nonce,
