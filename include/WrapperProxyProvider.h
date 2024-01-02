@@ -20,6 +20,10 @@ class WrapperProxyProvider
 
         TransactionStatus getTransactionStatus(std::string const &txHash) const;
 
+        nlohmann::json getProxyTransactionResult(const std::string & p_thash) const;
+
+        nlohmann::json getAPITransactionResult(const std::string & p_thash) const;
+
         nlohmann::json getOwnedTokens(const std::string &p_address) const;
 
         BigUInt getOwnedNFTorSFTBalance(Address const &address, std::string const &p_collectionID, const uint64_t p_nonce) const;
@@ -49,8 +53,6 @@ class WrapperProxyProvider
         void simulateSend(Transaction const &transaction) const;
 
         std::string decryptSimulationFailedResult(nlohmann::json data) const;
-
-        nlohmann::json getTransactionResult(const std::string & p_thash) const;
 
         std::map<int,std::string> getMapOfBlockchainResponse(const std::string & p_str) const;
 

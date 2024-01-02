@@ -7,7 +7,7 @@
 //THIS WALLET HAS TO BE CREATED FROM SCRATCH AND LOADED WITH EGLD FOR THE TEST TO WORK
 TEST_F(FixtureOverUnitTests, getEmittedCollectionsTestSuccess)
 {
-    //Load wallet
+    //Load wallet 
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_GETEMITTEDCOLLECTIONS,WALLETPASSWORD);
     if (t_rccLoad.retCode)
     {

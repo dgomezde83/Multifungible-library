@@ -25,13 +25,15 @@
 #define WRAPPER_WALLET_GENERATOR_PROPERTY_MISSING "Property missing"
 #define WRAPPER_WALLET_GENERATOR_ATTRIBUTE_MISSING "Attribute missing"
 #define WRAPPER_WALLET_GENERATOR_AMOUNT_MISSING "Amount missing"
-#define WRAPPER_WALLET_TRANSACTION_REJECTED "Transaction rejected"
+#define WRAPPER_WALLET_TRANSACTION_FAILED "Transaction failed"
+#define WRAPPER_WALLET_TRANSACTION_INVALID "Invalid transaction"
 #define WRAPPER_WALLET_TRANSACTION_TIMEOUT_EXPIRED "Timeout expired"
 #define WRAPPER_WALLET_UNEXPECTED_TRANSACTION(x) std::string(x) + std::string(": Unexpected transaction")
 #define WRAPPER_WALLET_ERROR_TRANSACTION(x,y) std::string(x) + std::string(": failed retrieving ") + std::string(y)
-//#define WRAPPER_WALLET_TRANSACTION_NODATA "Transaction contains no data"
-//#define WRAPPER_WALLET_TRANSACTION_NOHASH "Transaction contains no hash"
+#define WRAPPER_WALLET_TRANSACTION_NODATA "Transaction contains no data"
+#define WRAPPER_WALLET_TRANSACTION_NOHASH "Transaction contains no hash"
 #define WRAPPER_WALLET_TRANSACTION_NOOPERATION "Transaction failed without specific error"
+#define WRAPPER_WALLET_TRANSACTION_NOTSUCCESSFUL "Transaction unsuccessful"
 
 //Not used for now
 #define MULTIVERSX_NOTENOUGHBALANCEOFTOKEN(x) std::string("Not enough balance of NFT ") + std::string(x);
@@ -224,11 +226,23 @@ class WalletProvider
 
         Transaction buildCreateTokensTransaction(const std::string& p_collectionID, const std::string& p_name, const std::string& p_emitAmount, const std::string& p_royalties, const std::string& p_attributes, const std::string& p_uri) const;
 
+        void waitTillSCTransactionIsCompleted(const std::string &p_txHash) const;
+
         void waitTillTransactionIsCompleted(const std::string &p_txHash) const;
 
         std::optional<std::string> pushTransaction(Transaction p_ts, const bool p_simulate) const;
 
-        std::vector<std::string> getTransactionsData(const std::string &p_transactionHash) const;
+        std::vector<std::string> getSCTransactionData(const std::string &p_transactionHash) const;
+
+        void decodeAPITransactionError(const nlohmann::json &p_transactionHash) const;
+
+        void decodeProxyTransactionInvalid(const nlohmann::json &p_transactionData) const;
+
+        void decodeProxyTransactionError(const nlohmann::json &p_transactionHash) const;
+
+        std::vector<std::string> decodeAPITransactionResults(const nlohmann::json &p_transactionData) const;
+
+        std::vector<std::string> decodeProxyTransactionResults(const nlohmann::json &p_transactionData) const;
 };
 
 #endif // WALLETPROVIDER_H

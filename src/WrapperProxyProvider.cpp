@@ -57,21 +57,17 @@ std::string WrapperProxyProvider::send(Transaction const &transaction) const
 *-------------------------------------------------------------------------*/
 TransactionStatus WrapperProxyProvider::getTransactionStatus(std::string const &txHash) const
 {
-    wrapper::http::Client client(m_config.apiUrl);
+    wrapper::http::Client client(m_config.proxyUrl);
 
-    wrapper::http::Result const result = client.get("/transactions/" + txHash);
+    wrapper::http::Result const result = client.get("/transaction/" + txHash + "/status");
 
     try
     {
-        auto data = getAPIPayLoad(result);
-
-        //std::cout << std::setw(4) << data << std::endl;
+        auto data = getPayLoad(result);
 
         utility::requireAttribute(data, "status");
 
         std::string const txStatus = data["status"];
-
-        std::cout << txStatus << std::endl;
 
         return TransactionStatus(txStatus);
     }
@@ -79,6 +75,17 @@ TransactionStatus WrapperProxyProvider::getTransactionStatus(std::string const &
     {
         return TransactionStatus("Not found");
     }
+}
+/*-------------------------------------------------------------------------*
+* Retrieves the Proxy transaction result fo a given hash.                  *
+*-------------------------------------------------------------------------*/
+nlohmann::json WrapperProxyProvider::getProxyTransactionResult(const std::string & p_thash) const
+{
+    wrapper::http::Client client(m_config.proxyUrl);
+
+    wrapper::http::Result const result = client.get("/transaction/" + p_thash + "?withResults=true&withLogs=true&withReceipt=true");
+
+    return getPayLoad(result);
 }
 /*-------------------------------------------------------------------------*
 * Gets a map of the properties of the given collection.                    *
@@ -305,9 +312,9 @@ std::map<int,std::string> WrapperProxyProvider::getMapOfBlockchainResponse(const
     return mapTokens;
 }
 /*-------------------------------------------------------------------------*
-* Retrieves a vector of transaction associated with the given one.         *
+* Retrieves the API transaction result of a given hash.                    *
 *-------------------------------------------------------------------------*/
-nlohmann::json WrapperProxyProvider::getTransactionResult(const std::string & p_thash) const
+nlohmann::json WrapperProxyProvider::getAPITransactionResult(const std::string & p_thash) const
 {
     std::vector<nlohmann::json> t_listOfJsons;
 

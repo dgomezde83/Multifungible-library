@@ -41,6 +41,7 @@
 #define MULTIVERSX_ESDT_IS_PAUSED "Esdt token is paused"
 #define MULTIVERSX_ACTION_NOT_ALLOWED "action is not allowed"
 #define MULTIVERSX_NEW_NFT_DATA_ON_SENDER "new NFT data on sender"
+#define MULTIVERSX_CANNOT_WIPE_NOT_FROZEN "cannot wipe because the account is not frozen for this esdt token"
 
 class UnitTests
 {

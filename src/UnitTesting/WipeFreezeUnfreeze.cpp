@@ -184,12 +184,27 @@ TEST_F(FixtureOverUnitTests, wipeVerificationTransferWithoutFreeze) {
         FAIL();
     }
 
-    //We don't freeze the account so we can't wipe
-    EXPECT_EQ(m_ut->wipeVerification(MULTIFUNGIBLE_MAINWALLET,
-                                           WALLETPASSWORD,
-                                           t_rccIssueNFTToken.message,
-                                           t_rccAccountToFreeze.message),true);
-
+    try
+    {
+        //We don't freeze the account so we can't wipe
+        EXPECT_EQ(m_ut->wipeVerification(MULTIFUNGIBLE_MAINWALLET,
+                                            WALLETPASSWORD,
+                                            t_rccIssueNFTToken.message,
+                                            t_rccAccountToFreeze.message),true);
+        FAIL();
+    }
+    catch( const std::runtime_error& err )
+    {
+        //Test passed.
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_CANNOT_WIPE_NOT_FROZEN, err.what());
+        }
+    }
 }
 
 /*-------------------------------------------------------------------------*

@@ -152,13 +152,15 @@ bool UnitTests::tokenQuantityVerification(const int p_functionToUse, const std::
     //Option 2: Use API->accounts->nfts query
     else if (p_functionToUse == 2)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(60000));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(60000));
         t_rccGetBalances = Multifungible::getOwnedTokens(p_address);
     }
     //Option 3: Use API->token ID information
     else if (p_functionToUse == 3)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(60000));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(60000));
+        std::cout << "Retrieving str token: " << p_tokenID << std::endl;
+        std::cout << "Retrieving char token: " << p_tokenID.c_str() << std::endl;
         t_rccGetBalances = Multifungible::getTokenProperties(p_tokenID.c_str());
     }
 
@@ -189,10 +191,21 @@ bool UnitTests::tokenQuantityVerification(const int p_functionToUse, const std::
             }
             else if (t_response["type"] == "SemiFungibleESDT")
             {
-                if(t_response["supply"] == p_quantity) //supply or balance?
+                if (p_functionToUse == 3)
                 {
-                    return true;
+                    if(t_response["supply"] == p_quantity) //supply or balance?
+                    {
+                        return true;
+                    }
                 }
+                else if (p_functionToUse == 2)
+                {
+                    if(t_response["balance"] == p_quantity) //supply or balance?
+                    {
+                        return true;
+                    }
+                }
+                    
             }
             break;
         }

@@ -1000,7 +1000,7 @@ returnCodeAndChar Multifungible::unfreezeESDT(const char * p_walletName, const c
         //WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).freezeAddress(t_collectionIDAndNonce.first, p_ownerAddress);
         WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).unfreezeESDT(p_tokenID, p_ownerAddress);
 
-        return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_FREEZE_SUCCESSFUL(p_tokenID));
+        return Multifungible::transformIntoRCC(0,MULTIFUNGIBLE_UNFREEZE_SUCCESSFUL(p_tokenID));
 
     }
     catch (const std::exception& e)

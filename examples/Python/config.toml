@@ -19,4 +19,4 @@ ApiUrl = "https://devnet-api.multiversx.com"
 [Local]
 ChainID = "local-testnet"
 ProxyUrl = "http://127.0.0.1:7950"
-ApiUrl = "http://127.0.0.1:7950"
+ApiUrl = "http://127.0.0.1:3001"
