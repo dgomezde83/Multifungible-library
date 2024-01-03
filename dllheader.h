@@ -58,6 +58,7 @@ extern "C"
     EXPORT RCM CALLING_CONVENTION buildProofOfOwnershipOfKeyPair (const char * p_walletName, const char * p_password, const char * p_plaintext);
     EXPORT RCM CALLING_CONVENTION getProofOfCollectionOwnership (const char * p_walletName, const char * p_password, const char * p_plaintext, const char * p_collectionID);
     EXPORT RCM CALLING_CONVENTION getProofOfTokenOwnership (const char * p_walletName, const char * p_password, const char * p_plaintext, const char * p_tokenID);
+    EXPORT RCM CALLING_CONVENTION signMessage (const char * p_walletName, const char * p_password, const char * p_plaintext, const bool p_computeHash);
     EXPORT RCM CALLING_CONVENTION getOwnerAddress (const char * p_tokenID);
     EXPORT RCM CALLING_CONVENTION getEmittedCollections (const char * p_address);
     EXPORT RCM CALLING_CONVENTION addCollectionRole(const char * p_walletName, const char * p_password,const char * p_tokenID, const char * p_address, const char * p_role);

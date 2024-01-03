@@ -123,6 +123,7 @@ class Multifungible
         static returnCodeAndChar buildProofOfOwnershipOfKeyPair (const char * p_walletName, const char * p_password, const char * p_plaintext);
         static returnCodeAndChar getProofOfCollectionOwnership (const char * p_walletName, const char * p_password, const char * p_plaintext, const char * p_collectionID);
         static returnCodeAndChar getProofOfTokenOwnership (const char * p_walletName, const char * p_password, const char * p_plaintext, const char * p_tokenID);
+        static returnCodeAndChar signMessage (const char * p_walletName, const char * p_password, const char * p_plaintext, const bool p_computeHash);
         static returnCodeAndChar getOwnerAddress (const char * p_collectionID);
         static returnCodeAndChar getEmittedCollections (const char * p_address);
         static returnCodeAndChar getRolesAndAddresses(const char * p_collectionID);

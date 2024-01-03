@@ -3,6 +3,7 @@
 #include "Wallet.h"
 #include "WalletProvider.h"
 
+#include "cryptosignwrapper.h"
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
@@ -276,6 +277,39 @@ returnCodeAndChar Multifungible::getProofOfTokenOwnership (const char * p_wallet
         {
             return Multifungible::transformIntoRCC(0,"false");
         }
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::signMessage (const char * p_walletName, const char * p_password, const char * p_plaintext, const bool p_computeHash)
+{
+    try
+    {
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        Wallet t_wallet(p_walletName,clicf.config(),p_password,false);
+        WrapperProxyProvider t_wpp(clicf.config());
+
+        std::string t_public_address = t_wallet.getPublicKey();
+
+        std::string t_serialized_plaintext = p_plaintext;
+
+        // Decode the options
+        if (p_computeHash)
+        {
+           t_serialized_plaintext = wrapper::crypto::sha3Keccak(t_serialized_plaintext);
+        }
+
+        std::string t_ciphertext = util::stringToHex(t_wallet.signMessage(t_serialized_plaintext));
+        
+        return Multifungible::transformIntoRCC(0,t_ciphertext.c_str());
     }
     catch (const std::exception& e)
     {

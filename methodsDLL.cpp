@@ -96,6 +96,13 @@ extern "C"
     /*-------------------------------------------------------------------------*
     *--------------------------------------------------------------------------*
     *-------------------------------------------------------------------------*/
+    EXPORT RCM CALLING_CONVENTION signMessage (const char * p_walletName, const char * p_password, const char * p_plaintext, const bool p_computeHash)
+    {
+        return Multifungible::signMessage (p_walletName, p_password, p_plaintext, p_computeHash);
+    }
+    /*-------------------------------------------------------------------------*
+    *--------------------------------------------------------------------------*
+    *-------------------------------------------------------------------------*/
     EXPORT RCM CALLING_CONVENTION getOwnerAddress (const char * p_tokenID)
     {
         return Multifungible::getOwnerAddress (p_tokenID);

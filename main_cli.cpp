@@ -608,6 +608,16 @@ int main(int argc, char** argv)
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::getProofOfTokenOwnership(argv[2],t_password,argv[3],argv[4]);
     }
+    else if (firstArgument == "signMessage")
+    {
+        if (argc != 2 + 3)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        getPassword(t_password,CLI_SIZE_PASSWORD);
+        t_rcc = Multifungible::signMessage(argv[2],t_password,argv[3], argv[4]);
+    }
     else if (firstArgument == "getOwnerAddress")
     {
         if (argc != 2 + 1)
