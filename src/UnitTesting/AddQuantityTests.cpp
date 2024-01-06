@@ -105,6 +105,10 @@ TEST_F(FixtureOverUnitTests, addSFTQuantityNotAllOwnedToken) {
                                                                               t_rccAccountToTransfer.message,
                                                                               t_rccIssueSFTToken.message,
                                                                               "4");
+
+    //Sleep 1 minute to give tiume to the blockchain to synchroinize and recognize the new address
+    std::this_thread::sleep_for(std::chrono::milliseconds(60000));
+    
     EXPECT_EQ(m_ut->addBurnQuantityVerification(MULTIFUNGIBLE_MAINWALLET,
                                              WALLETPASSWORD,
                                              true,
@@ -172,6 +176,9 @@ TEST_F(FixtureOverUnitTests, addSFTQuantityNotOwnedToken) {
         std::cout << t_rccTransfer.message << std::endl;
         FAIL();
     }
+
+    //Sleep 1 minute to give tiume to the blockchain to synchroinize and recognize the new address
+    std::this_thread::sleep_for(std::chrono::milliseconds(60000));
 
     try
     {

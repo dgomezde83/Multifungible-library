@@ -208,7 +208,7 @@ if (BUILD_TESTS)
     if (WIN32)
         add_executable(Multifungible ${SDK_TEST_FILES} ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
     else()
-        add_executable(Multifungible ${SDK_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
+        add_executable(Multifungible ${SDK_TEST_FILES} ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
     endif()
 # Build executable for CLI
 elseif(BUILD_CLI)

@@ -655,7 +655,10 @@ bool UnitTests::upgradeAttributesVerification(const char * p_dllwalletpath,
     {
         throw std::runtime_error(t_rccUpgradeAttr.message);
     }
-    //std::this_thread::sleep_for(std::chrono::milliseconds(60000));
+
+    //Give some time for the APIO to syunchronize
+    std::this_thread::sleep_for(std::chrono::milliseconds(60000));
+
     //Retrieve current URIs
     returnCodeAndChar t_rccNewAttributeStatus = Multifungible::getTokenProperties(p_tokenID);
     if (t_rccNewAttributeStatus.retCode)
@@ -684,6 +687,9 @@ bool UnitTests::upgradeAttributesVerification(const char * p_dllwalletpath,
     }
     else
     {
+        std::cout << "Nb differences: " << t_differenceMediasTable.size() << std::endl;
+        std::cout << "t_newMetadata: " << t_newMetadata << std::endl;
+        std::cout << "Nb t_differenceTagsTable: " << t_differenceTagsTable.size() << std::endl;
         return false;
     }
 }

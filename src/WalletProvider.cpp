@@ -558,7 +558,7 @@ void WalletProvider::waitTillSCTransactionIsCompleted(const std::string &p_txHas
                         {
                             if (p_json.contains("hash"))
                             {
-                                waitTillTransactionIsCompleted(std::string(p_json["hash"]));
+                                waitTillSCTransactionIsCompleted(std::string(p_json["hash"]));
                             }
                             else
                             {
