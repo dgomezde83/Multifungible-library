@@ -116,7 +116,51 @@ std::string UnitTests::issueCollection(const char * p_dllwalletpath,
 
     return std::string(t_rccIssueCollection.message);
 }
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+std::string UnitTests::issueESDT(const char * p_dllwalletpath,
+                            const char * p_password,
+                            const char * p_collectionName,
+                            const char * p_collectionTicker,
+                            const char * p_initialSupply,
+                            const char * p_nbDecimals,
+                             const bool p_canFreeze,
+                             const bool p_canWipe,
+                             const bool p_canPause,
+                             const bool p_canChangeOwner,
+                             const bool p_canUpgrade,
+                             const bool p_canAddSpecialRoles)
+{
+    //Load wallet
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
+    if (t_rccLoad.retCode)
+    {
+        throw std::runtime_error(t_rccLoad.message);
+    }
 
+    returnCodeAndChar t_rccIssueCollection;
+
+    t_rccIssueCollection = Multifungible::issueESDTToken(p_dllwalletpath,
+                                                                    p_password,
+                                                                    p_collectionName,
+                                                                    p_collectionTicker,
+                                                                    p_initialSupply,
+                                                                    p_nbDecimals,
+                                                                    p_canFreeze,
+                                                                    p_canWipe,
+                                                                    p_canPause,
+                                                                    p_canChangeOwner,
+                                                                    p_canUpgrade,
+                                                                    p_canAddSpecialRoles);
+
+    if (t_rccIssueCollection.retCode)
+    {
+        throw std::runtime_error(std::string(t_rccIssueCollection.message));
+    }
+
+    return std::string(t_rccIssueCollection.message);
+}
 //Create a wallet and retrieve its public address. Load the wallet and retrieve
 //its public address. Verify that both addresses are the same
 /*-------------------------------------------------------------------------*
@@ -284,6 +328,62 @@ bool UnitTests::issueCollectionVerification(const char * p_dllwalletpath,
                                                 p_canWipe,
                                                 p_canPause,
                                                 p_canTransferNFTCreateRole,
+                                                p_canChangeOwner,
+                                                p_canUpgrade,
+                                                p_canAddSpecialRoles);
+
+    returnCodeAndChar t_rccOwner = Multifungible::getOwnerAddress(t_collectionID.c_str());
+    if (t_rccOwner.retCode)
+    {
+        throw std::runtime_error(t_rccOwner.message);
+    }
+
+    if( !strcmp(t_rccOwner.message,t_rccLoad.message))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+bool UnitTests::issueESDTVerification(const char * p_dllwalletpath,
+                                         const char * p_password,
+                                         const char * p_collectionName,
+                                         const char * p_collectionTicker,
+                                         const char * p_initialSupply,
+                                         const char * p_nbDecimals,
+                                         const bool p_canFreeze,
+                                         const bool p_canWipe,
+                                         const bool p_canPause,
+                                         const bool p_canChangeOwner,
+                                         const bool p_canUpgrade,
+                                         const bool p_canAddSpecialRoles)
+{
+    CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+    Network nw = Testnet;
+    clicf.setNetwork(nw);
+    WrapperProxyProvider wpp (clicf.config());
+
+    //Load wallet
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
+    if (t_rccLoad.retCode)
+    {
+        throw std::runtime_error(t_rccLoad.message);
+    }
+
+    std::string t_collectionID = issueCollection(p_dllwalletpath,
+                                                p_password,
+                                                p_collectionName,
+                                                p_collectionTicker,
+                                                p_initialSupply,
+                                                p_nbDecimals,
+                                                p_canFreeze,
+                                                p_canWipe,
+                                                p_canPause,
                                                 p_canChangeOwner,
                                                 p_canUpgrade,
                                                 p_canAddSpecialRoles);

@@ -92,6 +92,19 @@ class UnitTests
                                          const bool p_canUpgrade,
                                          const bool p_canAddSpecialRoles);
 
+        bool issueESDTVerification(const char * p_dllwalletpath,
+                                         const char * p_password,
+                                         const char * p_collectionName,
+                                         const char * p_collectionTicker,
+                                         const char * p_initialSupply,
+                                         const char * p_nbDecimals,
+                                         const bool p_canFreeze,
+                                         const bool p_canWipe,
+                                         const bool p_canPause,
+                                         const bool p_canChangeOwner,
+                                         const bool p_canUpgrade,
+                                         const bool p_canAddSpecialRoles);
+
         bool addRemoveRoleVerification(const char * p_dllwalletpath,
                                     const char * p_password,
                                     const char * p_collectionID,
@@ -210,6 +223,19 @@ class UnitTests
                              const bool p_canWipe,
                              const bool p_canPause,
                              const bool p_canTransferNFTCreateRole,
+                             const bool p_canChangeOwner,
+                             const bool p_canUpgrade,
+                             const bool p_canAddSpecialRoles);
+
+        std::string issueESDT(const char * p_dllwalletpath,
+                            const char * p_password,
+                            const char * p_collectionName,
+                            const char * p_collectionTicker,
+                            const char * p_initialSupply,
+                            const char * p_nbDecimals,
+                             const bool p_canFreeze,
+                             const bool p_canWipe,
+                             const bool p_canPause,
                              const bool p_canChangeOwner,
                              const bool p_canUpgrade,
                              const bool p_canAddSpecialRoles);
