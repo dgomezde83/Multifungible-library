@@ -5,12 +5,13 @@
 *-------------------------------------------------------------------------*/
 
 TEST_F(FixtureOverUnitTests, issueESDTVerification) {
-    EXPECT_EQ(m_ut->issueCollectionVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->issueESDTVerification(MULTIFUNGIBLE_MAINWALLET,
                                                    WALLETPASSWORD,
-                                                   true,
                                                    "collectionTest",
                                                    "CTST",
-                                                   true,true,true,true,true,true,true), true);
+                                                   "10000",
+                                                   "2",
+                                                   true,true,true,true,true,true), true);
 }
 
 /*-------------------------------------------------------------------------*
@@ -24,12 +25,13 @@ TEST_F(FixtureOverUnitTests, issueESDTVerificationNotInBlockchain)
     try
     {
 
-    m_ut->issueCollectionVerification(MULTIFUNGIBLE_WALLET_NOTINBLOCKCHAIN,
+    m_ut->issueESDTVerification(MULTIFUNGIBLE_WALLET_NOTINBLOCKCHAIN,
                                                    WALLETPASSWORD,
-                                                   true,
                                                    "collectionTest",
                                                    "CTST",
-                                                   true,true,true,true,true,true,true);
+                                                   "10000",
+                                                   "2",
+                                                   true,true,true,true,true,true);
     FAIL();
     }
     catch( const std::runtime_error& err )
@@ -58,12 +60,13 @@ TEST_F(FixtureOverUnitTests, issueESDTVerificationNoMoney)
     try
     {
 
-    m_ut->issueCollectionVerification(MULTIFUNGIBLE_WALLET_NOMONEY,
+    m_ut->issueESDTVerification(MULTIFUNGIBLE_WALLET_NOMONEY,
                                                    WALLETPASSWORD,
-                                                   true,
                                                    "collectionTest",
                                                    "CTST",
-                                                   true,true,true,true,true,true,true);
+                                                   "10000",
+                                                   "2",
+                                                   true,true,true,true,true,true);
     FAIL();
     }
     catch( const std::runtime_error& err )
@@ -84,27 +87,14 @@ TEST_F(FixtureOverUnitTests, issueESDTVerificationNoMoney)
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
-//Only give add role property: p_canAddSpecialRoles
-TEST_F(FixtureOverUnitTests, issueESDTVerificationOnlyAddRole) {
-    EXPECT_EQ(m_ut->issueCollectionVerification(MULTIFUNGIBLE_MAINWALLET,
-                                                   WALLETPASSWORD,
-                                                   true,
-                                                   "collectionTest",
-                                                   "CTST",
-                                                   false,false,false,false,false,false,true), true);
-}
-
-/*-------------------------------------------------------------------------*
-*--------------------------------------------------------------------------*
-*-------------------------------------------------------------------------*/
-
 //Give no roles
 TEST_F(FixtureOverUnitTests, issueESDTVerificationNoRoles) {
-    EXPECT_EQ(m_ut->issueCollectionVerification(MULTIFUNGIBLE_MAINWALLET,
+    EXPECT_EQ(m_ut->issueESDTVerification(MULTIFUNGIBLE_MAINWALLET,
                                                    WALLETPASSWORD,
-                                                   true,
                                                    "collectionTest",
                                                    "CTST",
-                                                   false,false,false,false,false,false,false), true);
+                                                   "10000",
+                                                   "2",
+                                                   false,false,false,false,false,false), true);
 }
 

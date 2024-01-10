@@ -769,3 +769,131 @@ TEST_F(FixtureOverUnitTests, addSFTRoleVerificationAddQuantity) {
     }
 }
 
+//--------------------------------------------------------------------------------------------------------
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
+//Successfully add the 'ESDTRoleNFTAddURI' role
+TEST_F(FixtureOverUnitTests, addESDTRoleVerificationSuccessfulESDTRoleLocalBurn) {
+
+   returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+    if (t_rccLoad.retCode)
+    {
+        std::cout << t_rccLoad.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccIssueCollection = Multifungible::issueESDTToken(MULTIFUNGIBLE_MAINWALLET,
+                                                             WALLETPASSWORD,
+                                                             "collectionTest" ,
+                                                             "CTST",
+                                                             "20000",
+                                                             "2",
+                                                             false,false,false,false,false,true);
+
+    if (t_rccIssueCollection.retCode)
+    {
+        std::cout << t_rccIssueCollection.message << std::endl;
+        FAIL();
+    }
+
+    EXPECT_EQ(m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+                                           WALLETPASSWORD,
+                                           t_rccIssueCollection.message,
+                                           "ESDTRoleLocalBurn",
+                                           t_rccLoad.message,
+                                           true),true);
+
+}
+
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
+//Add 'ESDTRoleLocalMint' role to ESDT. But role already exists (it is given on creation by the issueESDTToken method if canAddSpecialRoles property is set)
+TEST_F(FixtureOverUnitTests, addESDTRoleVerificationLocalMintAlreadyExists) {
+
+   returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+    if (t_rccLoad.retCode)
+    {
+        std::cout << t_rccLoad.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccIssueCollection = Multifungible::issueESDTToken(MULTIFUNGIBLE_MAINWALLET,
+                                                             WALLETPASSWORD,
+                                                             "collectionTest" ,
+                                                             "CTST",
+                                                             "20000",
+                                                             "2",
+                                                             false,false,false,false,false,true);
+
+    if (t_rccIssueCollection.retCode)
+    {
+        std::cout << t_rccIssueCollection.message << std::endl;
+        FAIL();
+    }
+
+    try
+    {
+
+        m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+                                           WALLETPASSWORD,
+                                           t_rccIssueCollection.message,
+                                           "ESDTRoleLocalMint",
+                                           t_rccLoad.message,
+                                           true);
+        FAIL();
+    }
+    catch( const std::runtime_error& err )
+    {
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( MULTIVERSX_SPECIAL_ROLE, err.what());
+        }
+    }
+}
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
+//Add 'ESDTTransferRole' role to NFT collection
+TEST_F(FixtureOverUnitTests, addESDTRoleVerificationSuccessfulESDTTransferRole) {
+
+   returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+    if (t_rccLoad.retCode)
+    {
+        std::cout << t_rccLoad.message << std::endl;
+        FAIL();
+    }
+
+    returnCodeAndChar t_rccIssueCollection = Multifungible::issueESDTToken(MULTIFUNGIBLE_MAINWALLET,
+                                                             WALLETPASSWORD,
+                                                             "collectionTest" ,
+                                                             "CTST",
+                                                             "2000",
+                                                             "2",
+                                                             false,false,false,false,false,true);
+
+    if (t_rccIssueCollection.retCode)
+    {
+        std::cout << t_rccIssueCollection.message << std::endl;
+        FAIL();
+    }
+
+    EXPECT_EQ(m_ut->addRemoveRoleVerification(MULTIFUNGIBLE_MAINWALLET,
+                                           WALLETPASSWORD,
+                                           t_rccIssueCollection.message,
+                                           "ESDTTransferRole",
+                                           t_rccLoad.message,
+                                           true),true);
+
+}

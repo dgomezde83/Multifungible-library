@@ -375,7 +375,7 @@ bool UnitTests::issueESDTVerification(const char * p_dllwalletpath,
         throw std::runtime_error(t_rccLoad.message);
     }
 
-    std::string t_collectionID = issueCollection(p_dllwalletpath,
+    std::string t_collectionID = issueESDT(p_dllwalletpath,
                                                 p_password,
                                                 p_collectionName,
                                                 p_collectionTicker,
