@@ -130,14 +130,22 @@ class UnitTests
                                             const char * p_tokenID,
                                             const char * p_SFTQuantity);
 
+        bool mintBurnQuantityVerification(const char * p_dllwalletpath,
+                                        const char * p_password,
+                                        const bool p_isAdd,
+                                        const char * p_tokenID,
+                                         const char * p_quantity);
+
         bool wipeVerification(const char * p_dllwalletpath,
                                 const char * p_password,
+                                const bool p_isESDT,
                                 const char * p_tokenID,
                                 const char * p_destinationAddress);
 
         bool freezeUnfreezeVerification(const char * p_dllwalletpath,
                                         const char * p_password,
                                         const bool p_isFreeze,
+                                        const bool p_isESDT,
                                         const char * p_tokenID,
                                         const char * p_destinationAddress);
 

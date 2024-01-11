@@ -157,7 +157,7 @@ class WalletProvider
 
         void SFTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_amount) const;
         
-        void ESDTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_amount) const;
+        void ESDTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const std::string& p_amount, const uint32_t p_decimals) const;
 
         void EGLDTransaction(const std::string& p_destinationAddress, const std::string& p_amount) const;
 
@@ -192,7 +192,7 @@ class WalletProvider
                                                 const bool p_canUpgrade,
                                                 const bool p_canAddSpecialRoles) const;
 
-        Transaction buildESDTTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress, const std::string & p_quantity) const;
+        Transaction buildESDTTokenTransaction(const std::string& p_collectionID, const std::string & p_destinataryAddress, const std::string & p_quantity, const uint32_t p_decimals) const;
 
         Transaction buildTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress, const std::string & p_quantity) const;
 

@@ -136,7 +136,7 @@ set(MyDLL_TEST_FILES
     src/UnitTests.cpp
     include/UnitTesting/UnitTestsInfo.h
     #src/UnitTesting/AddQuantityTests.cpp
-    src/UnitTesting/AddRolesTests.cpp
+    #src/UnitTesting/AddRolesTests.cpp
     #src/UnitTesting/AddURIVerification.cpp
     #src/UnitTesting/buildProofOfOwnershipOfKeyPair.cpp
     #src/UnitTesting/BurnQuantityTests.cpp
@@ -159,12 +159,12 @@ set(MyDLL_TEST_FILES
     #src/UnitTesting/TransferTokenRoles.cpp
     #src/UnitTesting/UpdatePropertiesTests.cpp
     #src/UnitTesting/WalletGeneratorTests.cpp
-    #src/UnitTesting/WipeFreezeUnfreeze.cpp
+    src/UnitTesting/WipeFreezeUnfreeze.cpp
     #src/UnitTesting/PauseUnpauseTransactionsTests.cpp
-    src/UnitTesting/RemoveRolesTests.cpp
+    #src/UnitTesting/RemoveRolesTests.cpp
     #src/UnitTesting/UpgradeAttributesTests.cpp
     #src/UnitTesting/transferEGLDTests.cpp
-    src/UnitTesting/issueESDTTest.cpp
+    #src/UnitTesting/issueESDTTest.cpp
 )
 
 set(SDK_TEST_FILES

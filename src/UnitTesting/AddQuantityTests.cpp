@@ -55,6 +55,43 @@ TEST_F(FixtureOverUnitTests, addSFTQuantity) {
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
+//Issue an ESDT Collection, then mint 6 more.
+TEST_F(FixtureOverUnitTests, mintESDTQuantity) {
+
+    //Load wallet
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+    if (t_rccLoad.retCode)
+    {
+        std::cout << t_rccLoad.message << std::endl;
+        FAIL();
+    }
+
+    //Issue collection
+    returnCodeAndChar t_rccIssueCollection = Multifungible::issueESDTToken(MULTIFUNGIBLE_MAINWALLET,
+                                                                 WALLETPASSWORD,
+                                                                 "collectionTest",
+                                                                 "CTST",
+                                                                 "500",
+                                                                 "2",
+                                                                 false,false,false,false,false,true);
+    if (t_rccIssueCollection.retCode)
+    {
+        std::cout << t_rccIssueCollection.message << std::endl;
+        FAIL();
+    }
+
+    EXPECT_EQ(m_ut->mintBurnQuantityVerification(MULTIFUNGIBLE_MAINWALLET,
+                                             WALLETPASSWORD,
+                                             true,
+                                             t_rccIssueCollection.message,
+                                             "6"),true);
+
+}
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
 //Try to add quantity to a token I still own, but have sent 4 units out of 5 to another address
 TEST_F(FixtureOverUnitTests, addSFTQuantityNotAllOwnedToken) {
 

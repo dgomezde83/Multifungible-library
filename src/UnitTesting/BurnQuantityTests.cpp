@@ -38,8 +38,8 @@ TEST_F(FixtureOverUnitTests, burnSFTQuantity) {
                                                                                  "");
     if (t_rccIssueSFTToken.retCode)
     {
-        FAIL();
         std::cout << t_rccIssueSFTToken.message << std::endl;
+        FAIL();
     }
 
     EXPECT_EQ(m_ut->addBurnQuantityVerification(MULTIFUNGIBLE_MAINWALLET,
@@ -47,6 +47,43 @@ TEST_F(FixtureOverUnitTests, burnSFTQuantity) {
                                              false,
                                              false,
                                              t_rccIssueSFTToken.message,
+                                             "4"),true);
+
+}
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
+//Normal test. Issue 5 tokens, then burn 4
+TEST_F(FixtureOverUnitTests, burnESDTQuantity) {
+
+    //Load wallet
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
+    if (t_rccLoad.retCode)
+    {
+        std::cout << t_rccLoad.message << std::endl;
+        FAIL();
+    }
+
+    //Issue collection
+    returnCodeAndChar t_rccIssueCollection = Multifungible::issueESDTToken(MULTIFUNGIBLE_MAINWALLET,
+                                                                 WALLETPASSWORD,
+                                                                 "collectionTest",
+                                                                 "CTST",
+                                                                 "500",
+                                                                 "2",
+                                                                 false,false,false,false,false,true);
+    if (t_rccIssueCollection.retCode)
+    {
+        std::cout << t_rccIssueCollection.message << std::endl;
+        FAIL();
+    }
+
+    EXPECT_EQ(m_ut->mintBurnQuantityVerification(MULTIFUNGIBLE_MAINWALLET,
+                                             WALLETPASSWORD,
+                                             false,
+                                             t_rccIssueCollection.message,
                                              "4"),true);
 
 }
@@ -80,8 +117,8 @@ TEST_F(FixtureOverUnitTests, burnSFTQuantityOnOtherAddress) {
                                                                  false,false,false,false,false,false,true);
     if (t_rccIssueCollection.retCode)
     {
-        FAIL();
         std::cout << t_rccIssueCollection.message << std::endl;
+        FAIL();
     }
 
     //Issue token
@@ -95,8 +132,8 @@ TEST_F(FixtureOverUnitTests, burnSFTQuantityOnOtherAddress) {
                                                                                  "");
     if (t_rccIssueSFTToken.retCode)
     {
-        FAIL();
         std::cout << t_rccIssueSFTToken.message << std::endl;
+        FAIL();
     }
 
     //Send the tokens to second address
@@ -131,8 +168,8 @@ TEST_F(FixtureOverUnitTests, burnNFTQuantity) {
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
     if (t_rccLoad.retCode)
     {
-        FAIL();
         std::cout << t_rccLoad.message << std::endl;
+        FAIL();
     }
 
     //Issue collection
@@ -157,8 +194,8 @@ TEST_F(FixtureOverUnitTests, burnNFTQuantity) {
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)
     {
-        FAIL();
         std::cout << t_rccIssueNFTToken.message << std::endl;
+        FAIL();
     }
 
     EXPECT_EQ(m_ut->addBurnQuantityVerification(MULTIFUNGIBLE_MAINWALLET,
@@ -180,8 +217,8 @@ TEST_F(FixtureOverUnitTests, burnNFTQuantityOnOtherAddress) {
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(MULTIFUNGIBLE_MAINWALLET,WALLETPASSWORD);
     if (t_rccLoad.retCode)
     {
-        FAIL();
         std::cout << t_rccLoad.message << std::endl;
+        FAIL();
     }
     returnCodeAndChar t_rccAccountToTransfer = Multifungible::loadWallet(MULTIFUNGIBLE_AUXILLIARYWALLET,WALLETPASSWORD);
     if (t_rccAccountToTransfer.retCode)
@@ -212,8 +249,8 @@ TEST_F(FixtureOverUnitTests, burnNFTQuantityOnOtherAddress) {
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)
     {
-        FAIL();
         std::cout << t_rccIssueNFTToken.message << std::endl;
+        FAIL();
     }
 
     //Send the tokens to second address

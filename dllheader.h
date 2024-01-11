@@ -54,6 +54,7 @@ extern "C"
     EXPORT RCM CALLING_CONVENTION getAddressTokenBalance(const char * p_address, const char * p_tokenID);
     EXPORT RCM CALLING_CONVENTION getOwnedTokenProperties(const char * p_tokenID,const char * p_address);
     EXPORT RCM CALLING_CONVENTION getTokenProperties (const char * p_tokenID);
+    EXPORT RCM CALLING_CONVENTION getESDTProperties (const char * p_tokenID);
     EXPORT RCM CALLING_CONVENTION getCollectionProperties(const char * p_tokenID);
     EXPORT RCM CALLING_CONVENTION buildProofOfOwnershipOfKeyPair (const char * p_walletName, const char * p_password, const char * p_plaintext);
     EXPORT RCM CALLING_CONVENTION getProofOfCollectionOwnership (const char * p_walletName, const char * p_password, const char * p_plaintext, const char * p_collectionID);

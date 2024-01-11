@@ -108,7 +108,7 @@ TEST_F(FixtureOverUnitTests, removeESDTRoleVerificationSuccessfulESDTRoleLocalBu
                                                              "collectionTest" ,
                                                              "CTST",
                                                              "20000",
-                                                             "20",
+                                                             "2",
                                                              false,false,false,false,false,true);
 
     if (t_rccIssueCollection.retCode)

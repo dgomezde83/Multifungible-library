@@ -879,7 +879,7 @@ TEST_F(FixtureOverUnitTests, addESDTRoleVerificationSuccessfulESDTTransferRole) 
                                                              WALLETPASSWORD,
                                                              "collectionTest" ,
                                                              "CTST",
-                                                             "2000",
+                                                             "20000",
                                                              "2",
                                                              false,false,false,false,false,true);
 

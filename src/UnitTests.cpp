@@ -448,7 +448,7 @@ bool UnitTests::addRemoveRoleVerification(const char * p_dllwalletpath,
         return false;
     }
 }
-//Tries to ass quantity to a token provided. Checks if successful
+//Tries to add quantity to a token provided. Checks if successful
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
@@ -525,11 +525,87 @@ bool UnitTests::addBurnQuantityVerification(const char * p_dllwalletpath,
 
     return false;
 }
+//Tries to mint quantity to a token provided. Checks if successful
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+bool UnitTests::mintBurnQuantityVerification(const char * p_dllwalletpath,
+                                        const char * p_password,
+                                        const bool p_isAdd,
+                                        const char * p_tokenID,
+                                         const char * p_quantity)
+{
+    BigUInt p_quantityToAdd(p_quantity);
+
+    BigUInt t_oldBalance(0);
+
+    //Load wallet
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
+    if (t_rccLoad.retCode)
+    {
+        throw std::runtime_error(t_rccLoad.message);
+    }
+
+    //Get old balance
+    returnCodeAndChar t_rccGetOldBalances = Multifungible::getESDTProperties(p_tokenID);
+
+    if (t_rccGetOldBalances.retCode)
+    {
+        throw std::runtime_error(t_rccGetOldBalances.message);
+    }
+    nlohmann::json t_initialJson = nlohmann::json::parse(t_rccGetOldBalances.message);
+    std::string t_initialBalance = t_initialJson["supply"];
+    t_oldBalance = BigUInt(t_initialBalance);
+
+    //Add or burn quantity
+    returnCodeAndChar t_rccAddBurnQtt;
+    if (p_isAdd)
+    {
+        t_rccAddBurnQtt = Multifungible::mintESDTQuantity(p_dllwalletpath,p_password,p_tokenID,p_quantity);
+    }
+    else
+    {
+        t_rccAddBurnQtt = Multifungible::burnESDTQuantity(p_dllwalletpath,p_password,p_tokenID,p_quantity);
+    }
+    if (t_rccAddBurnQtt.retCode)
+    {
+        throw std::runtime_error(t_rccAddBurnQtt.message);
+    }
+
+    //Get new balance
+    returnCodeAndChar t_rccGetNewalances = Multifungible::getESDTProperties(p_tokenID);
+    if (t_rccGetNewalances.retCode)
+    {
+        throw std::runtime_error(t_rccGetNewalances.message);
+    }
+    nlohmann::json t_finalJson = nlohmann::json::parse(t_rccGetNewalances.message);
+    std::string t_finalBalance = t_finalJson["supply"];
+    BigUInt t_newBalance (t_finalBalance);
+
+    //Verify if addition or substraction is correct
+    if (p_isAdd)
+    {
+        if (t_newBalance == t_oldBalance + p_quantityToAdd)
+        {
+            return true;
+        }
+    }
+    else
+    {
+        if (t_newBalance == t_oldBalance - p_quantityToAdd)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 bool UnitTests::wipeVerification(const char * p_dllwalletpath,
                         const char * p_password,
+                        const bool p_isESDT,
                         const char * p_tokenID,
                         const char * p_destinationAddress)
 {
@@ -542,7 +618,15 @@ bool UnitTests::wipeVerification(const char * p_dllwalletpath,
     }
 
     //Wipe the token
-    returnCodeAndChar t_rccWipeToken = Multifungible::wipeNFT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
+    returnCodeAndChar t_rccWipeToken;
+    if (p_isESDT)
+    {
+        std::cout << "Wiping ESDT: " << p_tokenID << std::endl;
+        t_rccWipeToken = Multifungible::wipeESDT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
+    }
+    {
+        t_rccWipeToken = Multifungible::wipeNFT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
+    }
 
     if (t_rccWipeToken.retCode)
     {
@@ -587,14 +671,21 @@ bool UnitTests::isPropertyGivenToToken(const char *p_listOfRoles, const std::str
 bool UnitTests::freezeUnfreezeVerification(const char * p_dllwalletpath,
                                             const char * p_password,
                                             const bool p_isFreeze,
+                                            const bool p_isESDT,
                                             const char * p_tokenID,
                                             const char * p_destinationAddress)
 {
+    std::string t_collectionID;
 
-    std::pair<std::string,uint64_t> t_pairCollectionIDNonce = Multifungible::getCollectionIDAndNonceFromTokenID(p_tokenID);
-
-    std::string t_collectionID = t_pairCollectionIDNonce.first;
-    int t_nonce = t_pairCollectionIDNonce.second;
+    if (!p_isESDT)
+    {
+        std::pair<std::string,uint64_t> t_pairCollectionIDNonce = Multifungible::getCollectionIDAndNonceFromTokenID(p_tokenID);
+        t_collectionID = t_pairCollectionIDNonce.first;
+    }
+    else
+    {
+        t_collectionID = p_tokenID;
+    }
 
     //Load wallet
     returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
@@ -612,14 +703,28 @@ bool UnitTests::freezeUnfreezeVerification(const char * p_dllwalletpath,
     }
 
     returnCodeAndChar t_rccFreezeUnfreezeToken;
-    if(p_isFreeze)
+    if (!p_isESDT)
     {
-       t_rccFreezeUnfreezeToken = Multifungible::freezeNFT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
+        if(p_isFreeze)
+        {
+            t_rccFreezeUnfreezeToken = Multifungible::freezeNFT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
+        }
+        else
+        {
+            t_rccFreezeUnfreezeToken = Multifungible::unfreezeNFT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
+        }
     }
-    else
     {
-       t_rccFreezeUnfreezeToken = Multifungible::unfreezeNFT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
+        if(p_isFreeze)
+        {
+            t_rccFreezeUnfreezeToken = Multifungible::freezeESDT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
+        }
+        else
+        {
+            t_rccFreezeUnfreezeToken = Multifungible::unfreezeESDT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
+        }
     }
+    
     if (t_rccFreezeUnfreezeToken.retCode)
     {
         throw std::runtime_error(t_rccFreezeUnfreezeToken.message);

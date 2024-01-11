@@ -317,7 +317,7 @@ Transaction WalletProvider::buildMoneyTransaction(const std::string & p_destinat
 /*-------------------------------------------------------------------------*
 * Create a transaction for sending an ESDT token to another address.       *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildESDTTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce,const std::string & p_destinataryAddress, const std::string & p_amount) const
+Transaction WalletProvider::buildESDTTokenTransaction(const std::string& p_collectionID, const std::string & p_destinataryAddress, const std::string & p_amount, const uint32_t p_decimals) const
 {
     if(!p_collectionID.size())
     {
@@ -331,7 +331,8 @@ Transaction WalletProvider::buildESDTTokenTransaction(const std::string& p_colle
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    TokenPayment t_tp = TokenPayment::semiFungible(p_collectionID,p_nonce,BigUInt(p_amount));
+    std::string t_quantity = p_amount + std::string(p_decimals, '0');
+    TokenPayment t_tp = TokenPayment::fungibleFromAmount(p_collectionID,t_quantity,p_decimals);
     Transaction t_ts = m_wpf.createESDTTransfer(t_tp,m_wg->getAccount().getNonce(),p_amount,m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
     return t_ts;
 }
@@ -782,6 +783,12 @@ std::string WalletProvider::issueESDTToken(const std::string& p_esdtName,
     std::stringstream ss;
     ss << std::hex << decimalNumber;
     std::string t_nbInitialSupplyHex = ss.str();
+
+    // Check if the length of the string is odd
+    if (t_nbInitialSupplyHex.length() % 2 != 0) {
+        // Prepend '0' to make the length even
+        t_nbInitialSupplyHex = "0" + t_nbInitialSupplyHex;
+    }
 
     for (const std::string & p_transactionData : getSCTransactionData(t_transactionHash))
     {
@@ -1554,14 +1561,14 @@ void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, con
 /*-------------------------------------------------------------------------*
 * Sends the given tokens to the given address.                              *
 *-------------------------------------------------------------------------*/
-void WalletProvider::ESDTTransaction(const std::string& p_destinationAddress, const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_amount) const
+void WalletProvider::ESDTTransaction(const std::string& p_destinationAddress, const std::string& p_collectionID, const std::string& p_amount, const uint32_t p_decimals) const
 {
     if (__SIMULATE__)
     {
-        pushTransaction(buildESDTTokenTransaction(p_collectionID, p_nonce, p_destinationAddress,p_amount),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+        pushTransaction(buildESDTTokenTransaction(p_collectionID, p_destinationAddress, p_amount, p_decimals),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
     }
 
-    std::string t_transactionHash = pushTransaction(buildESDTTokenTransaction(p_collectionID, p_nonce, p_destinationAddress, p_amount),false).value();
+    std::string t_transactionHash = pushTransaction(buildESDTTokenTransaction(p_collectionID, p_destinationAddress, p_amount, p_decimals),false).value();
 
     waitTillSCTransactionIsCompleted(t_transactionHash);
 

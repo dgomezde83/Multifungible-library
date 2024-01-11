@@ -26,7 +26,9 @@
 #define MULTIFUNGIBLE_UNFREEZE_SUCCESSFUL(x) std::string("Unfroze ") + std::string(x) + std::string(" successfully")
 #define MULTIFUNGIBLE_NFTTRANSACTION_SUCCESSFUL(x,y,z) std::string("Sent ") + std::string(x) + std::string("-") + std::to_string(y) + std::string(" to ") + std::string(z) + std::string(" successfully")
 #define MULTIFUNGIBLE_SFTTRANSACTION_SUCCESSFUL(w,x,y,z) std::string("Sent ") + std::string(w) + std::string(( std::string(w).compare("0") != 0 ) ? " units of " : " unit of " ) + std::string(x) + std::string("-") + std::to_string(y) + std::string(" to ") + std::string(z) + std::string(" successfully")
-#define MULTIFUNGIBLE_EGLDTRANSACTION_SUCCESSFUL(x) std::string("Sent ") + std::string(x) + std::string(( std::string(x).compare("1") != 0 ) ? " units of " : " unit of " ) + std::string("EGLD successfully")
+#define MULTIFUNGIBLE_EGLDTRANSACTION_SUCCESSFUL(x,y) std::string("Sent ") + std::string(x) + std::string(( std::string(x).compare("1") != 0 ) ? " units of " : " unit of " ) + std::string("EGLD ") + std::string(" to ") + std::string(y) + std::string(" successfully")
+#define MULTIFUNGIBLE_ESDTTRANSACTION_SUCCESSFUL(x,y,z) std::string("Sent ") + std::string(x) + std::string(( std::string(x).compare("1") != 0 ) ? " units of " : " unit of " ) + std::string(y) + std::string(" to ") + std::string(z) + std::string(" successfully")
+
 
 class Multifungible
 {
@@ -119,6 +121,7 @@ class Multifungible
         static returnCodeAndChar getOwnedTokenProperties(const char * p_tokenID,const char * p_address);
         static returnCodeAndChar getAddressTokenBalance (const char * p_address, const char * p_tokenID);
         static returnCodeAndChar getTokenProperties (const char * p_tokenID);
+        static returnCodeAndChar getESDTProperties (const char * p_tokenID);
         static returnCodeAndChar getCollectionProperties(const char * p_collectionID);
         static returnCodeAndChar buildProofOfOwnershipOfKeyPair (const char * p_walletName, const char * p_password, const char * p_plaintext);
         static returnCodeAndChar getProofOfCollectionOwnership (const char * p_walletName, const char * p_password, const char * p_plaintext, const char * p_collectionID);

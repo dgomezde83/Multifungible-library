@@ -75,6 +75,13 @@ extern "C"
     /*-------------------------------------------------------------------------*
     *--------------------------------------------------------------------------*
     *-------------------------------------------------------------------------*/
+    EXPORT RCM CALLING_CONVENTION getESDTProperties (const char * p_tokenID)
+    {
+        return Multifungible::getESDTProperties (p_tokenID);
+    }
+    /*-------------------------------------------------------------------------*
+    *--------------------------------------------------------------------------*
+    *-------------------------------------------------------------------------*/
     EXPORT RCM CALLING_CONVENTION buildProofOfOwnershipOfKeyPair (const char * p_walletName, const char * p_password, const char * p_plaintext)
     {
         return Multifungible::buildProofOfOwnershipOfKeyPair (p_walletName, p_password, p_plaintext);

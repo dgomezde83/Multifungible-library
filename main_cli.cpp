@@ -545,6 +545,30 @@ int main(int argc, char** argv)
         }
         return 0;
     }
+    else if (firstArgument == "getESDTProperties")
+    {
+        if (argc != 2 + 1)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        t_rcc = Multifungible::getESDTProperties(argv[2]);
+        if (!t_rcc.retCode)
+        {
+            char* line = strtok(t_rcc.message, "\n"); // Tokenize the first line
+            while (line != nullptr)
+            {
+            nlohmann::json t_jsonLine = nlohmann::json::parse(line); // Call your function with the line as a string
+            std::cout << std::setw(4) << t_jsonLine << std::endl;
+            line = strtok(nullptr, "\n"); // Tokenize the next line
+            }
+        }
+        else
+        {
+            std::cout << t_rcc.message << std::endl;
+        }
+        return 0;
+    }
     else if (firstArgument == "getOwnedTokenProperties")
     {
         if (argc != 2 + 2)
