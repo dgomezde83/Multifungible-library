@@ -215,6 +215,12 @@ class UnitTests
                                             const char * p_address,
                                             const char * p_quantity);
 
+        bool transferSFTVerification(const char * p_dllwalletpath,
+                                            const char * p_password,
+                                            const char * p_tokenID,
+                                            const char * p_address,
+                                            const char * p_quantity);
+
     private:
         const std::string m_configName;
 
