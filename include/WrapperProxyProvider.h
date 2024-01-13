@@ -28,6 +28,8 @@ class WrapperProxyProvider
 
         BigUInt getOwnedNFTorSFTBalance(Address const &address, std::string const &p_collectionID, const uint64_t p_nonce) const;
 
+        BigUInt getOwnedESDTBalance(Address const &address, std::string const &p_collectionID) const;
+
         nlohmann::json getOwnedNFTorSFTInfo(Address const &address, std::string const &p_collectionID, const uint64_t p_nonce) const;
 
         std::map<int,std::string> getCollectionProperties(const std::string &p_collectionID) const;

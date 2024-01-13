@@ -192,13 +192,13 @@ class WalletProvider
                                                 const bool p_canUpgrade,
                                                 const bool p_canAddSpecialRoles) const;
 
-        Transaction buildESDTTokenTransaction(const std::string& p_collectionID, const std::string & p_destinataryAddress, const std::string & p_quantity, const uint32_t p_decimals) const;
+        Transaction buildESDTTokenTransaction(const std::string& p_collectionID, const std::string & p_destinataryAddress, const uint64_t p_quantity, const uint32_t p_decimals) const;
 
         Transaction buildTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress, const std::string & p_quantity) const;
 
         Transaction buildAddBurnSFTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_quantity, const bool p_isAdd) const;
 
-        Transaction buildMintBurnESDTQuantityTransaction(const std::string& p_collectionID, const std::string& p_quantity, const uint32_t p_decimals, const bool p_isAdd) const;
+        Transaction buildMintBurnESDTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_quantity, const uint32_t p_decimals, const bool p_isAdd) const;
 
         Transaction buildWipeNFTTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string& p_ownerAddress) const;
 

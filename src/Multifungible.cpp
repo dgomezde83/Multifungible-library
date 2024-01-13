@@ -441,6 +441,26 @@ returnCodeAndChar Multifungible::getAddressTokenBalance (const char * p_address,
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::getAddressESDTBalance (const char * p_address, const char * p_tokenID)
+{
+    try
+    {
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        BigUInt t_balance = WrapperProxyProvider(clicf.config()).getOwnedESDTBalance(Address(p_address),p_tokenID);
+
+        return Multifungible::transformIntoRCC(0,t_balance.getValue());
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
 returnCodeAndChar Multifungible::issueESDTToken(const char * p_walletName,
                                                 const char * p_password,
                                                 const char * p_esdtName,

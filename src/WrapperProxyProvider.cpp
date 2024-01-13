@@ -151,6 +151,25 @@ BigUInt WrapperProxyProvider::getOwnedNFTorSFTBalance(Address const &address, st
     return BigUInt(balance);
 }
 /*-------------------------------------------------------------------------*
+* Gets the balance of the given token, which is owned by the given address.*
+*-------------------------------------------------------------------------*/
+BigUInt WrapperProxyProvider::getOwnedESDTBalance(Address const &address, std::string const &p_collectionID) const
+{
+    wrapper::http::Client client(m_config.proxyUrl);
+
+    wrapper::http::Result const result = client.get("/address/" + address.getBech32Address() + "/esdt/" + p_collectionID.c_str());
+
+    auto data = getPayLoad(result);
+
+    utility::requireAttribute(data, "tokenData");
+
+    utility::requireAttribute(data["tokenData"], "balance");
+
+    std::string balance = data["tokenData"]["balance"];
+
+    return BigUInt(balance);
+}
+/*-------------------------------------------------------------------------*
 * Gets the information of the given token, which is owned by the given     *
 * address.                                                                 *
 *-------------------------------------------------------------------------*/

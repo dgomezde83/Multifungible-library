@@ -120,6 +120,7 @@ class Multifungible
         static returnCodeAndChar getOwnedTokens (const char * p_address);
         static returnCodeAndChar getOwnedTokenProperties(const char * p_tokenID,const char * p_address);
         static returnCodeAndChar getAddressTokenBalance (const char * p_address, const char * p_tokenID);
+        static returnCodeAndChar getAddressESDTBalance (const char * p_address, const char * p_tokenID);
         static returnCodeAndChar getTokenProperties (const char * p_tokenID);
         static returnCodeAndChar getESDTProperties (const char * p_tokenID);
         static returnCodeAndChar getCollectionProperties(const char * p_collectionID);

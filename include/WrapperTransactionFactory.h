@@ -65,7 +65,6 @@ class WrapperTransactionFactory
 
         std::unique_ptr<ITransactionBuilder> createESDTTransfer(const TokenPayment &tokenPayment,
                                                                    const uint64_t nonce,
-                                                                   std::string const & quantity,
                                                                    const Address &sender,
                                                                    const Address &receiver) const;
 
@@ -121,7 +120,6 @@ class WrapperTransactionFactory
         
         std::unique_ptr<ITransactionBuilder> mintBurnQuantityOfESDTs(const TokenPayment &p_tokenPayment,
                                                                                   const bool p_isMint,
-                                                                                   const std::string & p_supplyToEmmitOrBurn,
                                                                                    const uint64_t nonce,
                                                                                    const Address &sender) const;
 

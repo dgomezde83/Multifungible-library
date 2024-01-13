@@ -399,6 +399,13 @@ extern "C"
     /*-------------------------------------------------------------------------*
     *--------------------------------------------------------------------------*
     *-------------------------------------------------------------------------*/
+    EXPORT RCM CALLING_CONVENTION getAddressESDTBalance(const char * p_address, const char * p_tokenID)
+    {
+        return Multifungible::getAddressESDTBalance(p_address, p_tokenID);
+    }
+    /*-------------------------------------------------------------------------*
+    *--------------------------------------------------------------------------*
+    *-------------------------------------------------------------------------*/
     EXPORT RCM CALLING_CONVENTION getCollectionProperties(const char * p_tokenID)
     {
         return Multifungible::getCollectionProperties(p_tokenID);

@@ -413,7 +413,6 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::addBurnQuantityO
 *-------------------------------------------------------------------------*/
 std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::mintBurnQuantityOfESDTs(const TokenPayment &p_tokenPayment,
                                                                                   const bool p_isMint,
-                                                                                   const std::string & p_supplyToEmmitOrBurn,
                                                                                    const uint64_t nonce,
                                                                                    const Address &sender) const
 {
@@ -423,7 +422,7 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::mintBurnQuantity
 
     SCArguments args;
     args.add(p_tokenPayment.tokenIdentifier());
-    args.add(BigUInt(p_supplyToEmmitOrBurn));
+    args.add(p_tokenPayment.value());
 
     std::string data = (p_isMint ? ESDT_MINTQUANTITY_PREFIX : ESDT_BURNQUANTITY_PREFIX) + args.asOnData();
 
@@ -599,7 +598,6 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::addURI(const Tok
 *-------------------------------------------------------------------------*/
 std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createESDTTransfer(const TokenPayment &tokenPayment,
                                                                                    const uint64_t nonce,
-                                                                                   std::string const & quantity,
                                                                                    const Address &sender,
                                                                                    const Address &receiver) const
 {

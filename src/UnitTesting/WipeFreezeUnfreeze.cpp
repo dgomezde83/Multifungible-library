@@ -85,7 +85,6 @@ TEST_F(FixtureOverUnitTests, wipeESDTVerificationSuccessful) {
         FAIL();
     }
 
-    std::cout << "Tiken: " << t_rccIssueCollection.message << std::endl;
     returnCodeAndChar t_rccFreeze = Multifungible::freezeESDT(MULTIFUNGIBLE_MAINWALLET,
                                                                               WALLETPASSWORD,
                                                                               t_rccIssueCollection.message,
@@ -95,7 +94,6 @@ TEST_F(FixtureOverUnitTests, wipeESDTVerificationSuccessful) {
         std::cout << t_rccFreeze.message << std::endl;
         FAIL();
     }
-    std::cout << "Freeze: " << t_rccIssueCollection.message << std::endl;
 
     EXPECT_EQ(m_ut->wipeVerification(MULTIFUNGIBLE_MAINWALLET,
                                            WALLETPASSWORD,
@@ -361,8 +359,8 @@ TEST_F(FixtureOverUnitTests, freezeVerificationSuccessful) {
                                                                                  "");
     if (t_rccIssueSFTToken.retCode)
     {
-        FAIL();
         std::cout << t_rccIssueSFTToken.message << std::endl;
+        FAIL();
     }
 
     EXPECT_EQ(m_ut->freezeUnfreezeVerification(MULTIFUNGIBLE_MAINWALLET,
@@ -444,8 +442,8 @@ TEST_F(FixtureOverUnitTests, unfreezeVerificationSuccessful) {
                                                                                  "");
     if (t_rccIssueNFTToken.retCode)
     {
-        FAIL();
         std::cout << t_rccIssueNFTToken.message << std::endl;
+        FAIL();
     }
 
     //First we freeze

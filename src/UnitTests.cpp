@@ -621,13 +621,12 @@ bool UnitTests::wipeVerification(const char * p_dllwalletpath,
     returnCodeAndChar t_rccWipeToken;
     if (p_isESDT)
     {
-        std::cout << "Wiping ESDT: " << p_tokenID << std::endl;
         t_rccWipeToken = Multifungible::wipeESDT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
     }
+    else
     {
         t_rccWipeToken = Multifungible::wipeNFT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
     }
-
     if (t_rccWipeToken.retCode)
     {
         throw std::runtime_error(t_rccWipeToken.message);
@@ -695,6 +694,10 @@ bool UnitTests::freezeUnfreezeVerification(const char * p_dllwalletpath,
     }
 
     returnCodeAndChar t_oldFreezeUnfreezeState = Multifungible::getCollectionProperties(t_collectionID.c_str());
+    if (t_oldFreezeUnfreezeState.retCode)
+    {
+        throw std::runtime_error(t_oldFreezeUnfreezeState.message);
+    }
     bool t_isCanFreezeOld = isPropertyGivenToToken(t_oldFreezeUnfreezeState.message,"CanFreeze");
 
     if (!t_isCanFreezeOld)
@@ -714,6 +717,7 @@ bool UnitTests::freezeUnfreezeVerification(const char * p_dllwalletpath,
             t_rccFreezeUnfreezeToken = Multifungible::unfreezeNFT(p_dllwalletpath, p_password, p_tokenID, p_destinationAddress);
         }
     }
+    else
     {
         if(p_isFreeze)
         {
@@ -1646,6 +1650,112 @@ bool UnitTests::transferEGLDVerification(const char * p_dllwalletpath,
     }
 
     if ((t_oldBalanceSource - t_newBalanceSource - BigUInt("50000000000000")) == BigUInt(t_quantity) && t_resultingAbsBalance == BigUInt(t_quantity))
+    {
+        return true;
+    }
+    return false;
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+bool UnitTests::transferESDTVerification(const char * p_dllwalletpath,
+                                            const char * p_password,
+                                            const char * p_tokenID,
+                                            const char * p_address,
+                                            const char * p_quantity)
+{
+    //Transform the quantity just like the method does
+    char num_buf[strlen(p_quantity) + 1];
+    strcpy(num_buf, p_quantity);
+
+    // Replace comma with dot (if necessary) to ensure correct parsing
+    for (int i = 0; i < strlen(num_buf); i++) {
+        if (num_buf[i] == ',') {
+            num_buf[i] = '.';
+        }
+    }
+
+    returnCodeAndChar t_tokenInfo = Multifungible::getESDTProperties(p_tokenID);
+    if (t_tokenInfo.retCode)
+    {
+        std::cout << t_tokenInfo.message << std::endl;
+        throw std::runtime_error("Error getting token info");
+    }
+    nlohmann::json t_parsedTokenInfo = nlohmann::json::parse(t_tokenInfo.message);
+    uint32_t t_esdtDecimals = t_parsedTokenInfo["decimals"];
+    double num = atof(num_buf);
+    double result = num * pow(10, t_esdtDecimals);
+    uint64_t t_quantity = (uint64_t) result;
+
+    returnCodeAndChar t_rccLoad = Multifungible::loadWallet(p_dllwalletpath,p_password);
+    if (t_rccLoad.retCode)
+    {
+        std::cout << t_rccLoad.message << std::endl;
+        throw std::runtime_error("Error retrieving wallet");
+    }
+
+    CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+    Network nw = MULTIFUNGIBLE_NETWORK;
+    clicf.setNetwork(nw);
+
+    //Get old token balance
+    returnCodeAndChar t_oldBalanceSourceRcc = Multifungible::getAddressESDTBalance(t_rccLoad.message,p_tokenID);
+    returnCodeAndChar t_oldBalanceDestinationRcc = Multifungible::getAddressESDTBalance(t_rccLoad.message,p_tokenID);
+    if (t_oldBalanceSourceRcc.retCode)
+    {
+        std::cout << t_oldBalanceSourceRcc.message << std::endl;
+        throw std::runtime_error("Error retrieving old source balance");
+    }
+    if (t_oldBalanceDestinationRcc.retCode)
+    {
+        std::cout << t_oldBalanceDestinationRcc.message << std::endl;
+        throw std::runtime_error("Error retrieving old destination balance");
+    }
+
+    BigUInt t_oldBalanceSource (std::string(t_oldBalanceSourceRcc.message));
+    BigUInt t_oldBalanceDestination (std::string(t_oldBalanceDestinationRcc.message));
+
+    //Verify how much EGLD we had before
+    returnCodeAndChar t_rccSendEGLD = Multifungible::ESDTTransaction(p_dllwalletpath,
+                                                                        p_password,
+                                                                        p_address,
+                                                                        p_tokenID,
+                                                                        p_quantity);
+    if (t_rccSendEGLD.retCode)
+    {
+        std::cout << t_rccSendEGLD.message << std::endl;
+        throw std::runtime_error("Error sending token");
+    }
+
+    //Get new token balance
+     returnCodeAndChar t_newBalanceSourceRcc = Multifungible::getAddressESDTBalance(t_rccLoad.message,p_tokenID);
+    returnCodeAndChar t_newBalanceDestinationRcc = Multifungible::getAddressESDTBalance(t_rccLoad.message,p_tokenID);
+    if (t_newBalanceSourceRcc.retCode)
+    {
+        std::cout << t_newBalanceSourceRcc.message << std::endl;
+        throw std::runtime_error("Error retrieving new source balance");
+    }
+    if (t_newBalanceDestinationRcc.retCode)
+    {
+        std::cout << t_newBalanceDestinationRcc.message << std::endl;
+        throw std::runtime_error("Error retrieving new destination balance");
+    }
+    BigUInt t_newBalanceSource (t_newBalanceSourceRcc.message);
+    BigUInt t_newBalanceDestination (t_newBalanceDestinationRcc.message);
+
+    //Take the transaction fee into account, usually 0.00005 EGLD
+
+    BigUInt t_resultingAbsBalance(0);
+    if (t_newBalanceDestination > t_oldBalanceDestination)
+    {
+        t_resultingAbsBalance = t_newBalanceDestination - t_oldBalanceDestination;
+    }
+    else
+    {
+        t_resultingAbsBalance = t_oldBalanceDestination - t_newBalanceDestination;
+    }
+
+    if ((t_oldBalanceSource - t_newBalanceSource) == BigUInt(t_quantity) && t_resultingAbsBalance == BigUInt(t_quantity))
     {
         return true;
     }

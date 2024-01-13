@@ -167,19 +167,18 @@ Transaction WalletProvider::buildAddBurnSFTQuantityTransaction(const std::string
 /*-------------------------------------------------------------------------*
 * Create a transaction for adding a quantity of a token.                   *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildMintBurnESDTQuantityTransaction(const std::string& p_collectionID, const std::string& p_quantity, const uint32_t p_decimals, const bool p_isAdd) const
+Transaction WalletProvider::buildMintBurnESDTQuantityTransaction(const std::string& p_collectionID, const uint64_t p_quantity, const uint32_t p_decimals, const bool p_isAdd) const
 {
     if(!p_collectionID.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
     }
-    if(!p_quantity.size())
+    if(!p_quantity)
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_QUANTITY_MISSING);
     }
-    std::string t_quantity = p_quantity + std::string(p_decimals, '0');
-    TokenPayment t_tp = TokenPayment::fungibleFromAmount(p_collectionID,t_quantity,p_decimals);
-    Transaction t_ts = m_wpf.mintBurnQuantityOfESDTs(t_tp, p_isAdd, t_quantity, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    TokenPayment t_tp = TokenPayment::fungibleFromBigUInt(p_collectionID,BigUInt(p_quantity),p_decimals);
+    Transaction t_ts = m_wpf.mintBurnQuantityOfESDTs(t_tp, p_isAdd, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -317,13 +316,13 @@ Transaction WalletProvider::buildMoneyTransaction(const std::string & p_destinat
 /*-------------------------------------------------------------------------*
 * Create a transaction for sending an ESDT token to another address.       *
 *-------------------------------------------------------------------------*/
-Transaction WalletProvider::buildESDTTokenTransaction(const std::string& p_collectionID, const std::string & p_destinataryAddress, const std::string & p_amount, const uint32_t p_decimals) const
+Transaction WalletProvider::buildESDTTokenTransaction(const std::string& p_collectionID, const std::string & p_destinataryAddress, const uint64_t p_amount, const uint32_t p_decimals) const
 {
     if(!p_collectionID.size())
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
     }
-    if(!p_amount.size())
+    if(!p_amount)
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_AMOUNT_MISSING);
     }
@@ -331,9 +330,8 @@ Transaction WalletProvider::buildESDTTokenTransaction(const std::string& p_colle
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    std::string t_quantity = p_amount + std::string(p_decimals, '0');
-    TokenPayment t_tp = TokenPayment::fungibleFromAmount(p_collectionID,t_quantity,p_decimals);
-    Transaction t_ts = m_wpf.createESDTTransfer(t_tp,m_wg->getAccount().getNonce(),p_amount,m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
+    TokenPayment t_tp = TokenPayment::fungibleFromBigUInt(p_collectionID,BigUInt(p_amount),p_decimals);
+    Transaction t_ts = m_wpf.createESDTTransfer(t_tp,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -1125,12 +1123,27 @@ void WalletProvider::addSFTQuantity(const std::string& p_collectionID, const uin
 *-------------------------------------------------------------------------*/
 void WalletProvider::mintESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity, const uint32_t p_decimals) const
 {
-    if (__SIMULATE__)
-    {
-        pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, p_quantity, p_decimals, true),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    //Transform the EGLD amount in quintillion format
+    char num_buf[p_quantity.size() + 1];
+    strcpy(num_buf, p_quantity.c_str());
+
+    // Replace comma with dot (if necessary) to ensure correct parsing
+    for (int i = 0; i < strlen(num_buf); i++) {
+        if (num_buf[i] == ',') {
+            num_buf[i] = '.';
+        }
     }
 
-    std::string t_transactionHash = pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, p_quantity, p_decimals, true),false).value();
+    double num = atof(num_buf);
+    double result = num * pow(10, p_decimals);
+    uint64_t t_quantity = (uint64_t) result;
+
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, t_quantity, p_decimals, true),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, t_quantity, p_decimals, true),false).value();
 
     waitTillSCTransactionIsCompleted(t_transactionHash);
 
@@ -1174,12 +1187,27 @@ void WalletProvider::burnSFTQuantity(const std::string& p_collectionID, const ui
 *-------------------------------------------------------------------------*/
 void WalletProvider::burnESDTQuantity(const std::string& p_collectionID, const std::string& p_quantity, const uint32_t p_decimals) const
 {
-    if (__SIMULATE__)
-    {
-        pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, p_quantity, p_decimals, false),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    //Transform the EGLD amount in quintillion format
+    char num_buf[p_quantity.size() + 1];
+    strcpy(num_buf, p_quantity.c_str());
+
+    // Replace comma with dot (if necessary) to ensure correct parsing
+    for (int i = 0; i < strlen(num_buf); i++) {
+        if (num_buf[i] == ',') {
+            num_buf[i] = '.';
+        }
     }
 
-    std::string t_transactionHash = pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, p_quantity, p_decimals, false),false).value();
+    double num = atof(num_buf);
+    double result = num * pow(10, p_decimals);
+    uint64_t t_quantity = (uint64_t) result;
+
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, t_quantity, p_decimals, false),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildMintBurnESDTQuantityTransaction(p_collectionID, t_quantity, p_decimals, false),false).value();
 
     waitTillSCTransactionIsCompleted(t_transactionHash);
 
@@ -1243,7 +1271,7 @@ void WalletProvider::wipeESDT(const std::string& p_collectionID, const std::stri
         }
     }
 
-    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("wipeNFT"));
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("wipeESDT"));
 }
 /*-------------------------------------------------------------------------*
 * Freezes the given token.                                                 *
@@ -1563,12 +1591,27 @@ void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, con
 *-------------------------------------------------------------------------*/
 void WalletProvider::ESDTTransaction(const std::string& p_destinationAddress, const std::string& p_collectionID, const std::string& p_amount, const uint32_t p_decimals) const
 {
-    if (__SIMULATE__)
-    {
-        pushTransaction(buildESDTTokenTransaction(p_collectionID, p_destinationAddress, p_amount, p_decimals),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    //Transform the EGLD amount in quintillion format
+    char num_buf[p_amount.size() + 1];
+    strcpy(num_buf, p_amount.c_str());
+
+    // Replace comma with dot (if necessary) to ensure correct parsing
+    for (int i = 0; i < strlen(num_buf); i++) {
+        if (num_buf[i] == ',') {
+            num_buf[i] = '.';
+        }
     }
 
-    std::string t_transactionHash = pushTransaction(buildESDTTokenTransaction(p_collectionID, p_destinationAddress, p_amount, p_decimals),false).value();
+    double num = atof(num_buf);
+    double result = num * pow(10, p_decimals);
+    uint64_t t_quantity = (uint64_t) result;
+
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildESDTTokenTransaction(p_collectionID, p_destinationAddress, t_quantity, p_decimals),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildESDTTokenTransaction(p_collectionID, p_destinationAddress, t_quantity, p_decimals),false).value();
 
     waitTillSCTransactionIsCompleted(t_transactionHash);
 
