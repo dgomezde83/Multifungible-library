@@ -164,8 +164,8 @@ set(MyDLL_TEST_FILES
     #src/UnitTesting/RemoveRolesTests.cpp
     #src/UnitTesting/UpgradeAttributesTests.cpp
     #src/UnitTesting/transferEGLDTests.cpp
-    #src/UnitTesting/transferESDTTests.cpp
-    src/UnitTesting/transferSFTTests.cpp
+    src/UnitTesting/transferESDTTests.cpp
+    #src/UnitTesting/transferSFTTests.cpp
     #src/UnitTesting/issueESDTTest.cpp
 )
 

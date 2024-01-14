@@ -1678,7 +1678,7 @@ bool UnitTests::transferESDTVerification(const char * p_dllwalletpath,
     returnCodeAndChar t_tokenInfo = Multifungible::getESDTProperties(p_tokenID);
     if (t_tokenInfo.retCode)
     {
-        std::cout << t_tokenInfo.message << std::endl;
+        std::cout << t_tokenInfo.retCode << std::endl;
         throw std::runtime_error("Error getting token info");
     }
     nlohmann::json t_parsedTokenInfo = nlohmann::json::parse(t_tokenInfo.message);
@@ -1719,12 +1719,11 @@ bool UnitTests::transferESDTVerification(const char * p_dllwalletpath,
                                                                         p_quantity);
     if (t_rccSendEGLD.retCode)
     {
-        std::cout << t_rccSendEGLD.message << std::endl;
-        throw std::runtime_error("Error sending token");
+        throw std::runtime_error(t_rccSendEGLD.message);
     }
 
     //Get new token balance
-     returnCodeAndChar t_newBalanceSourceRcc = Multifungible::getAddressESDTBalance(t_rccLoad.message,p_tokenID);
+    returnCodeAndChar t_newBalanceSourceRcc = Multifungible::getAddressESDTBalance(t_rccLoad.message,p_tokenID);
     returnCodeAndChar t_newBalanceDestinationRcc = Multifungible::getAddressESDTBalance(t_rccLoad.message,p_tokenID);
     if (t_newBalanceSourceRcc.retCode)
     {

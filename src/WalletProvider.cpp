@@ -777,16 +777,7 @@ std::string WalletProvider::issueESDTToken(const std::string& p_esdtName,
     bool t_esdtOK = false;
     std::string t_esdtName;
 
-    int decimalNumber = atoi(p_initialSupply.c_str()); // Convert string to int
-    std::stringstream ss;
-    ss << std::hex << decimalNumber;
-    std::string t_nbInitialSupplyHex = ss.str();
-
-    // Check if the length of the string is odd
-    if (t_nbInitialSupplyHex.length() % 2 != 0) {
-        // Prepend '0' to make the length even
-        t_nbInitialSupplyHex = "0" + t_nbInitialSupplyHex;
-    }
+    std::string t_nbInitialSupplyHex = BigUInt(p_initialSupply).getHexValue();
 
     for (const std::string & p_transactionData : getSCTransactionData(t_transactionHash))
     {
