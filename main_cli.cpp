@@ -521,6 +521,15 @@ int main(int argc, char** argv)
         }
         t_rcc = Multifungible::getAddressTokenBalance(argv[2],argv[3]);
     }
+    else if (firstArgument == "getAddressESDTBalance")
+    {
+        if (argc != 2 + 2)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        t_rcc = Multifungible::getAddressESDTBalance(argv[2],argv[3]);
+    }
     else if (firstArgument == "getTokenProperties")
     {
         if (argc != 2 + 1)

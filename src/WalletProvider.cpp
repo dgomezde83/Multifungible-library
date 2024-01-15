@@ -61,15 +61,15 @@ Transaction WalletProvider::buildESDTEmissionTransaction(const std::string& p_es
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_INVALID_TICKER_LENGTH);
     }
-    if(!StringAlphaAndUpper::isAlphanumeric(p_esdtName))
+    if(!WalletFunctions::isAlphanumeric(p_esdtName))
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TOKEN_NOT_ALPHA);
     }
-    if(!StringAlphaAndUpper::isAlphanumeric(p_esdtTicker))
+    if(!WalletFunctions::isAlphanumeric(p_esdtTicker))
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TICKER_NOT_ALPHA);
     }
-    if(!StringAlphaAndUpper::isUpperCase(p_esdtTicker))
+    if(!WalletFunctions::isUpperCase(p_esdtTicker))
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TICKER_NOT_UPPER);
     }
@@ -117,15 +117,15 @@ Transaction WalletProvider::buildCollectionEmissionTransaction(const std::string
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_INVALID_TICKER_LENGTH);
     }
-    if(!StringAlphaAndUpper::isAlphanumeric(p_nftName))
+    if(!WalletFunctions::isAlphanumeric(p_nftName))
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TOKEN_NOT_ALPHA);
     }
-    if(!StringAlphaAndUpper::isAlphanumeric(p_nftTicker))
+    if(!WalletFunctions::isAlphanumeric(p_nftTicker))
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TICKER_NOT_ALPHA);
     }
-    if(!StringAlphaAndUpper::isUpperCase(p_nftTicker))
+    if(!WalletFunctions::isUpperCase(p_nftTicker))
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_TICKER_NOT_UPPER);
     }
@@ -1582,20 +1582,7 @@ void WalletProvider::NFTTransaction(const std::string& p_destinationAddress, con
 *-------------------------------------------------------------------------*/
 void WalletProvider::ESDTTransaction(const std::string& p_destinationAddress, const std::string& p_collectionID, const std::string& p_amount, const uint32_t p_decimals) const
 {
-    //Transform the EGLD amount in quintillion format
-    char num_buf[p_amount.size() + 1];
-    strcpy(num_buf, p_amount.c_str());
-
-    // Replace comma with dot (if necessary) to ensure correct parsing
-    for (int i = 0; i < strlen(num_buf); i++) {
-        if (num_buf[i] == ',') {
-            num_buf[i] = '.';
-        }
-    }
-
-    double num = atof(num_buf);
-    double result = num * pow(10, p_decimals);
-    uint64_t t_quantity = (uint64_t) result;
+    uint64_t t_quantity = WalletFunctions::getNumberFromDecimalString(p_amount, p_decimals);
 
     if (__SIMULATE__)
     {
@@ -1667,20 +1654,7 @@ void WalletProvider::SFTTransaction(const std::string& p_destinationAddress, con
 *-------------------------------------------------------------------------*/
 void WalletProvider::EGLDTransaction(const std::string& p_destinationAddress, const std::string& p_amount) const
 {
-    //Transform the EGLD amount in quintillion format
-    char num_buf[p_amount.size() + 1];
-    strcpy(num_buf, p_amount.c_str());
-
-    // Replace comma with dot (if necessary) to ensure correct parsing
-    for (int i = 0; i < strlen(num_buf); i++) {
-        if (num_buf[i] == ',') {
-            num_buf[i] = '.';
-        }
-    }
-
-    double num = atof(num_buf);
-    double result = num * pow(10, 18);
-    uint64_t t_quantity = (uint64_t) result;
+    uint64_t t_quantity = WalletFunctions::getNumberFromDecimalString(p_amount, 18);
 
     if (__SIMULATE__)
     {

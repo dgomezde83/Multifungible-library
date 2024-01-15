@@ -38,7 +38,7 @@
 //Not used for now
 #define MULTIVERSX_NOTENOUGHBALANCEOFTOKEN(x) std::string("Not enough balance of NFT ") + std::string(x);
 
-namespace StringAlphaAndUpper
+namespace WalletFunctions
 {
 inline bool isAlphanumeric(const std::string& p_word)
 {
@@ -66,6 +66,24 @@ inline bool isUpperCase(const std::string& p_word)
         }
     }
     return true;
+}
+
+inline uint64_t getNumberFromDecimalString(const std::string& p_amount, const uint32_t p_decimals)
+{
+   //Transform the EGLD amount in quintillion format
+    char num_buf[p_amount.size() + 1];
+    strcpy(num_buf, p_amount.c_str());
+
+    // Replace comma with dot (if necessary) to ensure correct parsing
+    for (int i = 0; i < strlen(num_buf); i++) {
+        if (num_buf[i] == ',') {
+            num_buf[i] = '.';
+        }
+    }
+
+    double num = atof(num_buf);
+    double result = num * pow(10, p_decimals);
+    return (uint64_t) result;
 }
 }
 

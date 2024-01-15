@@ -63,7 +63,7 @@ std::pair<std::string,uint64_t> Multifungible::getCollectionIDAndNonceFromTokenI
     //Verify if each of the tokens is alphanumeric
     for (const std::string & t_element: t_vectorCollectionSeedNonce)
     {
-        if (!StringAlphaAndUpper::isAlphanumeric(t_element))
+        if (!WalletFunctions::isAlphanumeric(t_element))
         {
            throw std::runtime_error(MULTIFUNGIBLE_ERROR_DECODING_TOKEN);
         }
