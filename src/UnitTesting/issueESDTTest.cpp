@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
 
-TEST_F(FixtureOverUnitTests, issueESDTVerification) {
+TEST_F(FixtureOverUnitTests, issueESDTVerification1) {
     EXPECT_EQ(m_ut->issueESDTVerification(MULTIFUNGIBLE_MAINWALLET,
                                                    WALLETPASSWORD,
                                                    "collectionTest",
@@ -12,6 +12,50 @@ TEST_F(FixtureOverUnitTests, issueESDTVerification) {
                                                    "10000",
                                                    "2",
                                                    true,true,true,true,true,true), true);
+}
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
+TEST_F(FixtureOverUnitTests, issueESDTVerification2) {
+    EXPECT_EQ(m_ut->issueESDTVerification(MULTIFUNGIBLE_MAINWALLET,
+                                                   WALLETPASSWORD,
+                                                   "collectionTest",
+                                                   "CTST",
+                                                   "200000000",
+                                                   "18",
+                                                   true,true,true,true,true,true), true);
+}
+
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
+
+TEST_F(FixtureOverUnitTests, issueESDTVerification3) {
+    try
+    {
+    EXPECT_EQ(m_ut->issueESDTVerification(MULTIFUNGIBLE_MAINWALLET,
+                                                   WALLETPASSWORD,
+                                                   "collectionTest",
+                                                   "CTST",
+                                                   "123,456",
+                                                   "3",
+                                                   true,true,true,true,true,true), true);
+    FAIL();
+    }
+    catch( const std::runtime_error& err )
+    {
+        // check exception
+        if (__SIMULATE__)
+        {
+            SUCCEED();
+        }
+        else
+        {
+            ASSERT_STRCASEEQ( "Invalid value: 123,456, reason: Error: Not a digit in base 10: ','", err.what());
+        }
+    }
 }
 
 /*-------------------------------------------------------------------------*

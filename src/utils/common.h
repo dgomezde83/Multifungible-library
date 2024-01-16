@@ -63,16 +63,23 @@ inline std::vector<std::filesystem::path> splitPath(const std::filesystem::path&
 
 // To merge the executable path with a provided path, replacing part of the executable path with the provided path when they share common directories.
 inline std::filesystem::path mergePaths(const std::filesystem::path& executablePath, const std::filesystem::path& providedPath) {
-    auto execPathComponents = splitPath(executablePath);
-    auto providedPathComponents = splitPath(providedPath);
+    std::vector<std::filesystem::path> execPathComponents = splitPath(executablePath);
+    std::vector<std::filesystem::path> providedPathComponents = splitPath(providedPath);
 
     // Find the point where providedPath can replace a part of executablePath
     size_t replacementIndex = execPathComponents.size();
+    bool t_found = false;
     for (size_t i = 0; i < providedPathComponents.size(); ++i) {
-        auto it = std::find(execPathComponents.begin(), execPathComponents.end(), providedPathComponents[i]);
-        if (it != execPathComponents.end()) {
-            replacementIndex = std::distance(execPathComponents.begin(), it);
-            break;
+        if (t_found)
+            {break;}
+        for (std::vector<std::filesystem::path>::iterator it = execPathComponents.begin(); it != execPathComponents.end(); it++)
+        {
+            if (*it == providedPathComponents[i])
+            {
+                replacementIndex = std::distance(execPathComponents.begin(), it);
+                t_found = true;
+                break;
+            }
         }
     }
 

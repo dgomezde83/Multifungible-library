@@ -135,38 +135,38 @@ set(MyDLL_TEST_FILES
     mainMultifungible.cpp
     src/UnitTests.cpp
     include/UnitTesting/UnitTestsInfo.h
-    #src/UnitTesting/AddQuantityTests.cpp
-    #src/UnitTesting/AddRolesTests.cpp
-    #src/UnitTesting/AddURIVerification.cpp
-    #src/UnitTesting/buildProofOfOwnershipOfKeyPair.cpp
-    #src/UnitTesting/BurnQuantityTests.cpp
-    #src/UnitTesting/getAddressTokenBalanceTest.cpp
-    #src/UnitTesting/getCollectionPropertiesTests.cpp
-    #src/UnitTesting/getEmittedCollectionsTest.cpp
-    #src/UnitTesting/getIssuerAddressTest.cpp
-    #src/UnitTesting/getOwnedTokenPropertiesTests.cpp
-    #src/UnitTesting/getOwnedTokensTests.cpp
-    #src/UnitTesting/getRolesAndAddressesTests.cpp
-    #src/UnitTesting/getTokenPropertiesTests.cpp
-    #src/UnitTesting/IssueNFTCollectionTests.cpp
-    #src/UnitTesting/IssueNFTTokenTests.cpp
-    #src/UnitTesting/IssueSFTCollectionTests.cpp
-    #src/UnitTesting/IssueSFTTokenTests.cpp
-    #src/UnitTesting/stopCreationTests.cpp
-    #src/UnitTesting/TokenDecoderTests.cpp
-    #src/UnitTesting/TransferCreationRoles.cpp
-    #src/UnitTesting/transferOwnershipTests.cpp
-    #src/UnitTesting/TransferTokenRoles.cpp
-    #src/UnitTesting/UpdatePropertiesTests.cpp
-    #src/UnitTesting/WalletGeneratorTests.cpp
-    #src/UnitTesting/WipeFreezeUnfreeze.cpp
-    #src/UnitTesting/PauseUnpauseTransactionsTests.cpp
-    #src/UnitTesting/RemoveRolesTests.cpp
-    #src/UnitTesting/UpgradeAttributesTests.cpp
-    #src/UnitTesting/transferEGLDTests.cpp
+    src/UnitTesting/AddQuantityTests.cpp
+    src/UnitTesting/AddRolesTests.cpp
+    src/UnitTesting/AddURIVerification.cpp
+    src/UnitTesting/buildProofOfOwnershipOfKeyPair.cpp
+    src/UnitTesting/BurnQuantityTests.cpp
+    src/UnitTesting/getAddressTokenBalanceTest.cpp
+    src/UnitTesting/getCollectionPropertiesTests.cpp
+    src/UnitTesting/getEmittedCollectionsTest.cpp
+    src/UnitTesting/getIssuerAddressTest.cpp
+    src/UnitTesting/getOwnedTokenPropertiesTests.cpp
+    src/UnitTesting/getOwnedTokensTests.cpp
+    src/UnitTesting/getRolesAndAddressesTests.cpp
+    src/UnitTesting/getTokenPropertiesTests.cpp
+    src/UnitTesting/IssueNFTCollectionTests.cpp
+    src/UnitTesting/IssueNFTTokenTests.cpp
+    src/UnitTesting/IssueSFTCollectionTests.cpp
+    src/UnitTesting/IssueSFTTokenTests.cpp
+    src/UnitTesting/stopCreationTests.cpp
+    src/UnitTesting/TokenDecoderTests.cpp
+    src/UnitTesting/TransferCreationRoles.cpp
+    src/UnitTesting/transferOwnershipTests.cpp
+    src/UnitTesting/TransferTokenRoles.cpp
+    src/UnitTesting/UpdatePropertiesTests.cpp
+    src/UnitTesting/WalletGeneratorTests.cpp
+    src/UnitTesting/WipeFreezeUnfreeze.cpp
+    src/UnitTesting/PauseUnpauseTransactionsTests.cpp
+    src/UnitTesting/RemoveRolesTests.cpp
+    src/UnitTesting/UpgradeAttributesTests.cpp
+    src/UnitTesting/transferEGLDTests.cpp
     src/UnitTesting/transferESDTTests.cpp
-    #src/UnitTesting/transferSFTTests.cpp
-    #src/UnitTesting/issueESDTTest.cpp
+    src/UnitTesting/transferSFTTests.cpp
+    src/UnitTesting/issueESDTTest.cpp
 )
 
 set(SDK_TEST_FILES
