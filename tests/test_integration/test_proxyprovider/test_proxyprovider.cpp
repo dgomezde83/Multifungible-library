@@ -317,8 +317,7 @@ TEST_F(LocalTestnetProxyProviderTxFixture, esdt_issue_transfer_getESDTBalance)
     issueESDT("Alice", "ALC", BigUInt(123), 0);
     issueESDT("Bob", "BOB", BigUInt(321), 0, ESDTProperties{
             .canFreeze = true,
-            .canWipe = true,
-            .canMint = true});
+            .canWipe = true});
 
     // Wait for meta to transfer esdt to account in shard
     wait(TIME_CROSS_SHARD_EXECUTION);

@@ -157,6 +157,15 @@ int main(int argc, char** argv)
     }
     if (firstArgument == "createWallet")
     {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: createWallet\n";
+            std::cout << "Description: Creates an encrypted JSON wallet file.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  1. filePath - The file path for the new wallet.\n";
+            std::cout << "  2. password - The password for wallet encryption.\n";
+            std::cout << "Returns: A structure with a return code and the wallet's public address.\n";
+            return 0;
+        }
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -169,6 +178,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "loadWallet")
     {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: loadWallet\n";
+            std::cout << "Description: Loads and decrypts a JSON wallet file from a specified path.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  1. filePath - The file path of the wallet to be loaded.\n";
+            std::cout << "  2. password - The password for wallet decryption.\n";
+            std::cout << "Returns: A structure with a return code and the wallet's public address.\n";
+            return 0;
+        }
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
