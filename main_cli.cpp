@@ -161,8 +161,7 @@ int main(int argc, char** argv)
             std::cout << "Function: createWallet\n";
             std::cout << "Description: Creates an encrypted JSON wallet file.\n";
             std::cout << "Arguments:\n";
-            std::cout << "  1. filePath - The file path for the new wallet.\n";
-            std::cout << "  2. password - The password for wallet encryption.\n";
+            std::cout << "  - filePath - The file path for the new wallet.\n";
             std::cout << "Returns: A structure with a return code and the wallet's public address.\n";
             return 0;
         }
@@ -182,8 +181,7 @@ int main(int argc, char** argv)
             std::cout << "Function: loadWallet\n";
             std::cout << "Description: Loads and decrypts a JSON wallet file from a specified path.\n";
             std::cout << "Arguments:\n";
-            std::cout << "  1. filePath - The file path of the wallet to be loaded.\n";
-            std::cout << "  2. password - The password for wallet decryption.\n";
+            std::cout << "  - filePath - The file path of the wallet to be loaded.\n";
             std::cout << "Returns: A structure with a return code and the wallet's public address.\n";
             return 0;
         }
@@ -198,6 +196,19 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "issueESDTToken")
     {
+        if (argc == 13 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: issueESDTToken\n";
+            std::cout << "Description: Issues an ESDT with specific attributes and configurable boolean properties.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - ESDT name\n";
+            std::cout << "  - ESDT Ticker\n";
+            std::cout << "  - Initial supply\n";
+            std::cout << "  - Decimals\n";
+            std::cout << "  - Each Boolean Property as a separate argument: canFreeze, canWipe, canPause, canChangeOwner, canUpgrade, canAddSpecialRoles\n";
+            std::cout << "Returns: ESDT ID or error message.\n";
+            return 0;
+        }
         if (argc != 2 + 11) 
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -214,6 +225,17 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "issueSFTCollection")
     {
+        if (argc == 12 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: issueSFTCollection\n";
+            std::cout << "Description: Issues an SFT collection with specific attributes and configurable boolean properties.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Collection Name\n";
+            std::cout << "  - Ticker\n";
+            std::cout << "  - Each Boolean Property as a separate argument: canFreeze, canWipe, canPause, canTransferNFTCreateRole, canChangeURI, canAddRoles, canTransferOwnership\n";
+            std::cout << "Returns: Collection ID or error message.\n";
+            return 0;
+        }
         if (argc != 2 + 10) 
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -231,6 +253,17 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "issueNFTCollection")
     {
+        if (argc == 12 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: issueNFTCollection\n";
+            std::cout << "Description: Issues a Non-Fungible Token (NFT) collection with customizable properties.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Collection Name\n";
+            std::cout << "  - Ticker\n";
+            std::cout << "  - Boolean Properties (one per argument): canFreeze, canWipe, canPause, canTransferNFTCreateRole, canChangeURI, canAddRoles, canTransferOwnership\n";
+            std::cout << "Returns: Collection ID or error message upon operation completion.\n";
+            return 0;
+        }
         if (argc != 2 + 10)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -248,6 +281,20 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "issueSemiFungibleToken")
     {
+        if (argc == 9 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: issueSemiFungibleToken\n";
+            std::cout << "Description: Issues a new Semi-Fungible Token within an existing collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Collection ID\n";
+            std::cout << "  - Token Name\n";
+            std::cout << "  - Quantity\n";
+            std::cout << "  - Metadata\n";
+            std::cout << "  - Royalties\n";
+            std::cout << "  - Properties (Attributes)\n";
+            std::cout << "Returns: Token ID upon successful issuance or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 7)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -258,6 +305,19 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "issueNonFungibleToken")
     {
+        if (argc == 8 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: issueNonFungibleToken\n";
+            std::cout << "Description: Issues a Non-Fungible Token (NFT) within an existing collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Collection ID\n";
+            std::cout << "  - Token Identifier\n";
+            std::cout << "  - Token Name\n";
+            std::cout << "  - Metadata\n";
+            std::cout << "  - Royalties\n";
+            std::cout << "Returns: Token ID upon successful issuance or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 6)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -268,6 +328,17 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "addCollectionRole") //For ESDT and NFT/SFT
     {
+        if (argc == 6 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: addCollectionRole\n";
+            std::cout << "Description: Assigns a specific role to a user within a collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Collection ID\n";
+            std::cout << "  - Address: Blockchain address of the user to assign the role.\n";
+            std::cout << "  - Role: Specific role to assign.\n";
+            std::cout << "Returns: A success message or an error description.\n";
+            return 0;
+        }
         if (argc != 2 + 4)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -278,6 +349,17 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "removeCollectionRole") //For ESDT and NFT/SFT
     {
+        if (argc == 6 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: removeCollectionRole\n";
+            std::cout << "Description: Removes an assigned role from a user in an NFT or SFT collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Collection ID\n";
+            std::cout << "  - Address: Blockchain address of the user.\n";
+            std::cout << "  - Role: The role to be removed.\n";
+            std::cout << "Returns: Confirmation of role removal or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 4)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -288,6 +370,16 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "addURI")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: addURI\n";
+            std::cout << "Description: Adds a Uniform Resource Identifier (URI) to a specific token or a collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Token Identifier\n";
+            std::cout << "  - URI: The URI to be added.\n";
+            std::cout << "Returns: Confirmation of URI addition or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -298,6 +390,17 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "upgradeAttribute")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: upgradeAttribute\n";
+            std::cout << "Description: Modifies or enhances an existing attribute of a token within a collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Token Identifier\n";
+            std::cout << "  - Attribute Key: Key of the attribute to modify.\n";
+            std::cout << "  - New Attribute Value: The new value for the attribute.\n";
+            std::cout << "Returns: Success message with the updated attribute, or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -308,6 +411,16 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "addSFTQuantity")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: addSFTQuantity\n";
+            std::cout << "Description: Increases the quantity of a specific Semi-Fungible Token within a collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Token Identifier\n";
+            std::cout << "  - Quantity: The amount to increase the SFT's quantity by.\n";
+            std::cout << "Returns: Confirmation message of the quantity addition or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -318,6 +431,16 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "mintESDTQuantity")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: mintESDTQuantity\n";
+            std::cout << "Description: Reduces the quantity of a specific Semi-Fungible Token within a collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Token Identifier\n";
+            std::cout << "  - Quantity: The amount by which to reduce the SFT's quantity.\n";
+            std::cout << "Returns: Confirmation of the quantity reduction or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -328,6 +451,16 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "burnSFTQuantity")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: burnSFTQuantity\n";
+            std::cout << "Description: Reduces the quantity of a specific Semi-Fungible Token within a collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Token Identifier\n";
+            std::cout << "  - Quantity: The amount by which to reduce the SFT's quantity.\n";
+            std::cout << "Returns: Confirmation of the quantity reduction or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -338,6 +471,16 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "burnESDTQuantity")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: burnSFTQuantity\n";
+            std::cout << "Description: Reduces the quantity of a specific Semi-Fungible Token within a collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Token Identifier\n";
+            std::cout << "  - Quantity: The amount by which to reduce the SFT's quantity.\n";
+            std::cout << "Returns: Confirmation of the quantity reduction or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -348,6 +491,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "wipeNFT")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: wipeNFT\n";
+            std::cout << "Description: Permanently removes a specific Non-Fungible Token (NFT) from circulation.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - NFT Identifier\n";
+            std::cout << "Returns: Confirmation of the NFT wipe or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -358,6 +510,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "wipeESDT")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: wipeESDT\n";
+            std::cout << "Description: Permanently removes a specific Non-Fungible Token (NFT) from circulation.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - NFT Identifier\n";
+            std::cout << "Returns: Confirmation of the NFT wipe or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -368,6 +529,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "freezeNFT")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: freezeNFT\n";
+            std::cout << "Description: Temporarily suspends all transactions for a specific Non-Fungible Token (NFT).\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - NFT Identifier\n";
+            std::cout << "Returns: Confirmation of NFT freezing or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -378,6 +548,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "freezeESDT")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: freezeNFT\n";
+            std::cout << "Description: Temporarily suspends all transactions for a specific Non-Fungible Token (NFT).\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - NFT Identifier\n";
+            std::cout << "Returns: Confirmation of NFT freezing or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -388,6 +567,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "unfreezeNFT")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: unfreezeNFT\n";
+            std::cout << "Description: Unlocks a Non-Fungible Token (NFT), allowing transactions to resume after being frozen. This function re-enables the transfer, sale, or any other transaction involving the specified NFT.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - NFT Identifier\n";
+            std::cout << "Returns: Confirmation message indicating the NFT is unfrozen, or an error message detailing any issues encountered.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -398,6 +586,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "unfreezeESDT")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: unfreezeNFT\n";
+            std::cout << "Description: Unlocks a Non-Fungible Token (NFT), allowing transactions to resume after being frozen. This function re-enables the transfer, sale, or any other transaction involving the specified NFT.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - NFT Identifier\n";
+            std::cout << "Returns: Confirmation message indicating the NFT is unfrozen, or an error message detailing any issues encountered.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -408,6 +605,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "transferCreationRole")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: transferCreationRole\n";
+            std::cout << "Description: Transfers the role responsible for creating new tokens within a collection to a different user. This is used to change the creator or administrator of a collection to another wallet address.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - New Creator Address\n";
+            std::cout << "Returns: Confirmation of role transfer or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -418,6 +624,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "stopTokenCreation")
     {
+        if (argc == 4 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: stopTokenCreation\n";
+            std::cout << "Description: Halts the ability to create new tokens within a specific collection. This is typically used when the desired number of tokens has been issued, or to prevent further issuance in a closed collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "Returns: Confirmation message indicating the halt of token creation, or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -428,6 +642,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "pauseTransactions")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: pauseTransactions\n";
+            std::cout << "Description: Temporarily suspends all transactions within a specified collection. This function is used to halt all trading, transferring, or other transactional activities for the tokens in the collection.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "Returns: Confirmation of transaction pause or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -438,6 +660,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "unPauseTransactions")
     {
+        if (argc == 4 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: unPauseTransactions\n";
+            std::cout << "Description: Resumes all transactions within a specific collection that were previously paused. This function is used to reactivate trading, transferring, and other activities for the tokens in the collection after a temporary suspension.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "Returns: Confirmation of transaction resumption or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -448,6 +678,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "upgradeProperties")
     {
+        if (argc == 6 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: upgradeProperties\n";
+            std::cout << "Description: Updates or changes the properties of a token or collection. This function is utilized to modify attributes like metadata or other characteristics after the token has been issued.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "Returns: Confirmation of properties upgrade or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 4)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -458,6 +696,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "transferOwnership")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: transferOwnership\n";
+            std::cout << "Description: Transfers the ownership of a token or an entire collection to another user. This function is key for handing over control of assets, including all associated rights and privileges, to a different wallet address.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - New Owner Address\n";
+            std::cout << "Returns: Confirmation of ownership transfer or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -468,6 +715,16 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "NFTTransaction")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: NFTTransaction\n";
+            std::cout << "Description: Executes a transaction involving a Non-Fungible Token (NFT), such as transferring ownership. This function is critical for the movement of NFTs between different parties or wallets.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Recipient Address\n";
+            std::cout << "  - NFT Identifier\n";
+            std::cout << "Returns: Confirmation of the transaction or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -478,6 +735,17 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "SFTTransaction")
     {
+        if (argc == 6 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: SFTTransaction\n";
+            std::cout << "Description: Facilitates a transaction with Semi-Fungible Tokens (SFTs), such as transferring a specific quantity to another user. This function is essential for managing SFTs within their respective ecosystems.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Recipient Address\n";
+            std::cout << "  - SFT Identifier\n";
+            std::cout << "  - Quantity to send\n";
+            std::cout << "Returns: Confirmation of the SFT transaction or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 4)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -488,6 +756,17 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "ESDTTransaction")
     {
+        if (argc == 6 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: ESDTTransaction\n";
+            std::cout << "Description: Facilitates a transaction with Semi-Fungible Tokens (SFTs), such as transferring a specific quantity to another user. This function is essential for managing SFTs within their respective ecosystems.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Recipient Address\n";
+            std::cout << "  - ESDT Identifier\n";
+            std::cout << "  - Quantity to send\n";
+            std::cout << "Returns: Confirmation of the SFT transaction or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 4)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -498,6 +777,16 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "EGLDTransaction")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: EGLDTransaction\n";
+            std::cout << "Description: Conducts transactions using EGLD (Elrond Gold), the native token of the Elrond blockchain. This function allows users to send EGLD tokens from their wallet to another address.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Recipient Address\n";
+            std::cout << "  - Amount of EGLD to be transferred\n";
+            std::cout << "Returns: Confirmation of the transaction or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -508,6 +797,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getOwnedTokens")
     {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getOwnedTokens\n";
+            std::cout << "Description: Retrieves a list of tokens owned by the wallet. This function is used to query and display all NFTs and SFTs held within a specific wallet, providing an overview of the user's digital assets.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "Returns: A list of owned tokens or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -532,6 +829,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getAddressTokenBalance")
     {
+        if (argc == 4 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getAddressTokenBalance\n";
+            std::cout << "Description: Queries the token balance of a specific address. This function is used to check the number of tokens, including NFTs and SFTs, held by a particular blockchain address.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Address: The blockchain address for which the token balance is queried.\n";
+            std::cout << "Returns: The token balance of the specified address or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -541,6 +846,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getAddressESDTBalance")
     {
+        if (argc == 4 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getAddressTokenBalance\n";
+            std::cout << "Description: Queries the token balance of a specific address. This function is used to check the number of tokens, including NFTs and SFTs, held by a particular blockchain address.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Address: The blockchain address for which the token balance is queried.\n";
+            std::cout << "Returns: The token balance of the specified address or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -550,6 +863,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getTokenProperties")
     {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getTokenProperties\n";
+            std::cout << "Description: Retrieves the properties and attributes of a specific token. This function is essential for understanding the characteristics, metadata, and other details associated with a particular NFT or SFT.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Token Identifier: The identifier of the token whose properties are being queried.\n";
+            std::cout << "Returns: Detailed properties of the token or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -574,6 +895,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getESDTProperties")
     {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getESDTProperties\n";
+            std::cout << "Description: Retrieves the properties and attributes of a specific token. This function is essential for understanding the characteristics, metadata, and other details associated with a particular NFT or SFT.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Token Identifier: The identifier of the token whose properties are being queried.\n";
+            std::cout << "Returns: Detailed properties of the token or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -598,6 +927,15 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getOwnedTokenProperties")
     {
+        if (argc == 4 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getOwnedTokenProperties\n";
+            std::cout << "Description: Provides detailed properties of tokens owned by a specific wallet address. This function is useful for obtaining in-depth information about each NFT or SFT owned, including attributes, metadata, and more.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Address: Blockchain address of the wallet owner.\n";
+            std::cout << "Returns: A list of token properties or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -622,6 +960,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getCollectionProperties")
     {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getCollectionProperties\n";
+            std::cout << "Description: Retrieves properties and details of a specific token collection. This function allows users to understand the attributes, rules, and settings of a collection, such as creator information, metadata, and other relevant properties.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Collection ID: Identifier of the collection whose properties are being queried.\n";
+            std::cout << "Returns: Detailed information about the collection or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -631,6 +977,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "buildProofOfOwnershipOfKeyPair")
     {
+        if (argc == 4 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: buildProofOfOwnershipOfKeyPair\n";
+            std::cout << "Description: Generates proof of ownership for a specific key pair associated with a wallet. This function is crucial for verifying the rightful ownership of wallet keys, often required in security and authentication processes.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path): Path to the wallet file.\n";
+            std::cout << "Returns: Proof of key pair ownership or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 2)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -641,6 +995,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getProofOfCollectionOwnership")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getProofOfCollectionOwnership\n";
+            std::cout << "Description: Generates evidence demonstrating ownership of a specific token collection. This is particularly useful for verifying the ownership of NFTs and SFTs within a collection for authentication or transfer purposes.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path): Path to the wallet file.\n";
+            std::cout << "Returns: Proof of ownership documentation or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -651,6 +1013,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getProofOfTokenOwnership")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getProofOfTokenOwnership\n";
+            std::cout << "Description: Provides verifiable proof of ownership for a specific token. Essential for situations where ownership authentication of NFTs or SFTs is required, such as in transfers or legal proceedings.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path): Path to the wallet file.\n";
+            std::cout << "Returns: A document or data confirming token ownership or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -661,6 +1031,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "signMessage")
     {
+        if (argc == 5 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getProofOfTokenOwnership\n";
+            std::cout << "Description: Provides verifiable proof of ownership for a specific token. Essential for situations where ownership authentication of NFTs or SFTs is required, such as in transfers or legal proceedings.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "Returns: A document or data confirming token ownership or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 3)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -671,6 +1049,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getOwnerAddress")
     {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getOwnerAddress\n";
+            std::cout << "Description: Retrieves the blockchain address of the owner of a specific token. This function is used to identify the current owner of a Non-Fungible Token (NFT) or Semi-Fungible Token (SFT), providing clarity on ownership status.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Token Identifier: The identifier of the token in question.\n";
+            std::cout << "Returns: The blockchain address of the token's owner or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -680,6 +1066,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getEmittedCollections")
     {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getEmittedCollections\n";
+            std::cout << "Description: Lists all token collections that have been emitted (created and issued) by a specific wallet address. This function is useful for tracking the collections a user has originated, especially for creators or issuers of multiple NFT or SFT collections.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Address: The blockchain address of the wallet.\n";
+            std::cout << "Returns: A list of emitted collections or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
@@ -704,6 +1098,14 @@ int main(int argc, char** argv)
     }
     else if (firstArgument == "getRolesAndAddresses")
     {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: getRolesAndAddresses\n";
+            std::cout << "Description: Displays the roles assigned to different addresses within a specific token collection. This function is essential for understanding the distribution of roles such as administrators, creators, or other specified roles in the context of NFT or SFT collections.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Collection ID: The identifier of the collection.\n";
+            std::cout << "Returns: A list of roles and associated addresses or an error message.\n";
+            return 0;
+        }
         if (argc != 2 + 1)
         {
             std::cout << "Wrong number of arguments." << std::endl;
