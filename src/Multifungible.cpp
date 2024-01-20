@@ -1157,6 +1157,78 @@ returnCodeAndChar Multifungible::ESDTTransaction(const char * p_walletName, cons
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
 *-------------------------------------------------------------------------*/
+returnCodeAndChar Multifungible::MultiTransaction(const char* p_walletName, const char* p_password, const char * p_destinationAddress, int p_otherParamsCount, char** p_otherParams)
+{
+    try
+    {
+        CLIConfig clicf(TO_LITERAL(MULTIFUNGIBLE_CONFIG_FILE));
+        Network nw = MULTIFUNGIBLE_NETWORK;
+        clicf.setNetwork(nw);
+
+        //Number of arguments must follow the structure:
+        /*
+        1- token type (can be NFT, SFT or ESDT (as strings)).
+        2- token name (a string)
+        3- quantity to send (also a string)
+        */
+        if ((p_otherParamsCount) % 3 != 0)
+        {
+            throw std::runtime_error(MULTIFUNGIBLE_ERROR_MULTIARGUMENT);
+        }
+        std::vector<TokenPayment> t_vectorOfTokensToSend;
+        std::string t_resultSuccessMessage;
+        for (int i = 0; i < p_otherParamsCount; i += 3)
+        {
+            const char* tokenType = p_otherParams[i];
+            const char* tokenName = p_otherParams[i + 1];
+            const char* quantityToSend = p_otherParams[i + 2];
+
+            if (!strcmp(tokenType,"NFT"))
+            {
+                std::pair<std::string,uint64_t> t_collectionIDAndNonce = Multifungible::getCollectionIDAndNonceFromTokenID(std::string(tokenName));
+                t_resultSuccessMessage += MULTIFUNGIBLE_NFTTRANSACTION_SUCCESSFUL(t_collectionIDAndNonce.first,t_collectionIDAndNonce.second,p_destinationAddress) + "\n";
+                t_vectorOfTokensToSend.push_back(TokenPayment::nonFungible(t_collectionIDAndNonce.first,t_collectionIDAndNonce.second));
+            }
+            else if (!strcmp(tokenType,"SFT"))
+            {
+                std::pair<std::string,uint64_t> t_collectionIDAndNonce = Multifungible::getCollectionIDAndNonceFromTokenID(std::string(tokenName));
+                t_resultSuccessMessage += MULTIFUNGIBLE_SFTTRANSACTION_SUCCESSFUL(quantityToSend,t_collectionIDAndNonce.first,t_collectionIDAndNonce.second,p_destinationAddress) + "\n";
+                t_vectorOfTokensToSend.push_back(TokenPayment::semiFungible(t_collectionIDAndNonce.first,t_collectionIDAndNonce.second,BigUInt(quantityToSend)));
+            }
+            else if (!strcmp(tokenType,"ESDT"))
+            {
+                t_resultSuccessMessage += MULTIFUNGIBLE_ESDTTRANSACTION_SUCCESSFUL(quantityToSend,tokenName, p_destinationAddress) + "\n";
+                uint32_t t_esdtDecimals = WrapperProxyProvider(clicf.config()).getESDTInfo(tokenName)["decimals"];
+                uint64_t t_quantity = WalletFunctions::getNumberFromDecimalString(quantityToSend, t_esdtDecimals);
+                t_vectorOfTokensToSend.push_back(TokenPayment::fungibleFromBigUInt(tokenName,BigUInt(t_quantity)));
+            }
+            // Do something with tokenType, tokenName, and quantityToSend
+            //std::cout << "Token Type: " << tokenType << std::endl;
+            //std::cout << "Token Name: " << tokenName << std::endl;
+            //std::cout << "Quantity to Send: " << quantityToSend << std::endl;
+        }
+        /*
+        for (std::vector<TokenPayment>::iterator it = t_vectorOfTokensToSend.begin(); it != t_vectorOfTokensToSend.end(); it++)
+        {
+            std::cout << (*it).tokenIdentifier() << std::endl;
+            std::cout << (*it).nonce() << std::endl;
+            std::cout << (*it).value().getValue() << std::endl;
+        }
+        */
+
+        WalletProvider(clicf.config(),std::make_unique<Wallet>(p_walletName,clicf.config(),p_password,false)).MultiTransaction(p_destinationAddress, t_vectorOfTokensToSend);
+
+        return Multifungible::transformIntoRCC(0,t_resultSuccessMessage);
+
+    }
+    catch (const std::exception& e)
+    {
+        return Multifungible::transformIntoRCC(1,e.what());
+    }
+}
+/*-------------------------------------------------------------------------*
+*--------------------------------------------------------------------------*
+*-------------------------------------------------------------------------*/
 returnCodeAndChar Multifungible::getOwnedTokenProperties(const char * p_tokenID,const char * p_address)
 {
     try

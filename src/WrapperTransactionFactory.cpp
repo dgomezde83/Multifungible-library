@@ -594,7 +594,7 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::addURI(const Tok
     return std::make_unique<TransactionBuilderWrapped>(builder);
 }
 /*-------------------------------------------------------------------------*
-* Builds a transaction to transfer an SFT token to another address.        *
+* Builds a transaction to transfer an ESDT token to another address.       *
 *-------------------------------------------------------------------------*/
 std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createESDTTransfer(const TokenPayment &tokenPayment,
                                                                                    const uint64_t nonce,
@@ -606,6 +606,24 @@ std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createESDTTransf
     GasEstimator t_gasEstimator(networkConfig);
 
     return TransactionFactory(networkConfig).createESDTTransfer(tokenPayment,
+                            nonce,
+                            sender,
+                            receiver,
+                            MULTIVERSX_GAS_PRICE);
+}
+/*-------------------------------------------------------------------------*
+* Builds a transaction to transfer an SFT token to another address.        *
+*-------------------------------------------------------------------------*/
+std::unique_ptr<ITransactionBuilder> WrapperTransactionFactory::createMultiTransfer(const std::vector<TokenPayment> &tokenPayments,
+                                                                                   const uint64_t nonce,
+                                                                                   const Address &sender,
+                                                                                   const Address &receiver) const
+{
+    WrapperProxyProvider proxy(m_config);
+    NetworkConfig networkConfig = proxy.getNetworkConfig();
+    GasEstimator t_gasEstimator(networkConfig);
+
+    return TransactionFactory(networkConfig).createMultiESDTNFTTransfer(tokenPayments,
                             nonce,
                             sender,
                             receiver,

@@ -335,6 +335,23 @@ Transaction WalletProvider::buildESDTTokenTransaction(const std::string& p_colle
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
+* Create a transaction for sending a multi-token transaction to another    *
+* address.                                                                 *
+*-------------------------------------------------------------------------*/
+Transaction WalletProvider::buildMultiTokenTransaction(const std::string & p_destinataryAddress, const std::vector<TokenPayment>& p_tokens) const
+{
+    if(!p_tokens.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_MULTITOKENINFO_MISSING);
+    }
+    if(!p_destinataryAddress.size())
+    {
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
+    }
+    Transaction t_ts = m_wpf.createMultiTransfer(p_tokens,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
+    return t_ts;
+}
+/*-------------------------------------------------------------------------*
 * Create a transaction for sending an SFT token to another address.        *
 *-------------------------------------------------------------------------*/
 Transaction WalletProvider::buildTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce,const std::string & p_destinataryAddress, const std::string & p_amount) const
@@ -1590,6 +1607,41 @@ void WalletProvider::ESDTTransaction(const std::string& p_destinationAddress, co
     }
 
     std::string t_transactionHash = pushTransaction(buildESDTTokenTransaction(p_collectionID, p_destinationAddress, t_quantity, p_decimals),false).value();
+
+    waitTillSCTransactionIsCompleted(t_transactionHash);
+
+    std::vector<std::string> t_necessaryTokens {INTERNAL_TRANSACTION_SUCCESSFUL};
+
+    for (const std::string & p_transactionData : getSCTransactionData(t_transactionHash))
+    {
+        if (!t_necessaryTokens.size())
+        { break ; }
+
+        std::map<int,std::string> t_dataMap = m_wpp.getMapOfBlockchainResponse(p_transactionData);
+
+        if(t_dataMap[0] == INTERNAL_TRANSACTION_SUCCESSFUL)
+        {
+            t_necessaryTokens.pop_back();
+            continue;
+        }
+    }
+    if (!t_necessaryTokens.size())
+    {
+        return;
+    }
+    throw std::runtime_error(WRAPPER_WALLET_UNEXPECTED_TRANSACTION("SFTTransaction"));
+}
+/*-------------------------------------------------------------------------*
+* Sends the given tokens to the given address through a multi-transaction. *
+*-------------------------------------------------------------------------*/
+void WalletProvider::MultiTransaction(const std::string& p_destinationAddress, const std::vector<TokenPayment>& p_tokens) const
+{
+    if (__SIMULATE__)
+    {
+        pushTransaction(buildMultiTokenTransaction(p_destinationAddress, p_tokens),true); //Push transaction in simulated mode. If it fails, a runtime error will be raised
+    }
+
+    std::string t_transactionHash = pushTransaction(buildMultiTokenTransaction(p_destinationAddress, p_tokens),false).value();
 
     waitTillSCTransactionIsCompleted(t_transactionHash);
 

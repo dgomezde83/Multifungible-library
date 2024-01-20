@@ -788,6 +788,29 @@ int main(int argc, char** argv)
         getPassword(t_password,CLI_SIZE_PASSWORD);
         t_rcc = Multifungible::ESDTTransaction(argv[2],t_password,argv[3],argv[4],argv[5]);
     }
+    else if (firstArgument == "MultiTransaction")
+    {
+        if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
+            std::cout << "Function: MultiTransaction\n";
+            std::cout << "Description: Facilitates a multiple transaction involving NFT, SFT or ESDT tokens, to a single address.\n";
+            std::cout << "Arguments:\n";
+            std::cout << "  - Wallet Name (Path)\n";
+            std::cout << "  - Recipient Address\n";
+            std::cout << "  - Token type ('NFT'/'SFT'/'ESDT')\n";
+            std::cout << "  - Token Identifier\n";
+            std::cout << "  - Quantity to send\n";
+            std::cout << "  - Repeat the three preceding steps for each token to send in the multi-transaction\n";
+            std::cout << "Returns: Confirmation of the ESDT transaction or an error message.\n";
+            return 0;
+        }
+        if ((argc - 4) % 3 != 0)
+        {
+            std::cout << "Wrong number of arguments." << std::endl;
+            return 1;
+        }
+        getPassword(t_password,CLI_SIZE_PASSWORD);
+        t_rcc = Multifungible::MultiTransaction(argv[2],t_password,argv[3],argc - 4,&argv[4]);
+    }
     else if (firstArgument == "EGLDTransaction")
     {
         if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {

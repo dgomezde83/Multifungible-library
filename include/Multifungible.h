@@ -9,6 +9,7 @@
 
 //DLL MESSAGES
 #define MULTIFUNGIBLE_ERROR_DECODING_TOKEN "Error decoding token"
+#define MULTIFUNGIBLE_ERROR_MULTIARGUMENT "Wrong number of multi-token transaction arguments."
 #define MULTIFUNGIBLE_UPGRADEPROPERTY_SUCCESSFUL "Upgraded Property successfully"
 #define MULTIFUNGIBLE_TRANSFEROWNERSHIP_SUCCESSFUL "Transfered ownership successfully"
 #define MULTIFUNGIBLE_ADDROLE_SUCCESSFUL "Added Role successfully"
@@ -113,6 +114,7 @@ class Multifungible
         static returnCodeAndChar unPauseTransactions(const char * p_walletName, const char * p_password,const char * p_collectionID);
         static returnCodeAndChar NFTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress, const char * p_tokenID);
         static returnCodeAndChar ESDTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress,const char * p_tokenID, const char * p_amount);
+        static returnCodeAndChar MultiTransaction(const char* p_walletName, const char* p_password, const char * p_destinationAddress, int p_otherParamsCount, char** p_otherParams);
         static returnCodeAndChar SFTTransaction(const char * p_walletName, const char * p_password,const char * p_destinationAddress,const char * p_tokenID, const char * p_amount);
         static returnCodeAndChar EGLDTransaction(const char * p_walletName, const char * p_password,const char * p_strAddress, const char * p_amount);
 

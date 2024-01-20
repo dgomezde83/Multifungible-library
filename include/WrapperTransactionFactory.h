@@ -68,6 +68,11 @@ class WrapperTransactionFactory
                                                                    const Address &sender,
                                                                    const Address &receiver) const;
 
+        std::unique_ptr<ITransactionBuilder> createMultiTransfer(const std::vector<TokenPayment> &tokenPayments,
+                                                                    const uint64_t nonce,
+                                                                    const Address &sender,
+                                                                    const Address &receiver) const;
+
         std::unique_ptr<ITransactionBuilder> createSFTTransfer(const TokenPayment &tokenPayment,
                                                                    const uint64_t nonce,
                                                                    std::string const & quantity,

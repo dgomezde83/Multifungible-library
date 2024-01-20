@@ -14,6 +14,7 @@
 #define WRAPPER_WALLET_GENERATOR_TICKER_NOT_ALPHA "Ticker not alphanumeric"
 #define WRAPPER_WALLET_GENERATOR_TICKER_NOT_UPPER "Ticker not uppercase"
 #define WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING "Collection ID missing"
+#define WRAPPER_WALLET_GENERATOR_MULTITOKENINFO_MISSING "Token information missing"
 #define WRAPPER_WALLET_GENERATOR_TOKENID_MISSING "Token ID missing"
 #define WRAPPER_WALLET_GENERATOR_TOKENNAME_MISSING "Token name missing"
 #define WRAPPER_WALLET_GENERATOR_NONCE_MISSING "Nonce missing"
@@ -177,6 +178,8 @@ class WalletProvider
         
         void ESDTTransaction(const std::string& p_destinationAddress,const std::string& p_collectionID, const std::string& p_amount, const uint32_t p_decimals) const;
 
+        void MultiTransaction(const std::string& p_destinationAddress, const std::vector<TokenPayment>& p_tokens) const;
+
         void EGLDTransaction(const std::string& p_destinationAddress, const std::string& p_amount) const;
 
     protected:
@@ -211,6 +214,8 @@ class WalletProvider
                                                 const bool p_canAddSpecialRoles) const;
 
         Transaction buildESDTTokenTransaction(const std::string& p_collectionID, const std::string & p_destinataryAddress, const uint64_t p_quantity, const uint32_t p_decimals) const;
+
+        Transaction buildMultiTokenTransaction(const std::string & p_destinataryAddress, const std::vector<TokenPayment>& p_tokens) const;
 
         Transaction buildTokenTransaction(const std::string& p_collectionID, const uint64_t p_nonce, const std::string & p_destinataryAddress, const std::string & p_quantity) const;
 
