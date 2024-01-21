@@ -84,7 +84,7 @@ Transaction WalletProvider::buildESDTEmissionTransaction(const std::string& p_es
                                             p_canPause,
                                             p_canChangeOwner,
                                             p_canUpgrade,
-                                            p_canAddSpecialRoles})->buildSigned(m_wg->getSeed());
+                                            p_canAddSpecialRoles})->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -140,7 +140,7 @@ Transaction WalletProvider::buildCollectionEmissionTransaction(const std::string
                                             p_canChangeOwner,
                                             p_canUpgrade,
                                             p_canAddSpecialRoles,
-                                            p_canTransferNFTCreateRole})->buildSigned(m_wg->getSeed());
+                                            p_canTransferNFTCreateRole})->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -161,7 +161,7 @@ Transaction WalletProvider::buildAddBurnSFTQuantityTransaction(const std::string
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_QUANTITY_MISSING);
     }
     TokenPayment t_tp = TokenPayment::semiFungible(p_collectionID,p_nonce,BigUInt(p_quantity));
-    Transaction t_ts = m_wpf.addBurnQuantityOfSFTs(t_tp, p_isAdd, p_quantity,m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.addBurnQuantityOfSFTs(t_tp, p_isAdd, p_quantity,m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -178,7 +178,7 @@ Transaction WalletProvider::buildMintBurnESDTQuantityTransaction(const std::stri
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_QUANTITY_MISSING);
     }
     TokenPayment t_tp = TokenPayment::fungibleFromBigUInt(p_collectionID,BigUInt(p_quantity),p_decimals);
-    Transaction t_ts = m_wpf.mintBurnQuantityOfESDTs(t_tp, p_isAdd, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.mintBurnQuantityOfESDTs(t_tp, p_isAdd, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -199,7 +199,7 @@ Transaction WalletProvider::buildWipeNFTTransaction(const std::string& p_collect
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_OWNERADDRESS_MISSING);
     }
     TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID,p_nonce);
-    Transaction t_ts = m_wpf.wipeNFT(t_tp, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.wipeNFT(t_tp, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -215,7 +215,7 @@ Transaction WalletProvider::buildWipeESDTTransaction(const std::string& p_collec
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_OWNERADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.wipeESDT(p_collectionID, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.wipeESDT(p_collectionID, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -236,7 +236,7 @@ Transaction WalletProvider::buildFreezeUnfreezeTransaction(const std::string& p_
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_OWNERADDRESS_MISSING);
     }
     TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID,p_nonce);
-    Transaction t_ts = m_wpf.freezeUnfreezeNFT(t_tp, p_isFreeze, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.freezeUnfreezeNFT(t_tp, p_isFreeze, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -252,7 +252,7 @@ Transaction WalletProvider::buildFreezeUnfreezeESDTTransaction(const std::string
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_OWNERADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.freezeUnfreezeESDT(p_collectionID, p_isFreeze, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.freezeUnfreezeESDT(p_collectionID, p_isFreeze, p_ownerAddress, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -273,7 +273,7 @@ Transaction WalletProvider::buildAddURITransaction(const std::string& p_collecti
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_URI_MISSING);
     }
     TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID, p_nonce);
-    Transaction t_ts = m_wpf.addURI(t_tp, p_uri, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.addURI(t_tp, p_uri, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -294,7 +294,7 @@ Transaction WalletProvider::buildUpgradeAttributesTransaction(const std::string&
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_ATTRIBUTE_MISSING);
     }
     TokenPayment t_tp = TokenPayment::nonFungible(p_collectionID, p_nonce);
-    Transaction t_ts = m_wpf.upgradeAttributes(t_tp, p_newAttribute, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.upgradeAttributes(t_tp, p_newAttribute, m_wg->getAccount().getNonce(),m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -310,7 +310,7 @@ Transaction WalletProvider::buildMoneyTransaction(const std::string & p_destinat
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.createEGLDTransfer(m_wg->getAccount().getNonce(),BigUInt(p_amount),m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createEGLDTransfer(m_wg->getAccount().getNonce(),BigUInt(p_amount),m_wg->getPublicAddress(),Address(p_destinataryAddress))->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -331,7 +331,7 @@ Transaction WalletProvider::buildESDTTokenTransaction(const std::string& p_colle
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
     TokenPayment t_tp = TokenPayment::fungibleFromBigUInt(p_collectionID,BigUInt(p_amount),p_decimals);
-    Transaction t_ts = m_wpf.createESDTTransfer(t_tp,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createESDTTransfer(t_tp,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),Address(p_destinataryAddress))->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -348,7 +348,7 @@ Transaction WalletProvider::buildMultiTokenTransaction(const std::string & p_des
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.createMultiTransfer(p_tokens,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createMultiTransfer(p_tokens,m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),Address(p_destinataryAddress))->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -369,7 +369,7 @@ Transaction WalletProvider::buildTokenTransaction(const std::string& p_collectio
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
     TokenPayment t_tp = TokenPayment::semiFungible(p_collectionID,p_nonce,BigUInt(p_amount));
-    Transaction t_ts = m_wpf.createSFTTransfer(t_tp,m_wg->getAccount().getNonce(),p_amount,m_wg->getPublicAddress(),Address(p_destinataryAddress))->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createSFTTransfer(t_tp,m_wg->getAccount().getNonce(),p_amount,m_wg->getPublicAddress(),Address(p_destinataryAddress))->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -385,7 +385,7 @@ Transaction WalletProvider::buildUpgradePropertyTransaction(const std::string& p
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PROPERTY_MISSING);
     }
-    Transaction t_ts = m_wpf.createUpgradeProperty(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID,p_property,p_newValue)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createUpgradeProperty(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID,p_property,p_newValue)->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -401,7 +401,7 @@ Transaction WalletProvider::buildTransferOwnershipTransaction(const std::string&
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.createTransferCollectionOwnership(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID, p_address)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createTransferCollectionOwnership(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID, p_address)->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -421,7 +421,7 @@ Transaction WalletProvider::buildSetUnsetRolesTransaction(const std::string& p_c
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.setUnsetSpecialRoleSFT(m_wg->getAccount().getNonce(), p_isSet, m_wg->getPublicAddress(),p_collectionID, p_address,p_role)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.setUnsetSpecialRoleSFT(m_wg->getAccount().getNonce(), p_isSet, m_wg->getPublicAddress(),p_collectionID, p_address,p_role)->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -437,7 +437,7 @@ Transaction WalletProvider::buildTransferCreationRoleTransaction(const std::stri
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_DESTINATARYADDRESS_MISSING);
     }
-    Transaction t_ts = m_wpf.transferCreationRole(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID, p_address)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.transferCreationRole(m_wg->getAccount().getNonce(),m_wg->getPublicAddress(),p_collectionID, p_address)->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -449,7 +449,7 @@ Transaction WalletProvider::buildStopCreationRoleTransaction(const std::string& 
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
     }
-    Transaction t_ts = m_wpf.stopCreation(p_collectionID, m_wg->getAccount().getNonce(), m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.stopCreation(p_collectionID, m_wg->getAccount().getNonce(), m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -461,7 +461,7 @@ Transaction WalletProvider::buildPauseUnpauseTransaction(const std::string& p_co
     {
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_COLLECTIONID_MISSING);
     }
-    Transaction t_ts = m_wpf.pauseUnPauseCreation(p_collectionID, p_isPause, m_wg->getAccount().getNonce(), m_wg->getPublicAddress())->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.pauseUnPauseCreation(p_collectionID, p_isPause, m_wg->getAccount().getNonce(), m_wg->getPublicAddress())->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*
@@ -482,7 +482,7 @@ Transaction WalletProvider::buildCreateTokensTransaction(const std::string& p_co
         throw std::runtime_error(WRAPPER_WALLET_GENERATOR_AMOUNT_MISSING);
     }
     char t_sftHash [3] = "00";
-    Transaction t_ts = m_wpf.createIssueToken(m_wg->getAccount().getNonce(), m_wg->getPublicAddress(), p_collectionID, p_name, p_emitAmount, p_royalties, t_sftHash, p_attributes, p_uri)->buildSigned(m_wg->getSeed());
+    Transaction t_ts = m_wpf.createIssueToken(m_wg->getAccount().getNonce(), m_wg->getPublicAddress(), p_collectionID, p_name, p_emitAmount, p_royalties, t_sftHash, p_attributes, p_uri)->withVersion(WALLET_VERSION).withOptions(WALLET_OPTIONS).buildSigned(m_wg->getSeed());
     return t_ts;
 }
 /*-------------------------------------------------------------------------*

@@ -116,20 +116,54 @@ void displayHelpMessage()
     std::cout << "    displayed after the call), separated by spaces. If you want to provide"<< std::endl;
     std::cout << "    an empty argument, just write \"\"." << std::endl;
     std::cout << std::endl;
-    std::cout << " -- Refer to the documentation for the function names and the arguments they take." << std::endl;
-    std::cout << std::endl;
-    std::cout << " -- Example 1: I want to create a JSON wallet. Type:" << std::endl;
-    std::cout << "    createWallet \"my wallet.json\"" << std::endl;
-    std::cout << "    Press enter. A prompt will appear, asking for the password you want to use to" << std::endl;
-    std::cout << "    encrypt the wallet (between 0 (no password, not recommended!) and 100000 characters)." << std::endl;
-    std::cout << "    Press enter again. The function will create a wallet with name: \"my wallet.json\", " << std::endl;
-    std::cout << "    and the function will print its result (in this case, the wallet address)." << std::endl;
-    std::cout << std::endl;
-    std::cout << " -- Example 2: I want to issue an NFT token from the wallet I just created (and loaded with funds!). Type:" << std::endl;
-    std::cout << "    issueNonFungibleToken \"mywalletname.json\" \"ABCD-012345\" \"MyTokenName\" \"7500\"" << std::endl;
-    std::cout << "    \"metadata:ipfsCID/fileName.json;tags:tag1,tag2,tag3\" \"\"" << std::endl;
-    std::cout << "    Press enter again. The function will print its result (in this case, the token identifier)." << std::endl;
-    std::cout << "    Note that we left the URL argument empty. We indicate that by writing \"\"." << std::endl;
+    std::cout << " -- List of Available Functions:" << std::endl;
+    std::cout << "    1. createWallet" << std::endl;
+    std::cout << "    2. loadWallet" << std::endl;
+    std::cout << "    3. issueESDTToken" << std::endl;
+    std::cout << "    4. issueSFTCollection" << std::endl;
+    std::cout << "    5. issueNFTCollection" << std::endl;
+    std::cout << "    6. issueSemiFungibleToken" << std::endl;
+    std::cout << "    7. issueNonFungibleToken" << std::endl;
+    std::cout << "    8. addCollectionRole" << std::endl;
+    std::cout << "    9. removeCollectionRole" << std::endl;
+    std::cout << "    10. addURI" << std::endl;
+    std::cout << "    11. upgradeAttribute" << std::endl;
+    std::cout << "    12. addSFTQuantity" << std::endl;
+    std::cout << "    13. mintESDTQuantity" << std::endl;
+    std::cout << "    14. burnSFTQuantity" << std::endl;
+    std::cout << "    15. burnESDTQuantity" << std::endl;
+    std::cout << "    16. wipeNFT" << std::endl;
+    std::cout << "    17. wipeESDT" << std::endl;
+    std::cout << "    18. freezeNFT" << std::endl;
+    std::cout << "    19. freezeESDT" << std::endl;
+    std::cout << "    20. unfreezeNFT" << std::endl;
+    std::cout << "    21. unfreezeESDT" << std::endl;
+    std::cout << "    22. transferCreationRole" << std::endl;
+    std::cout << "    23. stopTokenCreation" << std::endl;
+    std::cout << "    24. pauseTransactions" << std::endl;
+    std::cout << "    25. unPauseTransactions" << std::endl;
+    std::cout << "    26. upgradeProperties" << std::endl;
+    std::cout << "    27. transferOwnership" << std::endl;
+    std::cout << "    28. NFTTransaction" << std::endl;
+    std::cout << "    29. SFTTransaction" << std::endl;
+    std::cout << "    30. ESDTTransaction" << std::endl;
+    std::cout << "    31. MultiTransaction" << std::endl;
+    std::cout << "    32. EGLDTransaction" << std::endl;
+    std::cout << "    33. getOwnedTokens" << std::endl;
+    std::cout << "    34. getAddressTokenBalance" << std::endl;
+    std::cout << "    35. getAddressESDTBalance" << std::endl;
+    std::cout << "    36. getTokenProperties" << std::endl;
+    std::cout << "    37. getESDTProperties" << std::endl;
+    std::cout << "    38. getOwnedTokenProperties" << std::endl;
+    std::cout << "    39. getCollectionProperties" << std::endl;
+    std::cout << "    40. buildProofOfOwnershipOfKeyPair" << std::endl;
+    std::cout << "    41. getProofOfCollectionOwnership" << std::endl;
+    std::cout << "    42. getProofOfTokenOwnership" << std::endl;
+    std::cout << "    43. signMessage" << std::endl;
+    std::cout << "    44. getOwnerAddress" << std::endl;
+    std::cout << "    45. getEmittedCollections" << std::endl;
+    std::cout << "    46. getRolesAndAddresses" << std::endl;
+    std::cout << "    For more information about each function, type the function name followed by -h or --help, or refer to the documentation.\n";
 }
 /*-------------------------------------------------------------------------*
 *--------------------------------------------------------------------------*
@@ -492,7 +526,7 @@ int main(int argc, char** argv)
     {
         if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
             std::cout << "Function: wipeNFT\n";
-            std::cout << "Description: Permanently removes a specific Non-Fungible Token (NFT) from circulation.\n";
+            std::cout << "Description: Permanently removes a specific Non-Fungible Token (NFT) from the balance of the specified address.\n";
             std::cout << "Arguments:\n";
             std::cout << "  - Wallet Name (Path)\n";
             std::cout << "  - NFT Identifier\n";
@@ -512,7 +546,7 @@ int main(int argc, char** argv)
     {
         if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
             std::cout << "Function: wipeESDT\n";
-            std::cout << "Description: Permanently removes a specific Non-Fungible Token (NFT) from circulation.\n";
+            std::cout << "Description: Permanently removes a specific Non-Fungible Token (NFT) from the balance of the specified address.\n";
             std::cout << "Arguments:\n";
             std::cout << "  - Wallet Name (Path)\n";
             std::cout << "  - ESDT Identifier\n";
@@ -532,7 +566,7 @@ int main(int argc, char** argv)
     {
         if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
             std::cout << "Function: freezeNFT\n";
-            std::cout << "Description: Temporarily suspends all transactions for a specific Non-Fungible Token (NFT).\n";
+            std::cout << "Description: Temporarily suspends all transactions for a specific Non-Fungible Token (NFT) on the specified address' balance.\n";
             std::cout << "Arguments:\n";
             std::cout << "  - Wallet Name (Path)\n";
             std::cout << "  - NFT Identifier\n";
@@ -552,7 +586,7 @@ int main(int argc, char** argv)
     {
         if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
             std::cout << "Function: freezeNFT\n";
-            std::cout << "Description: Temporarily suspends all transactions for a specific Non-Fungible Token (NFT).\n";
+            std::cout << "Description: Temporarily suspends all transactions for a specific Non-Fungible Token (NFT) on the specified address' balance.\n";
             std::cout << "Arguments:\n";
             std::cout << "  - Wallet Name (Path)\n";
             std::cout << "  - ESDT Identifier\n";
@@ -572,7 +606,7 @@ int main(int argc, char** argv)
     {
         if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
             std::cout << "Function: unfreezeNFT\n";
-            std::cout << "Description: Unlocks a Non-Fungible Token (NFT), allowing transactions to resume after being frozen.\n";
+            std::cout << "Description: Unlocks a Non-Fungible Token (NFT), allowing transactions to resume after being frozen on the specified address.\n";
             std::cout << "Arguments:\n";
             std::cout << "  - Wallet Name (Path)\n";
             std::cout << "  - NFT Identifier\n";
@@ -592,7 +626,7 @@ int main(int argc, char** argv)
     {
         if (argc == 3 && (strcmp(argv[2], "-h") == 0 || strcmp(argv[2], "--help") == 0)) {
             std::cout << "Function: unfreezeNFT\n";
-            std::cout << "Description: Unlocks a Non-Fungible Token (NFT), allowing transactions to resume after being frozen.\n";
+            std::cout << "Description: Unlocks a Non-Fungible Token (NFT), allowing transactions to resume after being frozen on tghe specified address.\n";
             std::cout << "Arguments:\n";
             std::cout << "  - Wallet Name (Path)\n";
             std::cout << "  - NFT Identifier\n";
@@ -1090,7 +1124,7 @@ int main(int argc, char** argv)
             return 1;
         }
         getPassword(t_password,CLI_SIZE_PASSWORD);
-        t_rcc = Multifungible::signMessage(argv[2],t_password,argv[3], argv[4]);
+        t_rcc = Multifungible::signMessage(argv[2],t_password,argv[3], !strcmp(argv[4],"false") ? false : true);
     }
     else if (firstArgument == "getOwnerAddress")
     {

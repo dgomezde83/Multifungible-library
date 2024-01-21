@@ -6,6 +6,10 @@
 #include "WrapperProxyProvider.h"
 #include "WrapperTransactionFactory.h"
 
+//Optins and version
+#define WALLET_OPTIONS 7
+#define WALLET_VERSION 6
+
 //Wrapper Wallet generator messages
 #define WRAPPER_WALLET_GENERATOR_PARAMETERMISSING(x) std::string("Parameter missing: ") + std::string(x)
 #define WRAPPER_WALLET_GENERATOR_INVALID_TOKEN_LENGTH "Invalid length of token name"

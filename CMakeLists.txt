@@ -132,7 +132,6 @@ set(MyDLL_ADDRESSGEN_WINDOWS
 
 # Test files
 set(MyDLL_TEST_FILES
-    mainMultifungible.cpp
     src/UnitTests.cpp
     include/UnitTesting/UnitTestsInfo.h
     src/UnitTesting/AddQuantityTests.cpp
@@ -167,6 +166,7 @@ set(MyDLL_TEST_FILES
     src/UnitTesting/transferESDTTests.cpp
     src/UnitTesting/transferSFTTests.cpp
     src/UnitTesting/issueESDTTest.cpp
+    src/UnitTesting/multiTransferTests.cpp
 )
 
 set(SDK_TEST_FILES
@@ -209,9 +209,9 @@ if (BUILD_TESTS)
     include_directories(tests/test_common)
     include_directories(include/boost_1_81_0)
     if (WIN32)
-        add_executable(Multifungible ${SDK_TEST_FILES} ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
+        add_executable(Multifungible mainMultifungible.cpp ${SDK_TEST_FILES} ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_ADDRESSGEN_WINDOWS} ${MyDLL_EXTERNAL})
     else()
-        add_executable(Multifungible ${SDK_TEST_FILES} ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
+        add_executable(Multifungible mainMultifungible.cpp ${SDK_TEST_FILES} ${MyDLL_TEST_FILES} ${SOURCES_ROOT} ${MyDLL_SRC} ${MyDLL_UTILS} ${MyDLL_ADDRESSGEN} ${MyDLL_EXTERNAL})
     endif()
 # Build executable for CLI
 elseif(BUILD_CLI)
