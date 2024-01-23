@@ -5,6 +5,8 @@
 #include "stdexcept"
 #include <filesystem>
 #include <iostream>
+#include <vector>
+
 #ifdef __WINDOWS__
 #include <windows.h>
 #endif
