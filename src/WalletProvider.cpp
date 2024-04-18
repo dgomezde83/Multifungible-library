@@ -47,11 +47,11 @@ Transaction WalletProvider::buildESDTEmissionTransaction(const std::string& p_es
 {
     if(!p_esdtName.size())
     {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PARAMETERMISSING("SFT Name"));
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PARAMETERMISSING("ESDT Name"));
     }
     if(!p_esdtTicker.size())
     {
-        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PARAMETERMISSING("SFT Ticker"));
+        throw std::runtime_error(WRAPPER_WALLET_GENERATOR_PARAMETERMISSING("ESDT Ticker"));
     }
     if(p_esdtName.size() < 3 || p_esdtName.size() > 20)
     {
