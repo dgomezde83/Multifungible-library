@@ -58,3 +58,5 @@ CMakeCache.txt
 # CLion
 .idea
 
+# Misc
+.DS_Store
