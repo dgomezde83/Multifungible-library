@@ -1,16 +1,16 @@
 # Multifungible Library
-This is an open-source library that allows you to easily interact with the MultiversX blockchain's non-fungible tokens (NFTs) and semi-fungible tokens (SFTs).
+This is an open-source library that allows you to easily interact with the MultiversX blockchain's fungible tokens (ESDTs), non-fungible tokens (NFTs) and semi-fungible tokens (SFTs).
 
 ## 1. Installation instructions and documentation
 Visit [![GitHub](https://img.shields.io/badge/GitHub-Profile-blue?style=flat-square&logo=github)](https://dgomezde83.github.io/multifungible.github.io) for a complete installation guide and documentation of every function of this library.
 
 ## 2. Why use this library?
 
-Traditional software development kits (SDKs) for blockchain can be difficult and technical to use, often requiring significant knowledge of blockchain development and a deep understanding of the underlying technology. The Multifungible Library provides a simple, user-friendly interface for interacting with the MultiversX blockchain, making it accessible to developers of all levels.
+Traditional software development kits (SDKs) for blockchain can be difficult and technical to use, often requiring significant knowledge of blockchain development and a deep understanding of the underlying technology. The Multifungible Library provides a simple, user-friendly interface for interacting with the MultiversX blockchain, making it accessible to developers of all levels. Moreover, the library can be compiled into a Command Line Interface (CLI) program for a seamless use.
 
 Here are some key features of the library:
-- **Cross-platform:** Compatible with Windows and Linux.
-- **Easy to use:** You can easily create and manage NFTs and SFTs on the MultiversX blockchain with just a few lines of code.
+- **Cross-platform:** Compatible and easy to compile with Windows, Linux and MacOS.
+- **Easy to use:** You can easily create and manage ESDTs, NFTs and SFTs on the MultiversX blockchain with just a few lines of code.
 - **Cross-language compatibility:** The library can be compiled as a DLL or shared object and can be used from almost any programming language that supports dynamic linking, allowing you to use it in projects written in different languages.
 - **Open source:** The code for the library is open source and available on GitHub, so you can easily contribute to the project and improve its functionality.
 
